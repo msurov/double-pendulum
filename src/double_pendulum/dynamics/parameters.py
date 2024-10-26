@@ -1,5 +1,6 @@
 import numpy as np
 from dataclasses import dataclass, asdict
+import json
 
 
 @dataclass
@@ -17,3 +18,13 @@ class DoublePendulumParam:
   def todict(self):
     d = asdict(self)
     return d
+
+def load(cfgpath : str):
+  with open(cfgpath, 'r') as f:
+    d = json.load(f)
+    return DoublePendulumParam(**d)
+
+def save(cfgpath : str, par : DoublePendulumParam):
+  with open(cfgpath, 'w') as f:
+    d = par.todict()
+    json.dump(d, f)

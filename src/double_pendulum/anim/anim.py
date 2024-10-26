@@ -26,8 +26,8 @@ class DoublePendulumAnim:
     return self.line,
 
 def compute_viewbox(q : np.ndarray, pr : DoublePendulumParam):
-  theta1 = q[:,0]
-  theta2 = q[:,1]
+  theta1 = q[...,0]
+  theta2 = q[...,1]
   l1,l2 = pr.lengths
 
   x1 = l1 * np.sin(theta1)
@@ -48,6 +48,18 @@ def inflate_viewbox(xmin, xmax, ymin, ymax, pcnt):
   w1 = w * (1 + pcnt / 100)
   h1 = h * (1 + pcnt / 100)
   return cx - w1/2, cx + w1/2, cy - h1/2, cy + h1/2
+
+def draw(q : np.ndarray, par : DoublePendulumParam):
+  q = np.array(q, float)
+  ax = plt.gca()
+  wb = compute_viewbox(q, par)
+  xmin, xmax, ymin, ymax = inflate_viewbox(*wb, 10)
+  plt.axis('equal')
+  ax.set_xlim((xmin, xmax))
+  ax.set_ylim((ymin, ymax))
+  model = DoublePendulumAnim(par)
+  model.move(q)
+  return model.elems()
 
 def animate(traj : Trajectory, par : DoublePendulumParam, fps=60):
   q = traj.coords
