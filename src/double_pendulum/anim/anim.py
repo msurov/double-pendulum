@@ -2,15 +2,12 @@ import matplotlib.pyplot as plt
 from matplotlib import animation, rc
 import numpy as np
 from scipy.interpolate import make_interp_spline
-from double_pendulum.dynamics import (
-  DoublePendulumParam, 
-  Trajectory
-)
-
+from double_pendulum.dynamics import DoublePendulumParam
+from common.trajectory import Trajectory
 
 class DoublePendulumAnim:
-  def __init__(self, par : DoublePendulumParam, color='black', **plotargs):
-    self.line, = plt.plot([0,0,0], [0,1,2], '-o', linewidth=3, color=color, **plotargs)
+  def __init__(self, par : DoublePendulumParam, color='black', linewidth=3, **plotargs):
+    self.line, = plt.plot([0,0,0], [0,1,2], '-o', linewidth=linewidth, color=color, **plotargs)
     self.l1, self.l2 = par.lengths
 
   def move(self, q):
@@ -49,7 +46,7 @@ def inflate_viewbox(xmin, xmax, ymin, ymax, pcnt):
   h1 = h * (1 + pcnt / 100)
   return cx - w1/2, cx + w1/2, cy - h1/2, cy + h1/2
 
-def draw(q : np.ndarray, par : DoublePendulumParam):
+def draw(q : np.ndarray, par : DoublePendulumParam, **plot_args):
   q = np.array(q, float)
   ax = plt.gca()
   wb = compute_viewbox(q, par)
@@ -57,11 +54,11 @@ def draw(q : np.ndarray, par : DoublePendulumParam):
   plt.axis('equal')
   ax.set_xlim((xmin, xmax))
   ax.set_ylim((ymin, ymax))
-  model = DoublePendulumAnim(par)
+  model = DoublePendulumAnim(par, **plot_args)
   model.move(q)
   return model.elems()
 
-def animate(traj : Trajectory, par : DoublePendulumParam, fps=60):
+def animate(traj : Trajectory, par : DoublePendulumParam, fps=60, speedup=1):
   q = traj.coords
   t = traj.time
   qfun = make_interp_spline(t, q, k=1)
@@ -70,16 +67,16 @@ def animate(traj : Trajectory, par : DoublePendulumParam, fps=60):
   xmin, xmax, ymin, ymax = inflate_viewbox(*wb, 10)
 
   fig, ax = plt.subplots(figsize=(4 * (xmax - xmin) / (ymax - ymin), 4))
-  plt.axis('equal')
-  ax.set_ylim((ymin, ymax))
+  plt.gca().set(xlim=[xmin, xmax], ylim=[ymin, ymax])
+  plt.gca().set_aspect(1)
 
   model = DoublePendulumAnim(par)
 
-  interval = t[-1] - t[0]
-  nframes = int(interval * fps)
+  animtime = (t[-1] - t[0]) / speedup
+  nframes = int(animtime * fps)
 
   def drawframe(iframe):
-    ti = iframe / fps + t[0]
+    ti = speedup * iframe / fps + t[0]
     model.move(qfun(ti))
     return model.elems()
 

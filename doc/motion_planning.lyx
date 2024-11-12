@@ -76,6 +76,635 @@
 \begin_body
 
 \begin_layout Standard
+\begin_inset Formula $M\ddot{q}+C\dot{q}+G=Bu$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $q=Q\left(s\right)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\dot{q}=Q'\dot{s}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\ddot{q}=Q''\dot{s}^{2}+Q'\ddot{s}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $MQ''\dot{s}^{2}+MQ'\ddot{s}+CQ'\dot{s}^{2}+G=Bu$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $B_{\perp}MQ'\ddot{s}+\left(B_{\perp}MQ''+B_{\perp}CQ'\right)\dot{s}^{2}+B_{\perp}G=0$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\alpha & =B_{\perp}MQ'\\
+\beta & =B_{\perp}MQ''+B_{\perp}CQ'\\
+\gamma & =B_{\perp}G
+\end{align*}
+
+\end_inset
+
+для 
+\begin_inset Formula $s_{0}=0$
+\end_inset
+
+ система находится в положении равновесия 
+\begin_inset Formula 
+\begin{align*}
+G & =0\\
+\dot{s} & =0\\
+\ddot{s} & =0
+\end{align*}
+
+\end_inset
+
+поскольку
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\ddot{q}=M^{-1}\left(-C\dot{q}-G+Bu\right)
+\]
+
+\end_inset
+
+то
+\begin_inset Formula 
+\[
+\ddot{q}_{0}=M^{-1}Bu
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+M\left(q_{0}\right)=\left[\begin{matrix}p_{1}+2p_{2} & p_{3}+p_{2}\\
+p_{3}+p_{2} & p_{3}
+\end{matrix}\right]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\ddot{q}=Q''\dot{s}^{2}+Q'\ddot{s}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\frac{dq}{ds}\to\pm\infty$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+B^{+}MQ'\ddot{s}+B^{+}\left(MQ''+CQ'\right)\dot{s}^{2}+B^{+}G & =u\\
+\ddot{s} & =\frac{u-B^{+}G-B^{+}\left(MQ''+CQ'\right)\dot{s}^{2}}{B^{+}MQ'}
+\end{align*}
+
+\end_inset
+
+В начальной точке 
+\begin_inset Formula 
+\begin{align*}
+\ddot{s} & =\frac{u}{B^{+}MQ'}\\
+\dot{s} & =0\\
+\ddot{q}_{0} & =Q'\ddot{s}_{0}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+—
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $M=\left[\begin{matrix}p_{1}+2p_{2}\cos\theta_{2} & p_{3}+p_{2}\cos\theta_{2}\\
+p_{3}+p_{2}\cos\theta_{2} & p_{3}
+\end{matrix}\right]$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $G=-g\left[\begin{matrix}p_{4}\sin\theta_{1}+p_{5}\sin\left(\theta_{1}+\theta_{2}\right)\\
+p_{5}\sin\left(\theta_{1}+\theta_{2}\right)
+\end{matrix}\right]$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $C=p_{2}\sin\theta_{2}\left[\begin{matrix}0 & -2\dot{\theta}_{1}-\dot{\theta}_{2}\\
+\frac{2\dot{\theta}_{1}+\dot{\theta}_{2}}{2} & -\frac{\dot{\theta}_{1}}{2}
+\end{matrix}\right]$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $B_{\perp}=\left[0,1\right]$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $Q=s^{2}v$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $Q'=2sv$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $Q''=2v$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+\SpecialChar softhyphen
+
+\end_layout
+
+\begin_layout Standard
+Редуцированная динамика
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\alpha & =B_{\perp}MQ'\\
+ & =\left(p_{3}+p_{2}\cos Q_{2}\right)Q_{1}'+p_{3}Q_{2}'\\
+\beta & =B_{\perp}MQ''+B_{\perp}CQ'\\
+ & =\left(p_{3}+p_{2}\cos\theta_{2}\right)Q_{1}''+p_{3}Q_{2}''+p_{2}\sin\theta_{2}\left(\left(\frac{2Q_{1}'+Q_{2}'}{2}\right)Q_{1}'-\frac{Q_{1}'}{2}Q_{2}'\right)\\
+ & =\left(p_{3}+p_{2}\cos Q_{2}\right)Q_{1}''+p_{3}Q_{2}''+\left(\frac{dQ_{1}}{ds}\right)^{2}p_{2}\sin Q_{2}\\
+\gamma & =-gp_{5}\sin\left(Q_{1}+Q_{2}\right)
+\end{align*}
+
+\end_inset
+
+Рассматриваем несколько случаев: 
+\end_layout
+
+\begin_layout Standard
+Верхнее положение равновесия 
+\begin_inset Formula $s=0,Q'=0,Q=0$
+\end_inset
+
+.
+ Тогда 
+\begin_inset Formula 
+\begin{align*}
+Q & =\frac{1}{2}as^{2}\\
+Q' & =as\\
+Q'' & =a
+\end{align*}
+
+\end_inset
+
+Тогда 
+\begin_inset Formula 
+\begin{align*}
+\alpha & =\left(p_{3}+p_{2}\cos Q_{2}\right)Q_{1}'+p_{3}Q_{2}'\\
+\beta & =\left(p_{3}+p_{2}\cos Q_{2}\right)Q_{1}''+p_{3}Q_{2}''+\left(\frac{dQ_{1}}{ds}\right)^{2}p_{2}\sin Q_{2}\\
+\gamma & =-gp_{5}\sin\left(Q_{1}+Q_{2}\right)
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+\alpha & =\left(p_{3}+p_{2}\cos\frac{1}{2}a_{2}s^{2}\right)a_{1}s+p_{3}a_{2}s\\
+\beta & =\left(p_{3}+p_{2}\cos\frac{1}{2}a_{2}s^{2}\right)a_{1}+p_{3}a_{2}+a_{1}^{2}s^{2}p_{2}\sin\frac{1}{2}a_{2}s^{2}\\
+\gamma & =-gp_{5}\sin\left(\frac{1}{2}a_{1}s^{2}+\frac{1}{2}a_{2}s^{2}\right)
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection*
+Редуцированная динамика с постоянными коэффициентами
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+sy'+\frac{2s\beta y}{\alpha}+\frac{s\gamma}{\alpha} & =0\\
+b & :=\left(\frac{2s\beta}{\alpha}\right)_{s=0}\\
+ & =\frac{2\left(\left(p_{3}+p_{2}\cos\frac{1}{2}a_{2}s^{2}\right)a_{1}+p_{3}a_{2}+a_{1}^{2}s^{2}p_{2}\sin\frac{1}{2}a_{2}s^{2}\right)}{\left(p_{3}+p_{2}\cos\frac{1}{2}a_{2}s^{2}\right)a_{1}+p_{3}a_{2}}\\
+ & =2+2\frac{\left(a_{1}^{2}s^{2}p_{2}\sin\frac{1}{2}a_{2}s^{2}\right)}{\left(p_{3}+p_{2}\cos\frac{1}{2}a_{2}s^{2}\right)a_{1}+p_{3}a_{2}}\\
+ & =2\\
+c & :=\left(\frac{s\gamma}{s^{2}\alpha}\right)_{s=0}\\
+ & =-gp_{5}\frac{\sin\left(\frac{1}{2}a_{1}s^{2}+\frac{1}{2}a_{2}s^{2}\right)}{s^{2}}\frac{1}{\left(p_{3}+p_{2}\cos\frac{1}{2}a_{2}s^{2}\right)a_{1}+p_{3}a_{2}}\\
+ & =-\frac{1}{2}g\frac{p_{5}\left(a_{1}+a_{2}\right)}{p_{3}\left(a_{1}+a_{2}\right)+p_{2}a_{1}}
+\end{align*}
+
+\end_inset
+
+Рассмотрим
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+xy'+2y+cx^{2}=0
+\]
+
+\end_inset
+
+находим общее решение однородного ДУ
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{dy}{y}=-2\frac{dx}{x}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\ln y=-b\ln x+C
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+y=Cx^{-b}
+\]
+
+\end_inset
+
+Подставляем в неоднородное 
+\begin_inset Formula 
+\[
+y'=C'x^{-b}-bCx^{-b-1}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+dC=-cx^{b+1}dx
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+C=-c\frac{x^{b+2}}{b+2}+C_{1}
+\]
+
+\end_inset
+
+получаем решение неоднородного 
+\begin_inset Formula $b=2$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+y & =-c\frac{x^{2}}{b+2}+C_{1}x^{-b}\\
+y' & =-c\frac{2x}{b+2}-bC_{1}x^{-b-1}
+\end{align*}
+
+\end_inset
+
+Тогда: либо 
+\begin_inset Formula $C_{1}=0$
+\end_inset
+
+, либо 
+\begin_inset Formula $b<0$
+\end_inset
+
+.
+ У меня получилось
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\alpha' & >0\\
+b & >0\\
+c & <0
+\end{align*}
+
+\end_inset
+
+Тогда
+\end_layout
+
+\begin_layout Standard
+—
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+q & =\left(\begin{array}{c}
+\pi\\
+\pi
+\end{array}\right)+\frac{1}{2}as^{2}\\
+\alpha & =\left(p_{3}-p_{2}\cos\frac{1}{2}a_{2}s^{2}\right)a_{1}s+p_{3}a_{2}s\\
+\beta & =\left(p_{3}-p_{2}\cos\frac{1}{2}a_{2}s^{2}\right)a_{1}+p_{3}a_{2}-\left(a_{1}s\right)^{2}p_{2}\sin\frac{1}{2}a_{2}s^{2}\\
+\gamma & =-gp_{5}\sin\left(\frac{a_{2}s^{2}+a_{1}s^{2}}{2}\right)\\
+b & =2\\
+c & =-\frac{1}{2}g\frac{p_{5}\left(a_{1}+a_{2}\right)}{p_{3}\left(a_{1}+a_{2}\right)-p_{2}a_{1}}
+\end{align*}
+
+\end_inset
+
+Требования: 
+\begin_inset Formula 
+\begin{align*}
+a_{1}+a_{2} & >0\\
+p_{3}\left(a_{1}+a_{2}\right) & >p_{2}a_{1}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection*
+Квадратичная связь
+\end_layout
+
+\begin_layout Standard
+Выберем 
+\begin_inset Formula $q=Q\left(s\right)$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+Q_{1} & =q_{01}+a_{1}s+\frac{1}{2}b_{1}s^{2}\\
+Q_{2} & =q_{02}+a_{2}s+\frac{1}{2}b_{2}s^{2}
+\end{align*}
+
+\end_inset
+
+тогда
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\alpha=\left(p_{3}+p_{2}\cos Q_{2}\right)\left(a_{1}+b_{1}s\right)+p_{3}\left(a_{2}+b_{2}s\right)
+\]
+
+\end_inset
+
+Потребуем при 
+\begin_inset Formula $s=0$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\left(p_{3}+p_{2}\cos Q_{2}\right)\left(a_{1}+b_{1}s\right)+p_{3}\left(a_{2}+b_{2}s\right)=0.
+\]
+
+\end_inset
+
+Можно выбрать 
+\begin_inset Formula $a_{1}=a_{2}=0$
+\end_inset
+
+, тогда 
+\begin_inset Formula $b_{1},b_{2}$
+\end_inset
+
+ могут быть любыми
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\left(p_{3}+p_{2}\cos Q_{2}\right)b_{1}s+p_{3}b_{2}s=0
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\alpha & =\left(p_{3}+p_{2}\cos Q_{2}\right)b_{1}s+p_{3}b_{2}s\\
+\beta & =\left(p_{3}+p_{2}\cos Q_{2}\right)b_{1}+p_{3}b_{2}+b_{1}^{2}s^{2}p_{2}\sin\left(b_{2}s\right)\\
+\gamma & =-gp_{5}\sin\left(\frac{b_{1}+b_{2}}{2}s^{2}\right)
+\end{align*}
+
+\end_inset
+
 
 \end_layout
 

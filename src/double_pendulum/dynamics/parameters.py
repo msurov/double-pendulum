@@ -28,3 +28,17 @@ def save(cfgpath : str, par : DoublePendulumParam):
   with open(cfgpath, 'w') as f:
     d = par.todict()
     json.dump(d, f)
+
+
+@dataclass
+class DoublePendulumParam2:
+  p : np.ndarray
+  actiated_joint : int
+  gravity_accel : float
+
+  def __post_init__(self):
+    pass
+
+  def todict(self):
+    d = asdict(self)
+    return d

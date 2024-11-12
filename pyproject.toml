@@ -15,7 +15,8 @@ dependencies = [
   "scipy",
   "matplotlib",
   "casadi",
-  "sympy"
+  "sympy",
+  "SciencePlots"
 ]
 requires-python = ">=3.10"
 authors = [

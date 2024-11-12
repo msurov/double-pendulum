@@ -73,8 +73,8 @@ def get_control_mar(par : DoublePendulumParam) -> Matrix:
   B[par.actiated_joint,0] = 1
   return B
 
-def get_coriolis_mat(M : Matrix, thetas : Tuple[Symbol], dthetas : Tuple[Symbol]) -> Matrix:
-  dq = Matrix([dthetas]).T
+def get_coriolis_mat(M : Matrix, thetas : Tuple[Symbol], dq : Tuple[Symbol]) -> Matrix:
+  dq = Matrix([dq]).T
   Mdq = M @ dq
   J = Mdq.jacobian(thetas)
   C = J - J.T / 2
@@ -83,8 +83,8 @@ def get_coriolis_mat(M : Matrix, thetas : Tuple[Symbol], dthetas : Tuple[Symbol]
 
 class DoublePendulumDynamics:
   def __init__(self, par : DoublePendulumParam):
-    q = sy.symbols(R'\theta_(1:3)', real=True)
-    dq = sy.symbols(R'\dot{\theta}_(1:3)', real=True)
+    q = sy.symbols(R'q_(1:3)', real=True)
+    dq = sy.symbols(R'\dot{q}_(1:3)', real=True)
     u = sy.symbols('u', real=True)
     M = get_kinetic_energy_mat(par, q)
     U = get_potential_energy(par, q)

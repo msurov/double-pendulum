@@ -1,0 +1,448 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\use_minted 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+\begin_inset Formula $\Phi=q_{s}+M^{-1}\left(q_{s}\right)B\theta+\frac{1}{2}w\theta^{2}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\Phi'=M^{-1}\left(q_{s}\right)B+w\theta$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\Phi''=w$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+—
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $M=\left[\begin{matrix}p_{1}+2p_{2}\cos q_{2} & p_{3}+p_{2}\cos q_{2}\\
+p_{3}+p_{2}\cos q_{2} & p_{3}
+\end{matrix}\right]$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\frac{\partial M}{\partial q_{1}}=0$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\frac{\partial M}{\partial q_{2}}=-p_{2}\sin q_{2}\left[\begin{matrix}2 & 1\\
+1 & 0
+\end{matrix}\right]$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+—
+\end_layout
+
+\begin_layout Standard
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+\begin_inset Formula $M^{-1}\left(q_{s}\right)=\frac{1}{p_{3}\left(p_{1}+2p_{2}\cos q_{s,2}\right)-\left(p_{3}+p_{2}\cos q_{s,2}\right)^{2}}\left[\begin{matrix}p_{3} & -p_{3}-p_{2}\cos q_{s,2}\\
+-p_{3}-p_{2}\cos q_{s,2} & p_{1}+2p_{2}\cos q_{s,2}
+\end{matrix}\right]$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+\begin_inset Formula $M^{-1}\left(q_{s}\right)B=\frac{1}{p_{3}\left(p_{1}+2p_{2}\cos q_{s,2}\right)-\left(p_{3}+p_{2}\cos q_{s,2}\right)^{2}}\left[\begin{matrix}p_{3}\\
+-p_{3}-p_{2}\cos q_{s,2}
+\end{matrix}\right]$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\Phi\left(\theta\right)=q_{s}+\frac{1}{p_{3}\left(p_{1}+2p_{2}\cos q_{s,2}\right)-\left(p_{3}+p_{2}\cos q_{s,2}\right)^{2}}\left[\begin{matrix}p_{3}\\
+-p_{3}-p_{2}\cos q_{s,2}
+\end{matrix}\right]\theta+\frac{1}{2}w\theta^{2}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+—
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\alpha=B_{\perp}M\left(\Phi\left(\theta\right)\right)\frac{d\Phi}{d\theta}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\alpha'=B_{\perp}M\left(\Phi\left(\theta\right)\right)\frac{d^{2}\Phi}{d\theta^{2}}+B_{\perp}\sum_{i}\left(\frac{\partial M}{\partial q_{i}}\frac{d\phi_{i}}{d\theta}\right)_{q=\Phi\left(\theta\right)}\frac{d\Phi}{d\theta}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\beta=B_{\perp}M\left(\Phi\left(\theta\right)\right)\frac{d^{2}\Phi}{d\theta^{2}}+B_{\perp}C\left(\Phi\left(\theta\right),\frac{d\Phi}{d\theta}\right)\frac{d\Phi}{d\theta}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\gamma=B_{\perp}G\left(\Phi\left(\theta\right)\right)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+—
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\alpha\left(0\right)=B_{\perp}M\left(q_{s}\right)M^{-1}\left(q_{s}\right)B=0$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\alpha'\left(0\right) & =B_{\perp}M\left(q_{s}\right)w+B_{\perp}\left(0\frac{d\phi_{1}}{d\theta}-p_{2}\sin q_{s,2}\left[\begin{matrix}2 & 1\\
+1 & 0
+\end{matrix}\right]\frac{d\phi_{2}}{d\theta}\right)_{q=\Phi\left(\theta\right)}M^{-1}\left(q_{s}\right)B\\
+ & =B_{\perp}M\left(q_{s}\right)w-p_{2}\sin q_{s,2}\left[M^{-1}\left(q_{s}\right)B\right]_{2}\left[M^{-1}\left(q_{s}\right)B\right]_{1}\\
+ & =B_{\perp}M\left(q_{s}\right)w-\frac{p_{2}p_{3}\sin q_{s,2}\left(p_{3}+p_{2}\cos q_{s,2}\right)}{\left(p_{3}\left(p_{1}+2p_{2}\cos q_{s,2}\right)-\left(p_{3}+p_{2}\cos q_{s,2}\right)^{2}\right)^{2}}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+— 
+\end_layout
+
+\begin_layout Standard
+Если записать в общем виде
+\end_layout
+
+\begin_layout Standard
+Пусть 
+\begin_inset Formula $L\equiv B_{\perp}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\alpha & =L_{k}M_{ki}\phi'_{i}\\
+\alpha' & =L_{k}M_{ki}\phi''_{i}+L_{k}\frac{\partial M_{ki}}{\partial q^{j}}\phi'_{i}\phi'_{j}\\
+C_{ij} & =\left(\frac{\partial M_{ij}}{\partial q_{k}}-\frac{1}{2}\frac{\partial M_{jk}}{\partial q_{i}}\right)\dot{q}_{k}\\
+\beta & =L_{k}\left(\frac{\partial M_{kj}}{\partial q^{i}}-\frac{1}{2}\frac{\partial M_{ij}}{\partial q^{k}}\right)\phi'_{i}\phi'_{j}+L_{k}M_{kj}\phi''_{j}\\
+ & =L_{k}M_{kj}\phi''_{j}+L_{k}\frac{\partial M_{kj}}{\partial q^{i}}\phi'_{i}\phi'_{j}-\frac{1}{2}L_{k}\frac{\partial M_{ij}}{\partial q^{k}}\phi'_{i}\phi'_{j}\\
+ & =\alpha'-\frac{1}{2}L_{k}\frac{\partial M_{ij}}{\partial q^{k}}\phi'_{i}\phi'_{j}
+\end{align*}
+
+\end_inset
+
+Связь
+\begin_inset Formula 
+\begin{align*}
+\Phi_{i} & =q_{s,i}+M_{ij}^{-1}\left(q_{s}\right)B_{j}\theta+\frac{1}{2}w_{i}\theta^{2}\\
+\Phi'_{i}\left(0\right) & =M_{ij}^{-1}\left(q_{s}\right)B_{j}
+\end{align*}
+
+\end_inset
+
+Тогда
+\begin_inset Formula 
+\begin{align*}
+\alpha & =L_{i}M_{ij}\left(\Phi\right)\left(M_{ik}^{-1}\left(q_{s}\right)B_{k}+w_{k}\theta\right)\\
+\alpha\left(0\right) & =0\\
+\alpha' & =L_{i}\frac{\partial M_{ij}}{\partial q_{k}}\left[M_{il}^{-1}\left(q_{s}\right)B_{l}+w_{i}\theta\right]\left[M_{kt}^{-1}\left(q_{s}\right)B_{t}+w_{k}\theta\right]+L_{i}M_{ij}w_{j}\\
+\alpha'\left(0\right) & =L_{i}\frac{\partial M_{ij}}{\partial q_{k}}\left[M_{il}^{-1}\left(q_{s}\right)B_{l}\right]\left[M_{kt}^{-1}\left(q_{s}\right)B_{t}\right]+L_{i}M_{ij}\left(q_{s}\right)w_{j}\\
+\beta & =L_{i}M_{ij}w_{j}+L_{i}\frac{\partial M_{ij}}{\partial q_{k}}\left[M_{kl}^{-1}\left(q_{s}\right)B_{l}+w_{k}\theta\right]\left[M_{jt}^{-1}\left(q_{s}\right)B_{t}+w_{j}\theta\right]-\frac{1}{2}L_{i}\frac{\partial M_{jk}}{\partial q_{i}}\left[M_{kl}^{-1}\left(q_{s}\right)B_{l}+w_{k}\theta\right]\left[M_{jt}^{-1}\left(q_{s}\right)B_{t}+w_{j}\theta\right]\\
+\beta\left(0\right) & =L_{i}M_{ij}w_{j}+L_{i}\frac{\partial M_{ij}}{\partial q_{k}}\left[M_{kl}^{-1}\left(q_{s}\right)B_{l}\right]\left[M_{jt}^{-1}\left(q_{s}\right)B_{t}\right]-\frac{1}{2}L_{i}\frac{\partial M_{jk}}{\partial q_{i}}\left[M_{kl}^{-1}\left(q_{s}\right)B_{l}\right]\left[M_{jt}^{-1}\left(q_{s}\right)B_{t}\right]\\
+ & =\alpha'\left(0\right)-\frac{1}{2}L_{i}\frac{\partial M_{jk}}{\partial q_{i}}\left[M_{kl}^{-1}\left(q_{s}\right)B_{l}\right]\left[M_{jt}^{-1}\left(q_{s}\right)B_{t}\right]
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+\begin_inset Formula $\frac{\partial M_{jk}}{\partial q_{i}}\left[M_{kl}^{-1}\left(q_{s}\right)B_{l}\right]\left[M_{jt}^{-1}\left(q_{s}\right)B_{t}\right]=\frac{\partial}{\partial q_{i}}\left(M_{jk}\left(q\right)\left[M_{kl}^{-1}\left(q_{s}\right)B_{l}\right]\left[M_{jt}^{-1}\left(q_{s}\right)B_{t}\right]\right)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+—
+\end_layout
+
+\begin_layout Standard
+Другой вариант – приблизить 
+\begin_inset Formula $B_{\perp}M\left(q_{s}+v\theta\right)M^{-1}\left(q_{s}\right)B\approx0+\#\theta$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+—
+\end_layout
+
+\begin_layout Standard
+Вводим обозначения
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $n\left(q\right)\equiv M\left(q\right)B_{\perp}^{T}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $n^{T}\left(q\right)\equiv B_{\perp}M\left(q\right)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $n\left(q_{s}\right)=M\left(q_{s}\right)B_{\perp}^{T}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $n^{T}\left(q_{s}\right)\equiv B_{\perp}M\left(q_{s}\right)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+тогда
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\alpha\left(\theta\right) & =n^{T}\left(\Phi\left(\theta\right)\right)\Phi'\left(\theta\right)\\
+\alpha\left(0\right) & =n^{T}\left(q_{s}\right)M^{-1}\left(q_{s}\right)B=B_{\perp}M\left(q_{s}\right)M^{-1}B=0\\
+\alpha' & =\left(\frac{\partial n\left(q\right)}{\partial q}\Phi'\left(\theta\right)\right)^{T}\Phi'\left(\theta\right)+n^{T}\left(\Phi\left(\theta\right)\right)\Phi''\left(\theta\right)\\
+\alpha'\left(0\right) & =\left(\frac{\partial n\left(q\right)}{\partial q}M^{-1}\left(q_{s}\right)B\right)_{q=q_{s}}^{T}M^{-1}\left(q_{s}\right)B+n^{T}\left(q_{s}\right)w\\
+\beta\left(\theta\right) & =n^{T}\left(\Phi\left(\theta\right)\right)\Phi''\left(\theta\right)+B_{\perp}C\left(\Phi\left(\theta\right),\Phi'\left(\theta\right)\right)\Phi'\left(\theta\right)\\
+\beta\left(0\right) & =n^{T}\left(q_{s}\right)w+B_{\perp}C\left(q_{s},M^{-1}\left(q_{s}\right)B\right)M^{-1}\left(q_{s}\right)B\\
+\gamma\left(\theta\right) & =B_{\perp}G\left(\Phi\left(\theta\right)\right)\\
+\gamma\left(0\right) & =B_{\perp}G\left(q_{s}\right)
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+—
+\end_layout
+
+\begin_layout Standard
+Можно ещё ввести
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $h\left(q\right)\equiv M^{-1}\left(q\right)B$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\Phi=q_{s}+h\left(q_{s}\right)\theta+\frac{k}{2}n\left(q_{s}\right)\theta^{2}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\Phi'=h\left(q_{s}\right)+w\theta$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\Phi''=w$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+тогда
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\alpha'\left(0\right) & =\left(\frac{\partial n\left(q\right)}{\partial q}h\left(q\right)\right)_{q=q_{s}}^{T}h\left(q_{s}\right)+kn^{T}\left(q_{s}\right)n\left(q_{s}\right)\\
+\beta\left(0\right) & =kn^{T}\left(q_{s}\right)n\left(q_{s}\right)+B_{\perp}C\left(q_{s},h\left(q_{s}\right)\right)h\left(q_{s}\right)
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\beta\left(0\right)=\alpha'\left(0\right)-\frac{1}{2}L_{k}\frac{\partial M_{ij}}{\partial q^{k}}h_{i}\left(q_{s}\right)h_{j}\left(q_{s}\right)$
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document

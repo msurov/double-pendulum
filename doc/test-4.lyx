@@ -1,0 +1,323 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\use_minted 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+1.
+ 
+\begin_inset Formula $\alpha'>0$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+kL^{T}\left(q_{s}\right)L\left(q_{s}\right)+\left(\frac{\partial L\left(q\right)}{\partial q}N\left(q_{s}\right)\right)_{q=q_{s}}^{T}N\left(q_{s}\right) & >0\quad\text{and}\\
+3kL^{T}\left(q_{s}\right)L\left(q_{s}\right)+2B_{\perp}C\left(q_{s},N\left(q_{s}\right)\right)N\left(q_{s}\right)+\left(\frac{\partial L\left(q\right)}{\partial q}N\left(q_{s}\right)\right)_{q=q_{s}}^{T}N\left(q_{s}\right) & <0\quad\text{and}\\
+B_{\perp}G\left(q_{s}\right) & >0.
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+2.
+ 
+\begin_inset Formula $\alpha'<0$
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+kL^{T}\left(q_{s}\right)L\left(q_{s}\right)+\left(\frac{\partial L\left(q\right)}{\partial q}N\left(q_{s}\right)\right)_{q=q_{s}}^{T}N\left(q_{s}\right) & <0\quad\text{and}\\
+3kL^{T}\left(q_{s}\right)L\left(q_{s}\right)+2B_{\perp}C\left(q_{s},N\left(q_{s}\right)\right)N\left(q_{s}\right)+\left(\frac{\partial L\left(q\right)}{\partial q}N\left(q_{s}\right)\right)_{q=q_{s}}^{T}N\left(q_{s}\right) & >0\quad\text{and}\\
+B_{\perp}G\left(q_{s}\right) & <0.
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+—
+\end_layout
+
+\begin_layout Standard
+если
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $q_{s}+N\left(q_{s}\right)\theta+\frac{k}{2}\frac{L\left(q_{s}\right)}{L^{T}\left(q_{s}\right)L\left(q_{s}\right)}\theta^{2}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $N\left(q\right):=M^{-1}\left(q\right)B,\quad L\left(q\right):=M\left(q\right)B_{\perp}^{T}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $M$
+\end_inset
+
+ kg
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $q$
+\end_inset
+
+ m
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $B$
+\end_inset
+
+ kg m/s
+\begin_inset Formula $^{2}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $N$
+\end_inset
+
+ m/s
+\begin_inset Formula $^{2}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $L$
+\end_inset
+
+ kg*kg m/s
+\begin_inset Formula $^{2}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\theta$
+\end_inset
+
+ s
+\begin_inset Formula $^{2}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+то
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+k\in\mathbb{R}:\quad\alpha'\left(0\right)=k+\left(\frac{\partial L\left(q\right)}{\partial q}N\left(q_{s}\right)\right)_{q=q_{s}}^{T}N\left(q_{s}\right) & \ne0\quad\text{and}\\
+\frac{\beta\left(0\right)}{\alpha'\left(0\right)}=\frac{k+B_{\perp}C\left(q_{s},N\left(q_{s}\right)\right)N\left(q_{s}\right)}{k+\left(\frac{\partial L\left(q\right)}{\partial q}N\left(q_{s}\right)\right)_{q=q_{s}}^{T}N\left(q_{s}\right)} & <-\frac{1}{2}\quad\text{and}\\
+\frac{\gamma\left(0\right)}{\alpha'\left(0\right)}=\frac{B_{\perp}G\left(q_{s}\right)}{k+\left(\frac{\partial L\left(q\right)}{\partial q}N\left(q_{s}\right)\right)_{q=q_{s}}^{T}N\left(q_{s}\right)} & >0.
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+—
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\Phi\left(\theta\right)=q_{s}+\alpha N\left(q_{s}\right)\theta+\frac{k}{2}\frac{L\left(q_{s}\right)}{L^{T}\left(q_{s}\right)L\left(q_{s}\right)}\theta^{2}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\alpha\left(\theta\right) & =B_{\perp}M\left(\Phi\left(\theta\right)\right)\Phi'\left(\theta\right)\\
+ & =L^{T}\left(\Phi\left(\theta\right)\right)\left(\alpha N\left(q_{s}\right)+k\frac{L\left(q_{s}\right)}{L^{T}\left(q_{s}\right)L\left(q_{s}\right)}\theta\right)\\
+\alpha\left(0\right) & =L^{T}\left(q_{s}\right)\alpha N\left(q_{s}\right)=0\\
+\alpha'\left(\theta\right) & =\left(\frac{\partial L\left(q\right)}{\partial q}\left(\alpha N\left(q_{s}\right)+k\frac{L\left(q_{s}\right)}{L^{T}\left(q_{s}\right)L\left(q_{s}\right)}\theta\right)\right)_{q=\Phi\left(\theta\right)}^{T}\left(\alpha N\left(q_{s}\right)+k\frac{L\left(q_{s}\right)}{L^{T}\left(q_{s}\right)L\left(q_{s}\right)}\theta\right)+kL^{T}\left(\Phi\left(\theta\right)\right)\frac{L\left(q_{s}\right)}{L^{T}\left(q_{s}\right)L\left(q_{s}\right)}\\
+\alpha'\left(0\right) & =\left(\frac{\partial L\left(q\right)}{\partial q}\alpha N\left(q_{s}\right)\right)_{q=\Phi\left(\theta\right)}^{T}\alpha N\left(q_{s}\right)+k\\
+\beta\left(\theta\right) & =B_{\perp}M\left(\Phi\left(\theta\right)\right)\Phi''\left(\theta\right)+B_{\perp}C\left(\Phi\left(\theta\right),\Phi'\left(\theta\right)\right)\Phi'\left(\theta\right)\\
+ & =L^{T}\left(\Phi\left(\theta\right)\right)\Phi''\left(\theta\right)+B_{\perp}C\left(\Phi\left(\theta\right),\Phi'\left(\theta\right)\right)\Phi'\left(\theta\right)\\
+ & =kL^{T}\left(\Phi\left(\theta\right)\right)\frac{L\left(q_{s}\right)}{L^{T}\left(q_{s}\right)L\left(q_{s}\right)}+B_{\perp}C\left(\Phi\left(\theta\right),\alpha N\left(q_{s}\right)+k\frac{L\left(q_{s}\right)}{L^{T}\left(q_{s}\right)L\left(q_{s}\right)}\theta\right)\left(\alpha N\left(q_{s}\right)+k\frac{L\left(q_{s}\right)}{L^{T}\left(q_{s}\right)L\left(q_{s}\right)}\theta\right)\\
+\beta\left(0\right) & =kL^{T}\left(q_{s}\right)\frac{L\left(q_{s}\right)}{L^{T}\left(q_{s}\right)L\left(q_{s}\right)}+\alpha^{2}B_{\perp}C\left(q_{s},N\left(q_{s}\right)\right)N\left(q_{s}\right)\\
+\gamma\left(\theta\right) & =B_{\perp}G\left(q_{s}+\alpha N\left(q_{s}\right)\theta+\frac{k}{2}\frac{L\left(q_{s}\right)}{L^{T}\left(q_{s}\right)L\left(q_{s}\right)}\theta^{2}\right)\\
+\gamma\left(0\right) & =B_{\perp}G\left(q_{s}\right)
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\left(\frac{\partial L\left(q\right)}{\partial q}N\left(q_{s}\right)\right)_{q=\Phi\left(\theta\right)}^{T}N\left(q_{s}\right)=\frac{1}{\alpha^{2}}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document

@@ -1,5 +1,6 @@
+data/
 .venv
-build
+build/
 *.egg-info
 __pycache__
 *.lyx#

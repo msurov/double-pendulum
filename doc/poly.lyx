@@ -76,87 +76,14 @@
 \begin_body
 
 \begin_layout Standard
-\begin_inset Formula $M=\left[\begin{matrix}p_{1}+2p_{2}\cos\theta_{2} & p_{3}+p_{2}\cos\theta_{2}\\
-p_{3}+p_{2}\cos\theta_{2} & p_{3}
-\end{matrix}\right]$
+\begin_inset Formula $y=a_{0}+a_{1}x+a_{2}x^{2}+a_{3}x^{3}$
 \end_inset
 
 
 \end_layout
 
 \begin_layout Standard
-\begin_inset Formula $G=-g\left[\begin{matrix}p_{4}\sin\theta_{1}+p_{5}\sin\left(\theta_{1}+\theta_{2}\right)\\
-p_{5}\sin\left(\theta_{1}+\theta_{2}\right)
-\end{matrix}\right]$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula $B=\left[\begin{matrix}1\\
-0
-\end{matrix}\right]$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula $C=p_{2}\sin\theta_{2}\left[\begin{matrix}0 & -2\dot{\theta}_{1}-\dot{\theta}_{2}\\
-\frac{2\dot{\theta}_{1}+\dot{\theta}_{2}}{2} & -\frac{\dot{\theta}_{1}}{2}
-\end{matrix}\right]$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula $C\dot{q}=p_{2}\sin\theta_{2}\left[\begin{matrix}-2\dot{\theta}_{1}\dot{\theta}_{2}-\dot{\theta}_{2}^{2}\\
-\dot{\theta}_{1}^{2}
-\end{matrix}\right]$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula $p_{1}:=I_{1}+I_{2}+m_{1}c_{1}^{2}+m_{2}c_{2}^{2}+m_{2}l_{1}^{2}$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula $p_{2}:=m_{2}c_{2}l_{1}$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula $p_{3}:=I_{2}+m_{2}c_{2}^{2}$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula $p_{4}:=c_{1}m_{1}+l_{1}m_{2}$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula $p_{5}:=c_{2}m_{2}$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula $E=\frac{I_{1}\dot{\theta}_{1}^{2}}{2}+\frac{I_{2}\dot{\theta}_{1}^{2}}{2}+I_{2}\dot{\theta}_{1}\dot{\theta}_{2}+\frac{I_{2}\dot{\theta}_{2}^{2}}{2}+\frac{\dot{\theta}_{1}^{2}c_{1}^{2}m_{1}}{2}+\frac{\dot{\theta}_{1}^{2}c_{2}^{2}m_{2}}{2}+\dot{\theta}_{1}^{2}c_{2}l_{1}m_{2}\cos\left(\theta_{2}\right)+\frac{\dot{\theta}_{1}^{2}l_{1}^{2}m_{2}}{2}+\dot{\theta}_{1}\dot{\theta}_{2}c_{2}^{2}m_{2}+\dot{\theta}_{1}\dot{\theta}_{2}c_{2}l_{1}m_{2}\cos\left(\theta_{2}\right)+\frac{\dot{\theta}_{2}^{2}c_{2}^{2}m_{2}}{2}+c_{1}gm_{1}\cos\left(\theta_{1}\right)+c_{2}gm_{2}\cos\left(\theta_{1}+\theta_{2}\right)+gl_{1}m_{2}\cos\left(\theta_{1}\right)$
+\begin_inset Formula $y'=a_{1}+2a_{2}x+3a_{3}x^{2}$
 \end_inset
 
 
@@ -167,12 +94,28 @@ p_{5}\sin\left(\theta_{1}+\theta_{2}\right)
 \end_layout
 
 \begin_layout Standard
-\begin_inset Formula 
-\begin{align*}
-\dot{p} & =-H_{q}+Bu\\
-\dot{q} & =H_{p}
-\end{align*}
+\begin_inset Formula $y_{0}=a_{0}$
+\end_inset
 
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $y_{1}=a_{0}+a_{1}+a_{2}+a_{3}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $y'_{0}=a_{1}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $y'_{1}=a_{1}+2a_{2}+3a_{3}$
 \end_inset
 
 
@@ -183,7 +126,53 @@ p_{5}\sin\left(\theta_{1}+\theta_{2}\right)
 \end_layout
 
 \begin_layout Standard
+\begin_inset Formula $2y_{1}=2a_{0}+2a_{1}+2a_{2}+2a_{3}$
+\end_inset
 
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $y'_{1}=a_{1}+2a_{2}+3a_{3}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+—
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $a_{0}=y_{0}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $a_{1}=y'_{0}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $a_{2}=-3y_{0}+3y_{1}-2y'_{0}-y'_{1}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $a_{3}=2y_{0}-2y_{1}+y'_{0}+y'_{1}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+—
 \end_layout
 
 \end_body

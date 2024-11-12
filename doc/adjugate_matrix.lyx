@@ -1,0 +1,454 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\use_minted 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+Свойство присоединённой матрицы 
+\begin_inset Formula $\mathrm{adj}A$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+A^{-1}=\frac{1}{\det A}\mathrm{adj}A.
+\]
+
+\end_inset
+
+Можно задать 
+\begin_inset Formula 
+\[
+\Phi\left(\theta\right)=q_{s}+N\left(q_{s}\right)\theta+\frac{k}{2}\frac{L\left(q_{s}\right)}{\left\Vert L\left(q_{s}\right)\right\Vert ^{2}}\theta^{2}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+N\left(q\right):=\mathbf{adj}M\left(q\right)B,\quad L\left(q\right):=M\left(q\right)B_{\perp}^{T}
+\]
+
+\end_inset
+
+тогда 
+\begin_inset Formula $A\mathrm{adj}A=AA^{-1}\det A=I\det A$
+\end_inset
+
+.
+ Коэффициенты редуцированной динамики будут 
+\begin_inset Formula 
+\begin{align*}
+\alpha\left(\theta\right) & =B_{\perp}M\left(\Phi\left(\theta\right)\right)\Phi'\left(\theta\right)\\
+ & =L^{T}\left(\Phi\left(\theta\right)\right)\left(N\left(q_{s}\right)+k\frac{L\left(q_{s}\right)}{\left\Vert L\left(q_{s}\right)\right\Vert ^{2}}\theta\right)\\
+\alpha\left(0\right) & =L^{T}\left(q_{s}\right)N\left(q_{s}\right)=0\\
+\alpha'\left(\theta\right) & =\left(\frac{\partial L\left(q\right)}{\partial q}\Phi'\left(\theta\right)\right)^{T}\Phi'\left(\theta\right)+L^{T}\left(\Phi\left(\theta\right)\right)\Phi''\left(\theta\right)\\
+\alpha'\left(0\right) & =\left(\frac{\partial L\left(q\right)}{\partial q}N\left(q_{s}\right)\right)_{q=q_{s}}^{T}N\left(q_{s}\right)+k\\
+\\
+\beta\left(\theta\right) & =B_{\perp}M\left(\Phi\left(\theta\right)\right)\Phi''\left(\theta\right)+B_{\perp}C\left(\Phi\left(\theta\right),\Phi'\left(\theta\right)\right)\Phi'\left(\theta\right)\\
+ & =B_{\perp}M\left(\Phi\left(\theta\right)\right)k\frac{L\left(q_{s}\right)}{\left\Vert L\left(q_{s}\right)\right\Vert ^{2}}+B_{\perp}C\left(\Phi\left(\theta\right),N\left(q_{s}\right)+k\frac{L\left(q_{s}\right)}{\left\Vert L\left(q_{s}\right)\right\Vert ^{2}}\theta\right)\left(N\left(q_{s}\right)+k\frac{L\left(q_{s}\right)}{\left\Vert L\left(q_{s}\right)\right\Vert ^{2}}\theta\right)\\
+\beta\left(0\right) & =k+B_{\perp}C\left(q_{s},N\left(q_{s}\right)\right)\left(N\left(q_{s}\right)\right)\\
+\gamma\left(\theta\right) & =B_{\perp}G\left(q_{s}+N\left(q_{s}\right)\theta+\frac{k}{2}L\left(q_{s}\right)\theta^{2}\right)\\
+\gamma\left(0\right) & =B_{\perp}G\left(q_{s}\right)
+\end{align*}
+
+\end_inset
+
+Вычисляем
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+L^{T}N & =B_{\perp}M\left(q\right)\mathrm{adj}M\left(q\right)B=\\
+ & =B_{\perp}M\left(q\right)M^{-1}\left(q\right)B\det M=0
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+M\left(q\right) & =\left(\begin{array}{cc}
+p_{1}+2p_{2}\cos q_{s,2} & p_{3}+p_{2}\cos q_{s,2}\\
+p_{3}+p_{2}\cos q_{s,2} & p_{3}
+\end{array}\right)\\
+G & =-g\left(\begin{array}{c}
+p_{4}\sin q_{1}+p_{5}\sin\left(q_{1}+q_{2}\right)\\
+p_{5}\sin\left(q_{1}+q_{2}\right)
+\end{array}\right)\\
+\mathbf{adj}M\left(q_{s}\right) & =\left(\begin{array}{cc}
+p_{3} & -p_{3}-p_{2}\cos q_{s,2}\\
+-p_{3}-p_{2}\cos q_{s,2} & p_{1}+2p_{2}\cos q_{s,2}
+\end{array}\right)\\
+B & =\left(\begin{array}{c}
+1\\
+0
+\end{array}\right)\\
+B_{\perp} & =\left(0,1\right)\\
+N\left(q\right) & =\mathbf{adj}M\left(q\right)B=\left(\begin{array}{c}
+p_{3}\\
+-p_{3}-p_{2}\cos q_{2}
+\end{array}\right)\\
+L\left(q\right) & =M\left(q\right)B_{\perp}^{T}=\left(\begin{array}{c}
+p_{3}+p_{2}\cos q_{s,2}\\
+p_{3}
+\end{array}\right)\\
+\frac{L\left(q\right)}{\left\Vert L\left(q\right)\right\Vert ^{2}} & =\frac{1}{\left(p_{3}+p_{2}\cos q_{2}\right)^{2}+p_{3}^{2}}\left(\begin{array}{c}
+p_{3}+p_{2}\cos q_{2}\\
+p_{3}
+\end{array}\right)\\
+\frac{\partial L\left(q\right)}{\partial q} & =\left(\begin{array}{cc}
+0 & -p_{2}\sin q_{2}\\
+0 & 0
+\end{array}\right)\\
+\frac{\partial L\left(q\right)}{\partial q}N\left(q\right) & =\left(\begin{array}{cc}
+0 & -p_{2}\sin q_{2}\\
+0 & 0
+\end{array}\right)\left(\begin{array}{c}
+p_{3}\\
+-p_{3}-p_{2}\cos q_{2}
+\end{array}\right)\\
+ & =\left(\begin{array}{c}
+\left(p_{3}+p_{2}\cos q_{2}\right)p_{2}\sin q_{2}\\
+0
+\end{array}\right)\\
+\left(\frac{\partial L\left(q\right)}{\partial q}N\left(q\right)\right)^{T}N\left(q\right) & =\left(\begin{array}{c}
+\left(p_{3}+p_{2}\cos q_{2}\right)p_{2}\sin q_{2}\\
+0
+\end{array}\right)^{T}\left(\begin{array}{c}
+p_{3}\\
+-p_{3}-p_{2}\cos q_{2}
+\end{array}\right)\\
+ & =\left(p_{2}p_{3}^{2}+p_{3}p_{2}^{2}\cos q_{2}\right)\sin q_{2}
+\end{align*}
+
+\end_inset
+
+Ещё нужно посчитать 
+\begin_inset Formula 
+\[
+B_{\perp}C\left(q_{s},N\left(q_{s}\right)\right)N\left(q_{s}\right)=p_{2}p_{3}^{2}\sin\theta_{2,s}
+\]
+
+\end_inset
+
+Тогда
+\begin_inset Formula 
+\begin{align*}
+\alpha'\left(0\right) & =k+p_{2}p_{3}^{2}\sin q_{2,s}+\frac{1}{2}p_{3}p_{2}^{2}\sin2q_{2,s}\\
+\beta\left(0\right) & =k+p_{2}p_{3}^{2}\sin q_{2,s}\\
+\gamma\left(0\right) & =-gp_{5}\sin\left(q_{1,s}+q_{2,s}\right)
+\end{align*}
+
+\end_inset
+
+1.
+ Случай 
+\begin_inset Formula 
+\begin{align*}
+k+p_{2}p_{3}^{2}\sin q_{2,s}+\frac{1}{2}p_{3}p_{2}^{2}\sin2q_{2,s} & >0\\
+k+p_{2}p_{3}^{2}\sin q_{2,s}+\frac{1}{6}p_{3}p_{2}^{2}\sin2q_{2,s} & <0\\
+\sin\left(q_{1,s}+q_{2,s}\right) & <0
+\end{align*}
+
+\end_inset
+
+допустимые конфигурации
+\begin_inset Formula 
+\begin{align*}
+\sin2q_{2,s} & >0\\
+\sin\left(q_{1,s}+q_{2,s}\right) & <0
+\end{align*}
+
+\end_inset
+
+тогда 
+\begin_inset Formula 
+\begin{align*}
+q_{2,s} & \in\left(0..\frac{\pi}{2},\pi..\frac{3\pi}{2},...\right)\\
+q_{1,s}+q_{2,s} & \in\left(\pi..2\pi,3\pi..4\pi,...\right)
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+2.
+ Случай 
+\begin_inset Formula 
+\begin{align*}
+k+p_{2}p_{3}^{2}\sin q_{2,s}+\frac{1}{2}p_{3}p_{2}^{2}\sin2q_{2,s} & <0\\
+k+p_{2}p_{3}^{2}\sin q_{2,s}+\frac{1}{6}p_{3}p_{2}^{2}\sin2q_{2,s} & >0\\
+\sin\left(q_{1,s}+q_{2,s}\right) & >0
+\end{align*}
+
+\end_inset
+
+допустимые конфигурации
+\begin_inset Formula 
+\begin{align*}
+\sin2q_{2,s} & <0\\
+\sin\left(q_{1,s}+q_{2,s}\right) & >0
+\end{align*}
+
+\end_inset
+
+тогда 
+\begin_inset Formula 
+\begin{align*}
+q_{2,s} & \in\left(\frac{\pi}{2}..\pi,\frac{3\pi}{2}..2\pi,...\right)\\
+q_{1,s}+q_{2,s} & \in\left(0..\pi,2\pi..3\pi,...\right)
+\end{align*}
+
+\end_inset
+
+Если 
+\begin_inset Formula $q_{1,s}+q_{2,s}=\frac{\pi}{2}$
+\end_inset
+
+, то 
+\begin_inset Formula $q_{2,s}\in\left(\frac{\pi}{2}..\pi\right)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $q_{1,s}=2\pi-\frac{\pi}{4}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $q_{2,s}=\frac{\pi}{2}-q_{1,s}=\frac{3\pi}{4}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/msurov/sirius/double-pendulum/fig/pendubot-schematic.pdf
+	width 5cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Конфигурации, в окрестности которых есть периодические траектории 
+\begin_inset Formula 
+\begin{align*}
+q_{2} & \in\left(0,\frac{\pi}{2}\right)+\pi n\quad\text{and}\\
+q_{1}+q_{2} & \in\left(\pi,2\pi\right)+2\pi k,\quad\text{where}\quad n,k\in\mathbb{Z}
+\end{align*}
+
+\end_inset
+
+или
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+q_{2} & \in\left(-\frac{\pi}{2},0\right)+\pi n\quad\text{and}\\
+q_{1}+q_{2} & \in\left(0..\pi\right)+2\pi k,\quad\text{where}\quad n,k\in\mathbb{Z}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+—
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\pi-q_{2}<q_{1}<2\pi-q_{2}$
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document

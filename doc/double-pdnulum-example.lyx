@@ -1,0 +1,755 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing onehalf
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\use_minted 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 3cm
+\topmargin 2cm
+\rightmargin 2cm
+\bottommargin 2cm
+\headheight 1cm
+\headsep 1cm
+\footskip 1cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Section
+Example: Periodic Motion Planning for the Pendubot System 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename /home/msurov/sirius/double-pendulum/fig/pendubot-schematic.pdf
+	width 6cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:pendubot-schematic"
+
+\end_inset
+
+ The Pendubot system.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+To illustrate the main contribution of this paper, we explore the existence
+ of forced periodic trajectories of the Pendubot system
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Spong1998"
+literal "false"
+
+\end_inset
+
+.
+ The system represents a two links robot with revolute joints that moves
+ within a vertical plane.
+ The first joint is actuated by a DC motor, while the second joint rotates
+ freely.
+ Let the generalized coordinates 
+\begin_inset Formula $q\in\mathbb{R}^{2}$
+\end_inset
+
+ be set as in Figure
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:pendubot-schematic"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ and let the DC motor operate in torque control mode.
+ Then, dynamics of the robot are written as 
+\begin_inset Formula 
+\begin{equation}
+M\left(q\right)\ddot{q}+C\left(q,\dot{q}\right)\dot{q}+G\left(q\right)=Bu\label{eq:pendubot-dynamics}
+\end{equation}
+
+\end_inset
+
+with matrix coefficients 
+\begin_inset Formula 
+\begin{align*}
+ & \,M\left(q\right)=\left(\begin{array}{cc}
+p_{1}+2p_{2}\cos q_{2} & p_{3}+p_{2}\cos q_{2}\\
+p_{3}+p_{2}\cos q_{2} & p_{3}
+\end{array}\right),\\
+ & \,C\left(q,\dot{q}\right)\dot{q}=p_{2}\sin q_{2}\left(\begin{array}{c}
+-2\dot{q}_{2}\dot{q}_{1}-\dot{q}_{2}^{2}\\
+\dot{q}_{1}^{2}
+\end{array}\right),\quad B=\left(\begin{array}{c}
+1\\
+0
+\end{array}\right),\\
+ & \,G\left(q\right)=g\left(\begin{array}{c}
+-p_{4}\sin q_{1}-p_{5}\sin\left(q_{1}+q_{2}\right)\\
+-p_{5}\sin\left(q_{1}+q_{2}\right)
+\end{array}\right),
+\end{align*}
+
+\end_inset
+
+where 
+\begin_inset Formula $g,p_{1},...,p_{5}$
+\end_inset
+
+ are physical parameters of the robot, depending on geometric relations
+ and mass distribution.
+ We set 
+\begin_inset Formula 
+\begin{align*}
+ & \,p_{1}=0.4\text{kg}\cdot\text{m}^{2}, & \quad & \,p_{2}=0.1\text{kg}\cdot\text{m}^{2}, & \quad & \,p_{3}=0.1\text{kg}\cdot\text{m}^{2}, & \quad\\
+ & \,p_{4}=0.3\text{kg}\cdot\text{m}, & \quad & \,p_{5}=0.1\text{kg}\cdot\text{m}, & \quad & \,g=9.81\frac{\text{m}}{\text{s}^{2}}. & \,
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For the Pendubot, we propose identifying configuration space points, a small
+ neighborhood of which possesses periodic trajectories.
+ If we limit ourselves to the case of regular reduced dynamics, then to
+ solve this problem we may consider a linear servo constraint 
+\begin_inset Formula 
+\[
+\Phi\left(\theta\right)=q_{e}+v\theta
+\]
+
+\end_inset
+
+with constants 
+\begin_inset Formula $v\in\mathbb{R}^{2}$
+\end_inset
+
+, 
+\begin_inset Formula $q_{e}\in\mathbb{R}^{2}$
+\end_inset
+
+.
+ According to Theorem
+\begin_inset space ~
+\end_inset
+
+3 formulated in
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Shiriaev2006"
+literal "false"
+
+\end_inset
+
+ we require that the resulting reduced dynamics exhibit a center-type equilibriu
+m at the point 
+\begin_inset Formula $q_{e}$
+\end_inset
+
+.
+ This is achieved when 
+\begin_inset Formula $q_{e}$
+\end_inset
+
+ satisfies the equation
+\begin_inset Formula 
+\begin{equation}
+\gamma\left(0\right)=B_{\perp}G\left(q_{e}\right)=0\label{eq:gamma_eq_0}
+\end{equation}
+
+\end_inset
+
+and there exists 
+\begin_inset Formula $v$
+\end_inset
+
+, such that the system of inequalities
+\begin_inset Formula 
+\begin{align}
+ & \quad\alpha\left(0\right)=B_{\perp}M\left(q_{e}\right)v\ne0\quad\text{and}\label{eq:dgamma_ge_0}\\
+ & \quad\frac{\gamma'\left(0\right)}{\alpha\left(0\right)}=\frac{B_{\perp}\left(\frac{\partial G}{\partial q}\right)_{q=q_{e}}v}{B_{\perp}M\left(q_{e}\right)v}>0\nonumber 
+\end{align}
+
+\end_inset
+
+holds true.
+ The system (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:gamma_eq_0"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:dgamma_ge_0"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+) is written explicitly as 
+\begin_inset Formula 
+\begin{align*}
+\sin\left(q_{e,1}+q_{e,2}\right) & =0,\\
+\cos\left(q_{e,1}+q_{e,2}\right)v_{1}+\cos\left(q_{e,1}+q_{e,2}\right)v_{2} & <0,\\
+\left(p_{3}+p_{2}\cos q_{e,2}\right)v_{1}+p_{3}v_{2} & >0
+\end{align*}
+
+\end_inset
+
+and it is solvable when 
+\begin_inset Formula 
+\[
+q_{e,1}+q_{e,2}=\pi k,\quad q_{e,1}\ne\frac{\pi}{2}+\pi n,\quad k,n\in\mathbb{Z}.
+\]
+
+\end_inset
+
+As a result, we conclude that the Pendubot possesses periodic trajectories
+ in a vicinity of configurations where the second link of the robot is oriented
+ vertically, while the first link can take any position except for the horizonta
+l one.
+ 
+\end_layout
+
+\begin_layout Standard
+The question immediately arises: 
+\shape italic
+are there periodic trajectories near other configurations of the robot?
+\shape default
+ 
+\shape italic
+For example, does a periodic trajectory exist in which the robot's second
+ link oscillates near the horizontal position?
+\end_layout
+
+\begin_layout Standard
+To address this question, let us consider the case when the reduced dynamics
+ are not supposed to be regular.
+ In this regard, we introduce the servo constraint 
+\begin_inset Formula 
+\begin{align}
+ & \Phi\left(\theta\right)=q_{s}+N\left(q_{s}\right)\theta+\frac{k}{2}F\left(q_{s}\right)\theta^{2},\quad\text{where}\label{eq:singular_connection}\\
+ & N\left(q\right):=M^{-1}\left(q\right)B,\quad L\left(q\right):=M\left(q\right)B_{\perp}^{T}\nonumber 
+\end{align}
+
+\end_inset
+
+and 
+\begin_inset Formula $k\in\mathbb{R},\,q_{s}\in\mathbb{R}^{2}$
+\end_inset
+
+ are constant parameters.
+ The constraint 
+\begin_inset Formula $\Phi\left(\theta\right)$
+\end_inset
+
+, as can be easily seen, ensures that the reduced dynamics have a singularity
+ at 
+\begin_inset Formula $\theta=0$
+\end_inset
+
+, which corresponds to the robot's configuration 
+\begin_inset Formula $q_{s}$
+\end_inset
+
+.
+ To determine whether the singular point is permeable, we outline the conditions
+ of Theorem
+\begin_inset space ~
+\end_inset
+
+1 for its neighborhood
+\begin_inset Formula 
+\begin{align}
+\alpha'\left(0\right)=k+\left(\frac{\partial L\left(q\right)}{\partial q}N\left(q_{s}\right)\right)_{q=q_{s}}^{T}N\left(q_{s}\right) & \ne0\quad\text{and}\label{eq:inequalities_general_form}\\
+\frac{\beta\left(0\right)}{\alpha'\left(0\right)}=\frac{k+B_{\perp}C\left(q_{s},N\left(q_{s}\right)\right)N\left(q_{s}\right)}{k+\left(\frac{\partial L\left(q\right)}{\partial q}N\left(q_{s}\right)\right)_{q=q_{s}}^{T}N\left(q_{s}\right)} & <-\frac{1}{2}\quad\text{and}\nonumber \\
+\frac{\gamma\left(0\right)}{\alpha'\left(0\right)}=\frac{-gp_{5}\sin\left(\theta_{1}+\theta_{2}\right)}{k+\left(\frac{\partial L\left(q\right)}{\partial q}N\left(q_{s}\right)\right)_{q=q_{s}}^{T}N\left(q_{s}\right)} & >0.\nonumber 
+\end{align}
+
+\end_inset
+
+This system of ineqaulities can be written as a union of two systems linear
+ in 
+\begin_inset Formula $k$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Itemize
+either 
+\begin_inset Formula $\alpha'\left(0\right)>0$
+\end_inset
+
+ and then 
+\begin_inset Formula $\frac{\beta\left(0\right)}{\alpha'\left(0\right)}<-\frac{1}{2}$
+\end_inset
+
+ and 
+\begin_inset Formula $\gamma\left(0\right)>0$
+\end_inset
+
+ which evaluate to
+\begin_inset Formula 
+\begin{align*}
+kd^{2}+p_{2}p_{3}^{2}\sin q_{s,2}+\frac{1}{2}p_{2}^{2}p_{3}2\sin q_{s,2} & >0\quad\text{and}\\
+-kd^{2}-p_{2}p_{3}^{2}\sin q_{s,2}-\frac{1}{6}p_{2}^{2}p_{3}\sin2q_{s,2} & >0\quad\text{and}\\
+-\sin\left(q_{s,1}+q_{s,2}\right) & >0,
+\end{align*}
+
+\end_inset
+
+where 
+\begin_inset Formula $d^{2}:=\left(\det M\left(q_{s}\right)\right)^{2}=\left(p_{3}\left(p_{1}+2p_{2}\cos q_{s,2}\right)-\left(p_{3}+p_{2}\cos q_{s,2}\right)^{2}\right)^{2}$
+\end_inset
+
+ used;
+\end_layout
+
+\begin_layout Itemize
+or 
+\begin_inset Formula $\alpha'\left(0\right)<0$
+\end_inset
+
+ and then 
+\begin_inset Formula $\frac{\beta\left(0\right)}{\alpha'\left(0\right)}<-\frac{1}{2}$
+\end_inset
+
+ and 
+\begin_inset Formula $\gamma\left(0\right)<0$
+\end_inset
+
+ which evaluate to
+\begin_inset Formula 
+\begin{align*}
+-kd^{2}-p_{2}p_{3}^{2}\sin q_{s,2}-\frac{1}{2}p_{2}^{2}p_{3}\sin2q_{s,2} & >0\quad\text{and}\\
+kd^{2}+p_{3}^{2}p_{2}\sin q_{s,2}+\frac{1}{6}p_{3}p_{2}^{2}\sin2q_{s,2} & >0\quad\text{and}\\
+\sin\left(q_{s,1}+q_{s,2}\right) & >0.
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The elementary analysis shows that one of these systems has a solution iff
+\end_layout
+
+\begin_layout Itemize
+eigher 
+\begin_inset Formula $q_{s,2}\in\left(0,\frac{\pi}{2}\right)+\pi k$
+\end_inset
+
+ and 
+\begin_inset Formula $q_{s,1}+q_{s,2}\in\left(-\pi,0\right)+2\pi n$
+\end_inset
+
+;
+\end_layout
+
+\begin_layout Itemize
+or 
+\begin_inset Formula $q_{s,2}\in\left(-\frac{\pi}{2},0\right)+\pi k$
+\end_inset
+
+ and 
+\begin_inset Formula $q_{s,1}+q_{s,2}\in\left(0,\pi\right)+2\pi n$
+\end_inset
+
+,
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $n,k\in\mathbb{Z}$
+\end_inset
+
+.
+ The set of these configurations is shown in Figure
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:pendubot-conf-space"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ This conclusion holds true for all positive 
+\begin_inset Formula $g,p_{1},...,p_{5}$
+\end_inset
+
+ and general assumption of positive defenitness of 
+\begin_inset Formula $M\left(q\right)$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+The result of the analysis demonstrates, in particular, the presence of
+ a periodic trajectory when the robot's second link oscillates near the
+ horizontal position.
+ Indeed, if we set 
+\begin_inset Formula $q_{s,1}+q_{s,2}=\frac{\pi}{2}$
+\end_inset
+
+, then the first link of the robot may take an orientation from the set
+ 
+\begin_inset Formula $q_{s,1}\in\left(\frac{\pi}{2},\pi\right)+\pi k$
+\end_inset
+
+.
+ In Figure
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:pendubot-oscillates-near-horizontal"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ we illustrate one of such trajectories.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename /home/msurov/sirius/double-pendulum/fig/configurations_with_oscillations.pdf
+	width 6cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:pendubot-conf-space"
+
+\end_inset
+
+Configuration Space of the Pendubot.
+ The blue regions indicate the configurations where the conditions of Theorem
+ 1 may be satisfied with an appropriate servo constraint, and thus, periodic
+ trajectories exist near each of these configurations.
+ The brown line identifies the equilibrium points of the robot.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /home/msurov/sirius/double-pendulum/fig/horizontal_oscillations_trajectory.svg
+	width 8cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Projections of phase trajectory and control input
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /home/msurov/sirius/double-pendulum/fig/horizontal_oscillations_schematic.svg
+	width 8cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+The sequence of configurations
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:pendubot-oscillates-near-horizontal"
+
+\end_inset
+
+ A periodic trajectory of the Pendubot system when its second links oscillates
+ near horizontal position.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /home/msurov/sirius/double-pendulum/fig/horizontal_oscillations_phase.svg
+	width 8cm
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:pendubot-phase-portrait"
+
+\end_inset
+
+ Phase portrait of the reduced dynamics of the Pendubot.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "Shiriaev2006"
+literal "false"
+
+\end_inset
+
+ Shiriaev, A.
+ and Robertsson, A.
+ and Perram, J.
+ and Sandberg, A., Periodic motion planning for virtually constrained Euler–Lagra
+nge systems, Systems & Control Letters, volume 55, 2006.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "Spong1998"
+literal "false"
+
+\end_inset
+
+ Spong, M.W., Underactuated Mechanical Systems, Control Problems in Robotics
+ and Automation, B.
+ Siciliano and K.P.
+ Valavanis (Eds), Lecture Notes in Control and Information Sciences 230
+ Spinger-Verlag, London, UK, 1997, presented at the International Workshop
+ on Control Problems in Robotics and Automation: Future Directions Hyatt
+ Regency, San Diego, California, Dec.
+ 1997.
+\end_layout
+
+\end_body
+\end_document
