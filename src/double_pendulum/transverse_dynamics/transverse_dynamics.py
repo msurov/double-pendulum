@@ -95,11 +95,19 @@ class TransverseCoordinates:
     self.u_ref_expr = self.u_ref(self.theta)
 
   def __verify_solvability(self, A):
-    A_val = ca.substitute(A, self.theta, 0)
-    A_val = ca.substitute(A_val, self.xi, 0)
-    A_val = ca.evalf(A_val)
-    abs_det = abs(ca.det(A_val))
-    assert abs_det > 1e-6, "Transverse parameters are incorrect, try to change projection matrix"
+    npts = 1000
+    det_vals = np.zeros(npts)
+    theta = np.linspace(0, 2 * np.pi, npts)
+
+    for i in range(npts):
+      A_val = ca.substitute(A, self.theta, theta[i])
+      A_val = ca.substitute(A_val, self.xi, ca.DM.zeros(*self.xi.shape))
+      A_val = ca.evalf(A_val)
+      det_vals[i] = ca.det(A_val)
+
+    det_sign = np.sign(det_vals[0])
+    det_vals = det_sign * det_vals
+    assert np.all(det_vals > 1e-5), "Transverse parameters are incorrect, try to change projection matrix"
 
   def __init_inverse_transform(self):
     R"""
@@ -129,8 +137,8 @@ class TransverseCoordinates:
     self.inverse_transform_expr = inverse_transform_expr
 
     inverse_jac_expr = ca.horzcat(
-      ca.jacobian(inverse_transform_expr, xi),
-      ca.jacobian(inverse_transform_expr, theta)
+      ca.jacobian(inverse_transform_expr, theta),
+      ca.jacobian(inverse_transform_expr, xi)
     )
     self.inverse_jac_expr = inverse_jac_expr
 
@@ -166,8 +174,8 @@ class TransverseDynamics:
     self.theta = coords.theta
 
     self.D_xi_expr = None
-    self.__init_transverse_dynamics()
-    self.D_xi_fun = ca.Funcion('Dxi', [coords.theta, coords.xi, coords.w], [self.D_xi_expr])
+    self.__init_transverse_dynamics(dynamics, coords)
+    self.D_xi_fun = ca.Function('Dxi', [coords.theta, coords.xi, self.u_stab], [self.D_xi_expr])
 
     self.A_expr = None
     self.B_expr = None
@@ -179,25 +187,27 @@ class TransverseDynamics:
       coords.inverse_transform_expr,
       coords.u_ref_expr + self.u_stab
     )
-    dot_xi_theta = coords.inverse_jac_expr @ dot_x
-    D_xi_expr = dot_xi_theta[0:n-1] / dot_xi_theta[n-1]
+    time_deriv_theta_xi = coords.inverse_jac_expr @ dot_x
+    time_deriv_theta = time_deriv_theta_xi[0]
+    time_deriv_xi = time_deriv_theta_xi[1:]
+    D_xi_expr = time_deriv_xi / time_deriv_theta
     self.D_xi_expr = D_xi_expr
 
   def __linearize_transverse_dynamics(self):
-    expr = ca.substitute(self.D_xi_expr, self.u_stab, 0)
+    expr = ca.substitute(self.D_xi_expr, self.u_stab, ca.DM.zeros(*self.u_stab.shape))
     expr = ca.jacobian(expr, self.xi)
-    expr = ca.substitute(expr, self.xi, 0)
+    expr = ca.substitute(expr, self.xi, ca.DM.zeros(*self.xi.shape))
     A = ca.simplify(expr)
     self.A_expr = A
 
     expr = ca.jacobian(self.D_xi_expr, self.u_stab)
-    expr = ca.substitute(expr, self.u_stab, 0)
-    expr = ca.substitute(expr, self.xi, 0)
+    expr = ca.substitute(expr, self.u_stab, ca.DM.zeros(*self.u_stab.shape))
+    expr = ca.substitute(expr, self.xi, ca.DM.zeros(*self.xi.shape))
     B = ca.simplify(expr)
     self.B_expr = B
 
-    expr = ca.substitute(self.D_xi_expr, self.u_stab, 0)
-    expr = ca.substitute(expr, self.xi, 0)
+    expr = ca.substitute(self.D_xi_expr, self.u_stab, ca.DM.zeros(*self.u_stab.shape))
+    expr = ca.substitute(expr, self.xi, ca.DM.zeros(*self.xi.shape))
     rest = ca.simplify(expr)
     self.rest_expr = rest
   

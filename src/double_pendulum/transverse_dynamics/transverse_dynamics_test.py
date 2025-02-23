@@ -48,9 +48,11 @@ def make_sample_data():
   )
   coords = TransverseCoordinates(tr_orig, trans_par)
   trajsp = make_interp_spline(tr_orig.time, tr_orig.phase, k=5, bc_type='periodic')
+  trans_dyn = TransverseDynamics(dynamics, coords)
   return {
     'par': trans_par,
     'dynamics': dynamics,
+    'trans_dyn': trans_dyn,
     'constr': constr,
     'reduced': reduced,
     'coords': coords,
@@ -97,8 +99,30 @@ def test_inv_transform():
     assert np.allclose(xi1, xi2)
     assert are_angles_close(theta1, theta2)
 
+def test_jacobians():
+  sampledata = make_sample_data()
+  traj = sampledata['traj']
+  coords = sampledata['coords']
+
+  np.random.seed(0)
+
+  for i in range(100):
+    xi = 1e-2 * np.random.normal(size=3)
+    theta = 4 * np.pi * np.random.rand()
+    x = coords.inverse_transform_fun(theta, xi)
+    J = coords.forward_jac_fun(x)
+    Jinv = coords.inverse_jac_fun(theta, xi)
+    assert np.allclose(J @ Jinv, np.eye(4))
+
 def test_transverse_dynamics():
   sampledata = make_sample_data()
+  coords = sampledata['coords']
+  transdyn = sampledata['trans_dyn']
 
 def test_transverse_linearization():
   pass
+
+test_forward_transform()
+test_inv_transform()
+test_transverse_dynamics()
+test_jacobians()
