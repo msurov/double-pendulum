@@ -212,7 +212,7 @@ def process_sing_traj_at_sing_point(singpt):
   motion_schematic(tr_orig, par)
   plt.show()
 
-def main(isample):
+def main():
   positions = [
     [-2.045583727546234, 0.6462469356355233],
     [-1.7050253662106756, -3.30435292667277],
@@ -234,6 +234,26 @@ def main(isample):
   for pos in positions:
     process_sing_traj_at_sing_point(pos)
 
+def show_sample_traj():
+  par = double_pendulum_param_default
+  dynamics = DoublePendulumDynamics(par)
+  singpt = np.array([-2.2, 1.12])
+  constr = get_sing_constr_at(dynamics, singpt)
+  reduced = ReducedDynamics(dynamics, constr)
+  tr_left = solve_reduced(reduced, [-0.05, -1e-4], 0.0, max_step=1e-4)
+  tr_right = solve_reduced(reduced, [0.08, 1e-4], 0.0, max_step=1e-4)
+  tr_up = traj_join(tr_left, tr_right[::-1])
+  tr_closed = traj_forth_and_back(tr_up)
+  tr_reduced = traj_repeat(tr_closed, 2)
+  tr_orig = reconstruct_trajectory(constr, reduced, dynamics, tr_reduced)
+
+  # show_trajectory(tr_orig, tr_reduced)
+  show_phase_prortrait(reduced, tr_closed)
+  plt.show()
+
+  # motion_schematic(tr_orig, par)
+  # plt.show()
+
 if __name__ == '__main__':
   plt.rcParams.update({
       "text.usetex": True,
@@ -242,4 +262,5 @@ if __name__ == '__main__':
   })
 
   np.set_printoptions(suppress=True)
-  main(isample=16)
+  # main()
+  show_sample_traj()

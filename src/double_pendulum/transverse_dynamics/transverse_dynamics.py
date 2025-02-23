@@ -14,6 +14,7 @@ from common.numpy_utils import (
 )
 import matplotlib.pyplot as plt
 from scipy.interpolate import make_interp_spline
+from typing import Tuple
 
 
 @dataclass
@@ -86,12 +87,12 @@ class TransverseCoordinates:
     else:
       bc_type = None
 
-    self.__xsp = make_interp_spline(theta, traj.phase, k=5, bc_type=bc_type)
-    self.x_ref = MXSpline(self.__xsp)
+    self.xsp = make_interp_spline(theta, traj.phase, k=5, bc_type=bc_type)
+    self.x_ref = MXSpline(self.xsp)
     self.x_ref_expr = self.x_ref(self.theta)
 
-    self.__usp = make_interp_spline(theta, traj.control, k=3, bc_type=bc_type)
-    self.u_ref = MXSpline(self.__usp)
+    self.usp = make_interp_spline(theta, traj.control, k=3, bc_type=bc_type)
+    self.u_ref = MXSpline(self.usp)
     self.u_ref_expr = self.u_ref(self.theta)
 
   def __verify_solvability(self, A):
@@ -164,6 +165,26 @@ class TransverseCoordinates:
     self.forward_transform_expr = ca.vertcat(self.theta_expr, self.xi_expr)
     self.forward_jac_expr = ca.jacobian(self.forward_transform_expr, x)
 
+def compute_theta(phase : np.ndarray, par : TransverseCoordinatesPar) -> np.ndarray:
+  x = (phase - par.proj_plane_origin) @ par.proj_plane_x
+  y = (phase - par.proj_plane_origin) @ par.proj_plane_y
+  theta = -np.arctan2(y, x)
+  return theta
+
+def compute_transverse(phase : np.ndarray, coords : TransverseCoordinates) -> Tuple[np.ndarray, np.ndarray]:
+  match np.shape(phase):
+    case npts,4:
+      arr = np.array([coords.forward_transform_fun(e) for e in phase], float)
+      theta = arr[:,0,0]
+      xi = arr[:,1:,0]
+    case (4,):
+      arr = coords.forward_transform_fun(phase)
+      theta = float(arr[0])
+      xi = np.reshape(arr[1:], (3,))
+    case _: assert False
+
+  return theta, xi
+
 class TransverseDynamics:
   def __init__(self, dynamics : DoublePendulumDynamics, coords : TransverseCoordinates):
     xdim,_ = dynamics.rhs_expr.shape
@@ -181,15 +202,21 @@ class TransverseDynamics:
     self.B_expr = None
     self.rest_expr = None
     self.__linearize_transverse_dynamics()
+    self.A_fun = ca.Function('A', [coords.theta], [self.A_expr])
+    self.B_fun = ca.Function('B', [coords.theta], [self.B_expr])
+    self.rest_fun = ca.Function('B', [coords.theta], [self.rest_expr])
 
   def __init_transverse_dynamics(self, dynamics : DoublePendulumDynamics, coords : TransverseCoordinates):
     dot_x = dynamics.rhs(
       coords.inverse_transform_expr,
       coords.u_ref_expr + self.u_stab
     )
-    time_deriv_theta_xi = coords.inverse_jac_expr @ dot_x
+    self.dot_x_expr = dot_x
+    time_deriv_theta_xi = ca.solve(coords.inverse_jac_expr, dot_x)
     time_deriv_theta = time_deriv_theta_xi[0]
     time_deriv_xi = time_deriv_theta_xi[1:]
+    self.time_deriv_theta_expr = time_deriv_theta
+    self.time_deriv_xi_expr = time_deriv_xi
     D_xi_expr = time_deriv_xi / time_deriv_theta
     self.D_xi_expr = D_xi_expr
 

@@ -71,3 +71,8 @@ def are_angles_close(a : np.ndarray, b : np.ndarray) -> bool:
   normed = 0.5 * (a - b) / np.pi
   rounded = np.round(normed)
   return np.allclose(normed, rounded)
+
+def vectors_dif(a, b):
+  a = np.reshape(a, (-1,))
+  b = np.reshape(b, (-1,))
+  return 1 - np.dot(a, b) / (np.linalg.norm(a) * np.linalg.norm(b))

@@ -157,7 +157,8 @@
 \begin_inset Formula 
 \begin{align*}
 \left(a\sin\theta+b\cos\theta\right)^{T}x & =\left(a\sin\theta+b\cos\theta\right)^{T}x_{0}\\
-\\\xi_{1..2n-2}+Tx_{*}\left(\theta\right) & =Tx
+\left(a\cos\theta-b\sin\theta\right)^{T}x & =\xi_{2n-1}+\left(a\cos\theta-b\sin\theta\right)^{T}x_{*}\left(\theta\right)\\
+Tx & =\xi_{1..2n-2}+Tx_{*}\left(\theta\right)
 \end{align*}
 
 \end_inset
@@ -165,18 +166,7 @@
 Динамика координаты 
 \begin_inset Formula 
 \begin{align*}
-\dot{\theta} & =\frac{a^{T}\left(x-x_{0}\right)b^{T}-b^{T}\left(x-x_{0}\right)a^{T}}{\left(a^{T}\left(x-x_{0}\right)\right)^{2}+\left(b^{T}\left(x-x_{0}\right)\right)^{2}}\dot{x}\\
-\dot{\xi}_{1..2n-2} & =T\cdot\left(\dot{x}-\frac{dx_{*}\left(\theta\right)}{d\theta}\dot{\theta}\right)\\
-\dot{\xi}_{2n-1} & =\left(b^{T}\sin\theta+a^{T}\cos\theta\right)\dot{x}+b\left(x-x_{0}\right)\cos\theta\dot{\theta}-a\left(x-x_{0}\right)\sin\theta\dot{\theta}
-\end{align*}
-
-\end_inset
-
-
-\begin_inset Formula 
-\begin{align*}
-\frac{d\xi_{1..2n-2}}{d\theta} & =T\cdot\left(\frac{\dot{x}}{\dot{\theta}}-\frac{dx_{*}\left(\theta\right)}{d\theta}\right)\\
-\frac{d\xi_{2n-1}}{d\theta} & =\left(b^{T}\sin\theta+a^{T}\cos\theta\right)\frac{\dot{x}}{\dot{\theta}}+b\left(x-x_{0}\right)\cos\theta-a\left(x-x_{0}\right)\sin\theta
+\dot{\theta} & =-\frac{a^{T}\left(x-x_{0}\right)b^{T}-b^{T}\left(x-x_{0}\right)a^{T}}{\left(a^{T}\left(x-x_{0}\right)\right)^{2}+\left(b^{T}\left(x-x_{0}\right)\right)^{2}}\dot{x}
 \end{align*}
 
 \end_inset
@@ -207,11 +197,10 @@ x & =\beta\left(\theta,\xi\right)
  Для системы 
 \begin_inset Formula 
 \begin{align*}
-\dot{x} & =\beta_{\theta}\dot{\theta}+\beta_{\xi}\dot{\xi}\\
- & =\frac{\partial\beta\left(\theta,\xi\right)}{\partial\left(\theta,\xi\right)}\left(\begin{array}{c}
+\dot{x} & =\frac{\partial\beta\left(\theta,\xi\right)}{\partial\left(\theta,\xi\right)}\left(\begin{array}{c}
 \dot{\theta}\\
 \dot{\xi}
-\end{array}\right)
+\end{array}\right)\\
 \end{align*}
 
 \end_inset
