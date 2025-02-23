@@ -1,5 +1,4 @@
 import numpy as np
-from scipy.integrate import solve_ivp
 from double_pendulum.dynamics import (
   DoublePendulumDynamics,
   DoublePendulumParam,
@@ -9,7 +8,13 @@ import casadi as ca
 import matplotlib.pyplot as plt
 from double_pendulum.anim import draw
 import json
-from double_pendulum.motion_planner.reduced_dynamics import ReducedDynamics, solve_reduced
+from double_pendulum.motion_planner.reduced_dynamics import (
+  ReducedDynamics,
+  solve_reduced,
+  solve_periodic,
+  reconstruct_trajectory
+)
+from double_pendulum.anim import draw, animate
 
 
 def get_test_par() -> DoublePendulumParam:
@@ -177,7 +182,54 @@ def test7():
   plt.show()
 
 def test8():
-  pass
+  par = get_test_par()
+  dynamics = DoublePendulumDynamics(par)
+  q0 = ca.DM([
+    2., -2.
+  ])
+  B_perp = ca.DM([[0., 1.]])
+  Phi1 = ca.DM([-0.2,  0.15])
+  theta = ca.SX.sym('theta')
+  constr_expr = q0 + Phi1 * theta
+  constr = ca.Function('constr', [theta], [constr_expr])
+  reduced = ReducedDynamics(dynamics, constr)
+
+  plt.figure('phase portrait', figsize=(3, 3))
+  plotpar = {
+    'color': 'blue',
+    'lw': 0.5,
+    'alpha': 0.5,
+  }
+  plt.plot(0, 0, 'o', color='grey')
+  plt.axhline(0, ls='--', color='grey', lw=1)
+  plt.axvline(0, ls='--', color='grey', lw=1)
+  plt.xlabel(R'$\theta$')
+  plt.ylabel(R'$\dot\theta$')
+
+  for x0 in np.linspace(-0.45, -0.05, 12):
+    tr_reduced = solve_periodic(reduced, x0, 1.0, max_step=1e-3)
+    plt.plot(tr_reduced.coords, tr_reduced.vels, **plotpar)
+  
+  for dx0 in np.linspace(1.0, 2.0, 5):
+    tr_reduced = solve_reduced(reduced, [-0.4, 0.7], dx0, max_step=1e-3)
+    plt.plot(tr_reduced.coords, tr_reduced.vels, **plotpar)
+    plt.plot(tr_reduced.coords, -tr_reduced.vels, **plotpar)
+  
+  ax = plt.gca()
+  ax.set_xlim(-0.4, 0.6)
+  ax.set_ylim(-2, 2)
+  plt.tight_layout()
+  plt.savefig('data/oscillations-around-equilibrium-phase.png')
+
+  tr_reduced = solve_periodic(reduced, -0.4, 1.0, max_step=1e-4)
+  tr_orig = reconstruct_trajectory(constr, reduced, dynamics, tr_reduced)
+
+  a = animate(tr_orig, par, speedup=1., fps=30)
+  plt.tight_layout()
+  plt.grid(True)
+  a.save('data/oscillations-around-equilibrium.mp4')
+  plt.show()
+
 
 if __name__ == '__main__':
   np.set_printoptions(suppress=True)

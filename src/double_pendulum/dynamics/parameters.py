@@ -42,3 +42,13 @@ class DoublePendulumParam2:
   def todict(self):
     d = asdict(self)
     return d
+
+
+double_pendulum_param_default = DoublePendulumParam(
+  lengths=[1., 1.],
+  mass_centers=[0.5, 0.5],
+  masses=[0.2, 0.2],
+  inertia=[0.05, 0.05],
+  actiated_joint=0,
+  gravity_accel=9.81
+)

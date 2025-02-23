@@ -343,29 +343,65 @@ For example, does a periodic trajectory exist in which the robot's second
 To address this question, let us consider the case when the reduced dynamics
  are not supposed to be regular.
  In this regard, we introduce the servo constraint 
+\end_layout
+
+\begin_layout Standard
 \begin_inset Formula 
 \begin{align}
- & \Phi\left(\theta\right)=q_{s}+N\left(q_{s}\right)\theta+\frac{k}{2}F\left(q_{s}\right)\theta^{2},\quad\text{where}\label{eq:singular_connection}\\
- & N\left(q\right):=M^{-1}\left(q\right)B,\quad L\left(q\right):=M\left(q\right)B_{\perp}^{T}\nonumber 
+\Phi\left(\theta\right) & =q_{s}+\left(\begin{array}{c}
+-p_{3}\\
+p_{3}+p_{2}\cos q_{2,s}
+\end{array}\right)\theta+\frac{k}{2p_{3}}\left(\begin{array}{c}
+0\\
+1
+\end{array}\right)\theta^{2},\label{eq:singular_connection}
 \end{align}
 
 \end_inset
 
-and 
+where 
 \begin_inset Formula $k\in\mathbb{R},\,q_{s}\in\mathbb{R}^{2}$
 \end_inset
 
  are constant parameters.
- The constraint 
+ If we select 
+\begin_inset Formula $B_{\perp}=\left(0,1\right)$
+\end_inset
+
+, then the coefficients 
+\begin_inset Formula $\alpha,\beta,\gamma$
+\end_inset
+
+ of the reduced dynamics
+\begin_inset Formula 
+\[
+\alpha\left(\theta\right)\ddot{\theta}+\beta\left(\theta\right)\dot{\theta}^{2}+\gamma\left(\theta\right)=0
+\]
+
+\end_inset
+
+evaluate to
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\alpha\left(\theta\right) & =k\theta+p_{2}p_{3}\cos q_{s,2}-p_{2}p_{3}\cos\left(q_{s,2}+p_{3}\theta+p_{2}\theta\cos q_{s,2}+\frac{k\theta^{2}}{2p_{3}}\right),\\
+\beta\left(\theta\right) & =k+p_{2}p_{3}^{2}\sin\left(p_{3}\theta+p_{2}\theta\cos q_{s,2}+q_{s,2}+\frac{k\theta^{2}}{2p_{3}}\right),\\
+\gamma\left(\theta\right) & =-gp_{5}\sin\left(q_{s,1}+q_{s,2}+p_{2}\theta\cos q_{s,2}+\frac{k\theta^{2}}{2p_{3}}\right).
+\end{align*}
+
+\end_inset
+
+As is readily apparent that the constraint 
 \begin_inset Formula $\Phi\left(\theta\right)$
 \end_inset
 
-, as can be easily seen, ensures that the reduced dynamics have a singularity
- at 
+ ensures the reduced dynamics become singular at 
 \begin_inset Formula $\theta=0$
 \end_inset
 
-, which corresponds to the robot's configuration 
+, corresponing the robot's configuration 
 \begin_inset Formula $q_{s}$
 \end_inset
 
@@ -375,86 +411,123 @@ and
 \begin_inset space ~
 \end_inset
 
-1 for its neighborhood
+1 for its neighborhood:
 \begin_inset Formula 
 \begin{align}
-\alpha'\left(0\right)=k+\left(\frac{\partial L\left(q\right)}{\partial q}N\left(q_{s}\right)\right)_{q=q_{s}}^{T}N\left(q_{s}\right) & \ne0\quad\text{and}\label{eq:inequalities_general_form}\\
-\frac{\beta\left(0\right)}{\alpha'\left(0\right)}=\frac{k+B_{\perp}C\left(q_{s},N\left(q_{s}\right)\right)N\left(q_{s}\right)}{k+\left(\frac{\partial L\left(q\right)}{\partial q}N\left(q_{s}\right)\right)_{q=q_{s}}^{T}N\left(q_{s}\right)} & <-\frac{1}{2}\quad\text{and}\nonumber \\
-\frac{\gamma\left(0\right)}{\alpha'\left(0\right)}=\frac{-gp_{5}\sin\left(\theta_{1}+\theta_{2}\right)}{k+\left(\frac{\partial L\left(q\right)}{\partial q}N\left(q_{s}\right)\right)_{q=q_{s}}^{T}N\left(q_{s}\right)} & >0.\nonumber 
+\alpha'\left(0\right)=k+\frac{1}{2}p_{2}^{2}p_{3}\sin2q_{s,2}+p_{2}p_{3}^{2}\sin q_{s,2}>0 & \quad\text{and}\label{eq:inequalities_general_form}\\
+\frac{\beta\left(0\right)}{\alpha'\left(0\right)}=\frac{k+p_{2}p_{3}^{2}\sin q_{s,2}}{k+\frac{1}{2}p_{2}^{2}p_{3}\sin2q_{s,2}+p_{2}p_{3}^{2}\sin q_{s,2}} & <-\frac{1}{2}\quad\text{and}\nonumber \\
+\gamma\left(0\right)=-gp_{5}\sin\left(q_{s,1}+q_{s,2}\right) & >0.\nonumber 
 \end{align}
 
 \end_inset
 
-This system of ineqaulities can be written as a union of two systems linear
- in 
+We represent the conditions 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:inequalities_general_form"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ as a system of linear inequalities in terms of in terms of 
 \begin_inset Formula $k$
 \end_inset
 
 :
 \end_layout
 
-\begin_layout Itemize
-either 
-\begin_inset Formula $\alpha'\left(0\right)>0$
-\end_inset
-
- and then 
-\begin_inset Formula $\frac{\beta\left(0\right)}{\alpha'\left(0\right)}<-\frac{1}{2}$
-\end_inset
-
- and 
-\begin_inset Formula $\gamma\left(0\right)>0$
-\end_inset
-
- which evaluate to
+\begin_layout Standard
 \begin_inset Formula 
 \begin{align*}
-kd^{2}+p_{2}p_{3}^{2}\sin q_{s,2}+\frac{1}{2}p_{2}^{2}p_{3}2\sin q_{s,2} & >0\quad\text{and}\\
--kd^{2}-p_{2}p_{3}^{2}\sin q_{s,2}-\frac{1}{6}p_{2}^{2}p_{3}\sin2q_{s,2} & >0\quad\text{and}\\
--\sin\left(q_{s,1}+q_{s,2}\right) & >0,
+-p_{2}p_{3}^{2}\sin q_{s,2}-\frac{1}{2}p_{2}^{2}p_{3}\sin2q_{s,2} & <k\\
+-p_{2}p_{3}^{2}\sin q_{s,2}-\frac{1}{6}p_{2}^{2}p_{3}\sin2q_{s,2} & >k\\
+\sin\left(q_{s,1}+q_{s,2}\right) & <0,
 \end{align*}
 
 \end_inset
 
-where 
-\begin_inset Formula $d^{2}:=\left(\det M\left(q_{s}\right)\right)^{2}=\left(p_{3}\left(p_{1}+2p_{2}\cos q_{s,2}\right)-\left(p_{3}+p_{2}\cos q_{s,2}\right)^{2}\right)^{2}$
+which directly provides the solvability set: at a given point 
+\begin_inset Formula $q_{s}$
 \end_inset
 
- used;
-\end_layout
-
-\begin_layout Itemize
-or 
-\begin_inset Formula $\alpha'\left(0\right)<0$
+ there exists a 
+\begin_inset Formula $k$
 \end_inset
 
- and then 
-\begin_inset Formula $\frac{\beta\left(0\right)}{\alpha'\left(0\right)}<-\frac{1}{2}$
+ satisfying 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:inequalities_general_form"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ iff 
+\begin_inset Formula $q_{s,2}\in\left(0,\frac{\pi}{2}\right)+\pi m$
 \end_inset
 
  and 
-\begin_inset Formula $\gamma\left(0\right)<0$
+\begin_inset Formula $q_{s,1}+q_{s,2}\in\left(-\pi,0\right)+2\pi n$
 \end_inset
 
- which evaluate to
-\begin_inset Formula 
-\begin{align*}
--kd^{2}-p_{2}p_{3}^{2}\sin q_{s,2}-\frac{1}{2}p_{2}^{2}p_{3}\sin2q_{s,2} & >0\quad\text{and}\\
-kd^{2}+p_{3}^{2}p_{2}\sin q_{s,2}+\frac{1}{6}p_{3}p_{2}^{2}\sin2q_{s,2} & >0\quad\text{and}\\
-\sin\left(q_{s,1}+q_{s,2}\right) & >0.
-\end{align*}
-
+, where 
+\begin_inset Formula $n,m\in\mathbb{Z}$
 \end_inset
 
-
+.
+ 
 \end_layout
 
 \begin_layout Standard
-The elementary analysis shows that one of these systems has a solution iff
+It is easy to show that using a left annihilator of the opposite direction
+ 
+\begin_inset Formula $B_{\perp}=\left(0,-1\right)$
+\end_inset
+
+ alters the signs of the coefficients 
+\begin_inset Formula $\alpha,\beta,\gamma$
+\end_inset
+
+ in the reduced dynamics.
+ Consequently, the conditions of Theorem
+\begin_inset space ~
+\end_inset
+
+1 lead to a different system of inequalities
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+-p_{2}p_{3}^{2}\sin q_{s,2}-\frac{1}{2}p_{2}^{2}p_{3}\sin2q_{s,2} & >k\label{eq:ineqs_v2}\\
+-p_{2}p_{3}^{2}\sin q_{s,2}-\frac{1}{6}p_{2}^{2}p_{3}\sin2q_{s,2} & <k\nonumber \\
+\sin\left(q_{s,1}+q_{s,2}\right) & >0.\nonumber 
+\end{align}
+
+\end_inset
+
+In this case the solvability criteria becomes: 
+\begin_inset Formula $q_{s,2}\in\left(-\frac{\pi}{2},0\right)+\pi m$
+\end_inset
+
+ and 
+\begin_inset Formula $q_{s,1}+q_{s,2}\in\left(0,\pi\right)+2\pi n$
+\end_inset
+
+.
+ As a result, we infer that the Pendubot in a vicinity of 
+\begin_inset Formula $q_{s}$
+\end_inset
+
+ satisfying
 \end_layout
 
 \begin_layout Itemize
-eigher 
+either 
 \begin_inset Formula $q_{s,2}\in\left(0,\frac{\pi}{2}\right)+\pi k$
 \end_inset
 
@@ -474,16 +547,16 @@ or
 \begin_inset Formula $q_{s,1}+q_{s,2}\in\left(0,\pi\right)+2\pi n$
 \end_inset
 
-,
-\end_layout
-
-\begin_layout Standard
-where 
+, where 
 \begin_inset Formula $n,k\in\mathbb{Z}$
 \end_inset
 
-.
- The set of these configurations is shown in Figure
+
+\end_layout
+
+\begin_layout Standard
+possesses periodic trajectories.
+ The set of such points is shown in Figure
 \begin_inset space ~
 \end_inset
 
@@ -498,33 +571,45 @@ noprefix "false"
 \end_inset
 
 .
- This conclusion holds true for all positive 
-\begin_inset Formula $g,p_{1},...,p_{5}$
+ As seen, there are configurations where the robot's second link is oriented
+ horizontally.
+ Specifically, if set 
+\begin_inset Formula $q_{s,1}=\frac{3\pi}{4}$
 \end_inset
 
- and general assumption of positive defenitness of 
-\begin_inset Formula $M\left(q\right)$
-\end_inset
-
-.
  
-\end_layout
-
-\begin_layout Standard
-The result of the analysis demonstrates, in particular, the presence of
- a periodic trajectory when the robot's second link oscillates near the
- horizontal position.
- Indeed, if we set 
-\begin_inset Formula $q_{s,1}+q_{s,2}=\frac{\pi}{2}$
+\begin_inset Formula $q_{s,2}=-\frac{\pi}{4}$
 \end_inset
 
-, then the first link of the robot may take an orientation from the set
- 
-\begin_inset Formula $q_{s,1}\in\left(\frac{\pi}{2},\pi\right)+\pi k$
+, 
+\begin_inset Formula $k=-p_{2}p_{3}^{2}\sin q_{s,2}-\frac{1}{3}p_{2}^{2}p_{3}\sin2q_{s,2}$
 \end_inset
 
-.
- In Figure
+, then the conditions
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:ineqs_v2"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ are satisfied.
+ Numerical integration of the corresponding reduced dynamics with initial
+ conditions 
+\begin_inset Formula $\theta\left(0\right)=-0.02,\dot{\theta}\left(0\right)=0$
+\end_inset
+
+ and 
+\begin_inset Formula $\theta\left(\frac{T}{2}\right)=0.02,\dot{\theta}\left(\frac{T}{2}\right)=0$
+\end_inset
+
+ yields the phase trajectory presented in Figure
 \begin_inset space ~
 \end_inset
 
@@ -538,14 +623,52 @@ noprefix "false"
 
 \end_inset
 
- we illustrate one of such trajectories.
+.
+ We also reconstruct the phase trajectory 
+\begin_inset Formula $\left(q_{*}\left(t\right),\dot{q}_{*}\left(t\right)\right)$
+\end_inset
+
+ and control input 
+\begin_inset Formula $u_{*}\left(t\right)$
+\end_inset
+
+ of the original system by substituting the numerically obtained trajectory
+ 
+\begin_inset Formula $\theta_{*}\left(t\right)$
+\end_inset
+
+ into the expressions in
+\begin_inset space ~
+\end_inset
+
+TODO.
+ These plots are shown in Figure
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:pendubot-oscillates-near-horizontal"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ As observed, all signals are smooth functions.
+ It is important to note that this trajectory could not be obtained with
+ a regular servo constraint.
+ This indicates that the proposed approach uncovers a new class of feasible
+ trajectories.
 \end_layout
 
 \begin_layout Standard
 \begin_inset Float figure
 wide false
 sideways false
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \align center
@@ -589,7 +712,7 @@ Configuration Space of the Pendubot.
 \begin_inset Float figure
 wide false
 sideways false
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \begin_inset Float figure
@@ -683,10 +806,6 @@ name "fig:pendubot-oscillates-near-horizontal"
 wide false
 sideways false
 status open
-
-\begin_layout Plain Layout
-
-\end_layout
 
 \begin_layout Plain Layout
 \begin_inset Graphics

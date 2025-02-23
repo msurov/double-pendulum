@@ -1,16 +1,16 @@
-#LyX 2.3 created this file. For more info see http://www.lyx.org/
-\lyxformat 544
+#LyX 2.4 created this file. For more info see https://www.lyx.org/
+\lyxformat 620
 \begin_document
 \begin_header
 \save_transient_properties true
 \origin unavailable
 \textclass article
 \use_default_options true
-\maintain_unincluded_children false
+\maintain_unincluded_children no
 \language english
 \language_package default
-\inputencoding auto
-\fontencoding global
+\inputencoding auto-legacy
+\fontencoding auto
 \font_roman "default" "default"
 \font_sans "default" "default"
 \font_typewriter "default" "default"
@@ -18,7 +18,9 @@
 \font_default_family default
 \use_non_tex_fonts false
 \font_sc false
-\font_osf false
+\font_roman_osf false
+\font_sans_osf false
+\font_typewriter_osf false
 \font_sf_scale 100 100
 \font_tt_scale 100 100
 \use_microtype false
@@ -50,7 +52,9 @@
 \suppress_date false
 \justification true
 \use_refstyle 1
+\use_formatted_ref 0
 \use_minted 0
+\use_lineno 0
 \index Index
 \shortcut idx
 \color #008000
@@ -66,11 +70,16 @@
 \papercolumns 1
 \papersides 1
 \paperpagestyle default
+\tablestyle default
 \tracking_changes false
 \output_changes false
+\change_bars false
+\postpone_fragile_content false
 \html_math_output 0
 \html_css_as_file 0
 \html_be_strict false
+\docbook_table_output 0
+\docbook_mathml_prefix 1
 \end_header
 
 \begin_body
@@ -126,6 +135,32 @@
 
 \begin_layout Standard
 \begin_inset Formula $C_{kj}=\left(\frac{\partial M_{kj}}{\partial q^{i}}-\frac{1}{2}\frac{\partial M_{ij}}{\partial q^{k}}\right)\dot{q}_{i}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+—
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\sum_{j}M_{kj}\ddot{q}_{j}+\underbrace{\sum_{i,j}\left(\frac{\partial M_{kj}}{\partial q^{i}}-\frac{1}{2}\frac{\partial M_{ij}}{\partial q^{k}}\right)\dot{q}_{i}}_{C\left(q,\dot{q}\right)}\dot{q}_{j}+\underbrace{\frac{\partial U}{\partial q^{k}}}_{G\left(q\right)}=f_{k}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\frac{d}{dt}\frac{\partial L\left(q,\dot{q}\right)}{d\dot{q}^{k}}-\frac{\partial L\left(q,\dot{q}\right)}{dq^{k}}=f_{k}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $L\left(q,\dot{q}\right)=\frac{1}{2}\dot{q}^{T}M\left(q\right)\dot{q}-U\left(q\right)$
 \end_inset
 
 

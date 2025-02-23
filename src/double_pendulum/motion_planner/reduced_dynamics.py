@@ -40,23 +40,114 @@ def compute_time(s, ds):
   t[1:] = np.cumsum(dt)
   return t
 
-def solve_reduced(rd : ReducedDynamics, sdiap, ds0, **solver_args) -> Trajectory:
+def solve_periodic(rd : ReducedDynamics, s0, smax, eps=1e-6, **solver_args) -> Trajectory:
   def rhs(s, y):
     dy = (-2 * rd.beta(s) * y - rd.gamma(s)) / rd.alpha(s)
     return float(dy)
   
-  def event(s, y):
-    if y[0] <= 0 and s != sdiap[0]:
-      event.terminate = True
-    return 0
+  def stop_condition(s, y):
+    if y[0] <= 0 and abs(s - s0) > eps:
+      return -1
+    return 1
 
-  y0 = ds0**2/2
-  sol = solve_ivp(rhs, sdiap, [y0], **solver_args, events=event)
-  ds = np.sqrt(2 * sol.y[0])
+  stop_condition.terminal = True
+  sol = solve_ivp(rhs, [s0, smax], [0.], **solver_args, events=stop_condition)
+
+  if len(sol.t) <= 2:
+    return None
+
+  y = np.clip(sol.y[0], 0., np.inf)
   s = sol.t
+
+  ds = np.sqrt(2 * y)
+  ds_full = np.concatenate((ds, -ds[-2::-1]))
+  s_full = np.concatenate((s, s[-2::-1]))
+
+  t = compute_time(s_full, ds_full)
+  return Trajectory(
+    time = t,
+    phase = np.array([s_full, ds_full]).T,
+    control = None
+  )
+
+def filter_out_duplicates(x, y, eps=1e-9):
+  mask = np.ones(x.shape, bool)
+  mask[:-1] = np.abs(np.diff(x)) > eps
+  x = x[mask]
+  y = y[mask,...]
+  return x, y
+
+def solve_reduced(rd : ReducedDynamics, sdiap, ds0, **solver_args) -> Trajectory:
+  def rhs(s, y):
+    dy = (-2 * rd.beta(s) * y - rd.gamma(s)) / rd.alpha(s)
+    return float(dy)
+
+  def stop(s, y):
+    if y[0] <= 0 and abs(s - sdiap[0]) > eps:
+      print('ZZZZZZZZZZZ')
+      return 0.
+    return 1.
+
+  eps = 1e-6
+  stop.terminal = True
+  y0 = ds0**2/2
+  # sol = solve_ivp(rhs, sdiap, [y0], **solver_args, events=stop)
+  sol = solve_ivp(rhs, sdiap, [y0], **solver_args)
+  s, y = filter_out_duplicates(sol.t, sol.y[0])
+
+  if len(s) <= 3:
+    return None
+
+  if y[-1] < 0:
+    y1,y2 = y[-2:]
+    assert y1 >= 0
+    s1,s2 = s[-2:]
+    s_final = (y2 * s1 - y1 * s2) / (y2 - y1)
+    s[-1] = s_final
+    y[-1] = 0.
+
+  ds = np.sqrt(2 * y)
   t = compute_time(s, ds)
+
   return Trajectory(
     time = t,
     phase = np.array([s, ds]).T,
     control = None
+  )
+
+def reconstruct_trajectory(constr : ca.Function, reduced : ReducedDynamics, 
+                           dynamics : DoublePendulumDynamics,
+                           reduced_traj : Trajectory) -> Trajectory:
+
+  s_expr = reduced.s
+  constr_expr = constr(s_expr)
+  Dconstr_expr = ca.jacobian(constr_expr, s_expr)
+  DDconstr_expr = ca.jacobian(Dconstr_expr, s_expr)
+  ds_expr = ca.SX.sym('ds')
+  dq_expr = Dconstr_expr * ds_expr
+  dds_expr = (-reduced.beta_expr * ds_expr**2 - reduced.gamma_expr) / reduced.alpha_expr
+  ddq_expr = Dconstr_expr * dds_expr + DDconstr_expr * ds_expr**2
+  Bt = dynamics.B(constr_expr).T
+  u_expr = Bt @ (dynamics.M(constr_expr) @ ddq_expr + dynamics.C(constr_expr, dq_expr) @ dq_expr + dynamics.G(constr_expr)) / (Bt @ Bt.T)
+  u_fun = ca.Function('u', [s_expr, ds_expr], [u_expr])
+  dq_fun = ca.Function('dq', [s_expr, ds_expr], [dq_expr])
+
+  nq,_ = constr(0.).shape
+  nt, = reduced_traj.time.shape
+  state = np.zeros((nt, 2 * nq))
+  u = np.zeros(nt)
+
+  for i in range(nt):
+    s = reduced_traj.coords[i]
+    ds = reduced_traj.vels[i]
+    q = constr(s)
+    dq = dq_fun(s, ds)
+    u[i] = float(u_fun(s, ds))
+    state[i,0:nq] = np.reshape(q, (-1,))
+    state[i,nq:] = np.reshape(dq, (-1,))
+
+  return Trajectory(
+    time = reduced_traj.time,
+    phase = state,
+    control = u
   )

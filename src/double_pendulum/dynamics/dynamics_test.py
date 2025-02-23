@@ -1,7 +1,7 @@
 import casadi as ca
 import numpy as np
-from . import dynamics_casadi
-from . import dynamics_sympy
+from double_pendulum.dynamics import dynamics_casadi
+from double_pendulum.dynamics import dynamics_sympy
 
 
 def get_test_par() -> dynamics_casadi.DoublePendulumParam:

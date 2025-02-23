@@ -2,10 +2,10 @@ from scipy.integrate import solve_ivp
 from scipy.interpolate import make_interp_spline
 import numpy as np
 import matplotlib.pyplot as plt
+from common.trajectory import Trajectory
 from double_pendulum.dynamics import (
   DoublePendulumDynamics,
-  DoublePendulumParam,
-  Trajectory
+  DoublePendulumParam
 )
 from typing import Callable
 from double_pendulum.anim import animate

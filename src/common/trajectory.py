@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 import numpy as np
+from scipy.linalg import block_diag
 from typing import Optional
 
 
@@ -19,6 +20,14 @@ class Trajectory:
     if self.control is not None:
       self.control = np.array(self.control, float)
       assert self.control.shape[0] == nt
+
+  @property
+  def is_velocity_periodic(self):
+    return np.all(self.vels[0] == self.vels[-1])
+
+  @property
+  def is_periodic(self):
+    return np.all(self.phase[0] == self.phase[-1])
 
   @property
   def dim(self):
@@ -308,3 +317,16 @@ if __name__ == '__main__':
   test_traj_forth_and_back()
   test_make_traj1()
   test_traj_repeat()
+
+def traj_affine_transform(A : np.ndarray, p0 : np.ndarray, traj : Trajectory) -> Trajectory:
+  """
+    Transform coordinates x as
+      A @ (x - x0)
+    and velocities v as
+      A @ v
+  """
+  ndim = traj.ndim
+  phase = np.zeros(traj.shape)
+  phase[:,0:ndim] = A @ (traj.coords - p0)
+  phase[:,ndim:] = A @ traj.vels
+  return Trajectory(time = traj.time, phase = phase)

@@ -1,5 +1,5 @@
 import casadi as ca
-from .parameters import DoublePendulumParam
+from double_pendulum.dynamics.parameters import DoublePendulumParam
 from typing import List
 
 
@@ -15,7 +15,8 @@ def get_links_positions(par : DoublePendulumParam, thetas : SX) -> List[SX]:
   """
   l1, _ = par.lengths
   c1, c2 = par.mass_centers
-  theta1,theta2 = thetas.elements()
+  theta1 = thetas[0]
+  theta2 = thetas[1]
   x1 = c1 * sin(theta1)
   y1 = c1 * cos(theta1)
   x2 = l1 * sin(theta1) + c2 * sin(theta1 + theta2)
@@ -92,6 +93,7 @@ class DoublePendulumDynamics:
 
     self.q = q
     self.dq = dq
+    self.u = u
     self.M_expr = M
     self.C_expr = C
     self.G_expr = G
@@ -100,8 +102,8 @@ class DoublePendulumDynamics:
     self.K_expr = K
 
     state = ca.vertcat(q, dq)
-    ddq = ca.pinv(M) @ (-C @ dq - G + B @ u)
-    self.rhs_expr = ca.vertcat(dq, ddq)
+    self.ddq_expr = ca.pinv(M) @ (-C @ dq - G + B @ u)
+    self.rhs_expr = ca.vertcat(dq, self.ddq_expr)
 
     self.M = ca.Function('M', [q], [self.M_expr])
     self.C = ca.Function('C', [q, dq], [self.C_expr])

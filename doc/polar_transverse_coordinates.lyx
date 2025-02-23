@@ -1,0 +1,241 @@
+#LyX 2.4 created this file. For more info see https://www.lyx.org/
+\lyxformat 620
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\use_default_options true
+\maintain_unincluded_children no
+\language american
+\language_package default
+\inputencoding utf8
+\fontencoding auto
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_roman_osf false
+\font_sans_osf false
+\font_typewriter_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\float_placement class
+\float_alignment class
+\paperfontsize default
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\use_formatted_ref 0
+\use_minted 0
+\use_lineno 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tablestyle default
+\tracking_changes false
+\output_changes false
+\change_bars false
+\postpone_fragile_content true
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\docbook_table_output 0
+\docbook_mathml_prefix 1
+\end_header
+
+\begin_body
+
+\begin_layout Section
+Азимутальная проекция
+\end_layout
+
+\begin_layout Standard
+Задаю
+\end_layout
+
+\begin_layout Itemize
+два вектора 
+\begin_inset Formula $a,b\in\mathbb{R}^{2n}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+матрицу проекции координат 
+\begin_inset Formula $T\in\mathbb{R}^{2n-2\times2n}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Определяю координату проекции
+\begin_inset Formula 
+\begin{align*}
+\theta & =-\arctan\frac{b^{T}\left(x-x_{0}\right)}{a^{T}\left(x-x_{0}\right)},
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Formula $x_{0}$
+\end_inset
+
+ – точка вокруг которой существуют колебания.
+ Определяю трансверсальные координаты 
+\begin_inset Formula 
+\begin{align*}
+\xi_{1..2n-2} & =T\cdot\left(x-x_{*}\left(\theta\right)\right)\\
+\xi_{2n-1} & =a^{T}\left(x-x_{*}\left(\theta\right)\right)\cos\theta-b^{T}\left(x-x_{*}\left(\theta\right)\right)\sin\theta.
+\end{align*}
+
+\end_inset
+
+Координата 
+\begin_inset Formula $\xi_{2n-1}$
+\end_inset
+
+ представляет собой преокцию радиус-вектора 
+\begin_inset Formula $\left[a^{T}\left(x-x_{*}\left(\theta\right)\right),b^{T}\left(x-x_{*}\left(\theta\right)\right)\right]$
+\end_inset
+
+ на направление 
+\begin_inset Formula $\left[-\cos\theta,\sin\theta\right]$
+\end_inset
+
+ (
+\begin_inset Formula $\theta$
+\end_inset
+
+ отсчитывается по часовой стрелке в соответствии с направлением хода времени).
+\end_layout
+
+\begin_layout Standard
+Обратное преобразование получается из решения СЛУ
+\begin_inset Formula 
+\begin{align*}
+\left(a\sin\theta+b\cos\theta\right)^{T}x & =\left(a\sin\theta+b\cos\theta\right)^{T}x_{0}\\
+\\\xi_{1..2n-2}+Tx_{*}\left(\theta\right) & =Tx
+\end{align*}
+
+\end_inset
+
+Динамика координаты 
+\begin_inset Formula 
+\begin{align*}
+\dot{\theta} & =\frac{a^{T}\left(x-x_{0}\right)b^{T}-b^{T}\left(x-x_{0}\right)a^{T}}{\left(a^{T}\left(x-x_{0}\right)\right)^{2}+\left(b^{T}\left(x-x_{0}\right)\right)^{2}}\dot{x}\\
+\dot{\xi}_{1..2n-2} & =T\cdot\left(\dot{x}-\frac{dx_{*}\left(\theta\right)}{d\theta}\dot{\theta}\right)\\
+\dot{\xi}_{2n-1} & =\left(b^{T}\sin\theta+a^{T}\cos\theta\right)\dot{x}+b\left(x-x_{0}\right)\cos\theta\dot{\theta}-a\left(x-x_{0}\right)\sin\theta\dot{\theta}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+\frac{d\xi_{1..2n-2}}{d\theta} & =T\cdot\left(\frac{\dot{x}}{\dot{\theta}}-\frac{dx_{*}\left(\theta\right)}{d\theta}\right)\\
+\frac{d\xi_{2n-1}}{d\theta} & =\left(b^{T}\sin\theta+a^{T}\cos\theta\right)\frac{\dot{x}}{\dot{\theta}}+b\left(x-x_{0}\right)\cos\theta-a\left(x-x_{0}\right)\sin\theta
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Общий случай нелинейного преобразования
+\end_layout
+
+\begin_layout Standard
+В общем случае разве сложнее?
+ Есть 2 функции 
+\begin_inset Formula 
+\begin{align*}
+\xi & =\alpha\left(\theta,x\right)\\
+x & =\beta\left(\theta,\xi\right)
+\end{align*}
+
+\end_inset
+
+Не ясно как вычислять 
+\begin_inset Formula $\frac{d\theta}{dt}$
+\end_inset
+
+.
+ Для системы 
+\begin_inset Formula 
+\begin{align*}
+\dot{x} & =\beta_{\theta}\dot{\theta}+\beta_{\xi}\dot{\xi}\\
+ & =\frac{\partial\beta\left(\theta,\xi\right)}{\partial\left(\theta,\xi\right)}\left(\begin{array}{c}
+\dot{\theta}\\
+\dot{\xi}
+\end{array}\right)
+\end{align*}
+
+\end_inset
+
+Отсюда 
+\begin_inset Formula 
+\begin{align*}
+\left(\begin{array}{c}
+\dot{\theta}\\
+\dot{\xi}
+\end{array}\right) & =\left(\frac{\partial\beta\left(\theta,\xi\right)}{\partial\left(\theta,\xi\right)}\right)^{-1}\dot{x}\\
+\dot{x} & =f\left(x,u\right)\\
+ & =f\left(x,u_{*}\left(\theta\right)+w\right)\\
+ & =f\left(\beta\left(\theta,\xi\right),u_{*}\left(\theta\right)+w\right)\\
+\left(\begin{array}{c}
+\dot{\theta}\\
+\dot{\xi}
+\end{array}\right) & =\left(\frac{\partial\beta\left(\theta,\xi\right)}{\partial\left(\theta,\xi\right)}\right)^{-1}f\left(\beta\left(\theta,\xi\right),u_{*}\left(\theta\right)+w\right)
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document

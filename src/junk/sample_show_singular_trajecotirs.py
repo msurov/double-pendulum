@@ -1,5 +1,4 @@
 import numpy as np
-from common.pi_formatter import set_xaxis_pi_ticks, set_yaxis_pi_ticks
 from common.trajectory import (
   Trajectory,
   traj_join, 
@@ -13,10 +12,12 @@ from double_pendulum.dynamics import (
 import casadi as ca
 import matplotlib.pyplot as plt
 from double_pendulum.anim import draw, animate
+from double_pendulum.motion_planner.singular_constrs import get_sing_constr_at
 from double_pendulum.motion_planner.reduced_dynamics import (
   ReducedDynamics,
   solve_reduced,
-  compute_time
+  compute_time,
+  reconstruct_trajectory
 )
 import scienceplots
 from fractions import Fraction
@@ -127,12 +128,12 @@ constr15 = [
 constr16 = [
   [-1.04719755,  2.61799388],
   [ 4.44444444, -0.59544265],
-  [-0.37490521, -2.79833056]
+  [-0.28296041, -5]
 ]
 
-def get_constr() -> ca.Function:
+def get_constr(isample : int) -> ca.Function:
   s = ca.SX.sym('s')
-  constr = constr15
+  constr = eval(f'constr{isample}')
   expr = ca.DM(constr[0]) \
     + ca.DM(constr[1]) * s \
     + ca.DM(constr[2]) * s**2 / 2
@@ -194,7 +195,7 @@ def motion_schematic(traj : Trajectory, par : DoublePendulumParam):
 
     plt.grid(True)
     plt.tight_layout()
-    plt.savefig('fig/horizontal_oscillations_schematic.svg')
+    plt.savefig('data/horizontal_oscillations_schematic.pdf')
 
 def add_annotation(text : str, textpos : Tuple[int, int]):
   bbox = {
@@ -217,12 +218,15 @@ def show_ref_traj(traj : Trajectory):
     _,axes = plt.subplots(2, 2, sharex=True, num='phase trajectory projections', figsize=(6, 4))
     theta1, theta2, dtheta1, dtheta2 = traj.phase.T
 
+    print(np.min(theta1), np.max(theta1))
+    print(np.min(theta2), np.max(theta2))
+
     u = traj.control
     plt.sca(axes[0, 0])
-    theta1_ticks, theta1_labels = gen_pi_ticks('29/40', '31/40', '1/40')
-    plt.xticks(theta1_ticks, theta1_labels)
-    theta2_ticks, theta2_labels = gen_pi_ticks('-7/24', '-5/24', '1/24')
-    plt.yticks(theta2_ticks, theta2_labels)
+    # theta1_ticks, theta1_labels = gen_pi_ticks('29/40', '31/40', '1/40')
+    # plt.xticks(theta1_ticks, theta1_labels)
+    # theta2_ticks, theta2_labels = gen_pi_ticks('-7/24', '-5/24', '1/24')
+    # plt.yticks(theta2_ticks, theta2_labels)
     plt.grid(True)
     plt.plot(theta1, theta2, alpha=0.8)
     add_annotation(R'$q_2$', (8, 75))
@@ -235,17 +239,18 @@ def show_ref_traj(traj : Trajectory):
     plt.sca(axes[1, 0])
     plt.grid(True)
     plt.plot(theta1, u, alpha=0.8)
-    add_annotation(R'$q_1$', (40, -20))
+    add_annotation(R'$q_1$', (70, -20))
     add_annotation(R'$u$', (16, 92))
 
     plt.sca(axes[1, 1])
     plt.grid(True)
     plt.plot(theta1, dtheta2, alpha=0.8)
-    add_annotation(R'$q_1$', (40, -20))
+    add_annotation(R'$q_1$', (70, -20))
     add_annotation(R'$\dot q_2$', (8, 92))
 
-    plt.tight_layout(h_pad=-0.5, w_pad=0.2)
-    plt.savefig('fig/horizontal_oscillations_trajectory.svg')
+    plt.tight_layout(h_pad=-0., w_pad=0.2)
+    plt.savefig('data/horizontal_oscillations_trajectory.pdf')
+
 
 def show_phase_prortrait(reduced : ReducedDynamics, reduced_traj : Trajectory):
   sleft = np.min(reduced_traj.coords)
@@ -280,62 +285,25 @@ def show_phase_prortrait(reduced : ReducedDynamics, reduced_traj : Trajectory):
     add_annotation(R'$\dot\theta$', (8, 210))
 
     plt.tight_layout()
-    plt.savefig('fig/horizontal_oscillations_phase.svg')
-
-def reconstruct_trajectory(constr : ca.Function, reduced : ReducedDynamics, 
-                           dynamics : DoublePendulumDynamics,
-                           reduced_traj : Trajectory) -> Trajectory:
-
-  s_expr = reduced.s
-  constr_expr = constr(s_expr)
-  Dconstr_expr = ca.jacobian(constr_expr, s_expr)
-  DDconstr_expr = ca.jacobian(Dconstr_expr, s_expr)
-  ds_expr = ca.SX.sym('ds')
-  dq_expr = Dconstr_expr * ds_expr
-  dds_expr = (-reduced.beta_expr * ds_expr**2 - reduced.gamma_expr) / reduced.alpha_expr
-  ddq_expr = Dconstr_expr * dds_expr + DDconstr_expr * ds_expr**2
-  Bt = dynamics.B(constr_expr).T
-  u_expr = Bt @ (dynamics.M(constr_expr) @ ddq_expr + dynamics.C(constr_expr, dq_expr) @ dq_expr + dynamics.G(constr_expr)) / (Bt @ Bt.T)
-  u_fun = ca.Function('u', [s_expr, ds_expr], [u_expr])
-  dq_fun = ca.Function('dq', [s_expr, ds_expr], [dq_expr])
-
-  nq,_ = constr(0.).shape
-  nt, = reduced_traj.time.shape
-  state = np.zeros((nt, 2 * nq))
-  u = np.zeros(nt)
-
-  for i in range(nt):
-    s = reduced_traj.coords[i]
-    ds = reduced_traj.vels[i]
-    q = constr(s)
-    dq = dq_fun(s, ds)
-    u[i] = float(u_fun(s, ds))
-    state[i,0:nq] = np.reshape(q, (-1,))
-    state[i,nq:] = np.reshape(dq, (-1,))
-
-  return Trajectory(
-    time = reduced_traj.time,
-    phase = state,
-    control = u
-  )
+    plt.savefig('data/horizontal_oscillations_phase.pdf')
 
 def show_aux_par(par):
   p = get_aux_par(par)
   for i in range(len(p)):
     print(f'p_{i + 1} = {p[i]}')
 
-def main():
+def old(isample):
   par = get_test_par()
   print(par)
   show_aux_par(par)
   dynamics = DoublePendulumDynamics(par)
-  constr = get_constr()
+  constr = get_constr(isample)
   reduced = ReducedDynamics(dynamics, constr)
   tr_left = solve_reduced(reduced, [-0.02, -1e-4], 0.0, max_step=1e-4)
   tr_right = solve_reduced(reduced, [0.02, 1e-4], 0.0, max_step=1e-4)
   tr_up = traj_join(tr_left, tr_right[::-1])
   tr_closed = traj_forth_and_back(tr_up)
-  tr_reduced = traj_repeat(tr_closed, 4)
+  tr_reduced = traj_repeat(tr_closed, 2)
   tr_orig = reconstruct_trajectory(constr, reduced, dynamics, tr_reduced)
 
   show_phase_prortrait(reduced, tr_closed)
@@ -345,14 +313,11 @@ def main():
   motion_schematic(tr_orig, par)
   plt.show()
 
-  # plt.plot(tr.time, tr.control)
-  # plt.grid(True)
-
-  # a = animate(tr_orig, par, speedup=0.1)
-  # plt.tight_layout()
-  # plt.grid(True)
-  # a.save('data/1.mp4')
-  # plt.show()
+  a = animate(tr_orig, par, speedup=0.1)
+  plt.tight_layout()
+  plt.grid(True)
+  a.save(f'data/{isample}.mp4')
+  plt.show()
 
   # _,axes = plt.subplots(3, 1, sharex=True)
   # s = np.linspace(-0.1, 0.1)
@@ -489,8 +454,9 @@ def show_oscillatory_points():
 
   plt.grid(True)
   plt.tight_layout()
-  plt.savefig('fig/configurations_with_oscillations.pdf')
+  plt.savefig('data/configurations_with_oscillations.pdf')
   plt.show()
+
 
 if __name__ == '__main__':
   plt.rcParams.update({
@@ -500,5 +466,5 @@ if __name__ == '__main__':
   })
 
   np.set_printoptions(suppress=True)
-  main()
+  main(isample=16)
   # show_oscillatory_points()

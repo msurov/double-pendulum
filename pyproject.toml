@@ -16,7 +16,9 @@ dependencies = [
   "matplotlib",
   "casadi",
   "sympy",
-  "SciencePlots"
+  "pytest",
+  "SciencePlots",
+  "pyqt5",
 ]
 requires-python = ">=3.10"
 authors = [
