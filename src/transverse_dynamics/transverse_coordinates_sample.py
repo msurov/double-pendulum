@@ -1,24 +1,13 @@
-from double_pendulum.motion_planner.singular_constrs import get_sing_constr_at
-from double_pendulum.dynamics import (
-  DoublePendulumDynamics,
-  DoublePendulumParam,
-  double_pendulum_param_default
-)
 import numpy as np
-from double_pendulum.motion_planner.reduced_dynamics import (
-  ReducedDynamics,
-  solve_reduced,
-  compute_time,
-  reconstruct_trajectory
-)
 from common.trajectory import (
   Trajectory,
   traj_join, 
   traj_forth_and_back, 
   traj_repeat
 )
+from common.plots import set_pi_xticks, set_pi_yticks
 import matplotlib.pyplot as plt
-from double_pendulum.transverse_dynamics.transverse_dynamics import (
+from transverse_dynamics.transverse_coordinates import (
   TransverseCoordinates,
   TransverseCoordinatesPar,
   TransverseDynamics,
@@ -28,45 +17,9 @@ from double_pendulum.transverse_dynamics.transverse_dynamics import (
 from scipy.interpolate import make_interp_spline
 from scipy.integrate import solve_ivp
 import matplotlib.pyplot as plt
+import casadi as ca
+from transverse_dynamics.sample_data import make_sample_data
 
-
-def make_sample_data():
-  par = double_pendulum_param_default
-  dynamics = DoublePendulumDynamics(par)
-  singpt = np.array([-2.2, 1.12])
-  constr = get_sing_constr_at(dynamics, singpt)
-  reduced = ReducedDynamics(dynamics, constr)
-  tr_left = solve_reduced(reduced, [-0.05, -1e-4], 0.0, max_step=1e-4)
-  tr_right = solve_reduced(reduced, [0.08, 1e-4], 0.0, max_step=1e-4)
-  tr_up = traj_join(tr_left, tr_right[::-1])
-  tr_closed = traj_forth_and_back(tr_up)
-  tr_orig = reconstruct_trajectory(constr, reduced, dynamics, tr_closed)
-
-  trans_par = TransverseCoordinatesPar(
-    transverse_projection_mat=np.array([
-      [100., 100., 0., 0.],
-      [0., 0., 1., 1.],
-    ]),
-    proj_plane_x = np.array([100., -100., 0., 0.]),
-    proj_plane_y = np.array([0., 0., 1., -1.]),
-    proj_plane_origin=np.concatenate((singpt, [0, 0]))
-  )
-
-  coords = TransverseCoordinates(tr_orig, trans_par)
-  trajsp = make_interp_spline(tr_orig.time, tr_orig.phase, k=5, bc_type='periodic')
-  trans_dyn = TransverseDynamics(dynamics, coords)
-
-  return {
-    'par': trans_par,
-    'dynamics': dynamics,
-    'trans_dyn': trans_dyn,
-    'constr': constr,
-    'reduced': reduced,
-    'coords': coords,
-    'traj': tr_orig,
-    'traj_spline': trajsp,
-    'traj_period': tr_orig.time[-1]
-  }
 
 def verify_free_motion_transverse_dynamics():
   sampledata = make_sample_data()
@@ -74,6 +27,7 @@ def verify_free_motion_transverse_dynamics():
   transdyn = sampledata['trans_dyn']
   dynamics = sampledata['dynamics']
 
+  plt.figure('verify_free_motion_transverse_dynamics')
   plt.title('Comparision of trajectories of the original\n dynamics and the transverse dynamics with zero input')
 
   def rhs_trans(theta, xi):
@@ -111,7 +65,6 @@ def verify_free_motion_transverse_dynamics():
   plt.ylabel(R'$\xi$')
   plt.grid(True)
   plt.tight_layout()
-  plt.show()
 
 def verify_transverse_dynamics():
   sampledata = make_sample_data()
@@ -119,6 +72,7 @@ def verify_transverse_dynamics():
   transdyn = sampledata['trans_dyn']
   dynamics = sampledata['dynamics']
 
+  plt.figure('verify_transverse_dynamics')
   plt.title('Comparision of trajectories of the original\n dynamics and the transverse dynamics with nonzero input')
 
   def stab_input(theta):
@@ -159,7 +113,6 @@ def verify_transverse_dynamics():
   plt.ylabel(R'$\xi$')
   plt.grid(True)
   plt.tight_layout()
-  plt.show()
 
 def test_transverse_linearization():
   sampledata = make_sample_data()
@@ -167,6 +120,7 @@ def test_transverse_linearization():
   transdyn = sampledata['trans_dyn']
   dynamics = sampledata['dynamics']
 
+  plt.figure('test_transverse_linearization')
   plt.title('Comparision of trajectories of \n the transverse dynamics and its linearization')
 
   def stab_input(theta):
@@ -197,12 +151,56 @@ def test_transverse_linearization():
     [R'$\xi_{1,lin}$', R'$\xi_{2,lin}$', R'$\xi_{3,lin}$'] + 
     [R'$\xi_{1,nonlin}$', R'$\xi_{2,nonlin}$', R'$\xi_{3,nonlin}$'])
   plt.grid(True)
-  plt.show()
+
+def show_theta_trajectory():
+  plt.figure('show_theta_trajectory')
+  sampledata = make_sample_data()
+  coords = sampledata['coords']
+  transdyn = sampledata['trans_dyn']
+  traj = sampledata['traj']
+  transpar = sampledata['par']
+  theta = compute_theta(traj.phase, transpar)
+  plt.plot(traj.time, theta)
+  plt.xlabel(R't', fontsize=16)
+  plt.ylabel(R'$\theta$', fontsize=16)
+  plt.grid(True)
+  set_pi_yticks('1/4')
+  plt.tight_layout()
+
+def show_trasnverse_linearization_coefs():
+  sampledata = make_sample_data()
+  transdyn = sampledata['trans_dyn']
+  theta = np.linspace(transdyn.transverse_coords.theta_min, transdyn.transverse_coords.theta_max, 400)
+  A = np.array([transdyn.A_fun(e) for e in theta])
+  B = np.array([transdyn.B_fun(e) for e in theta])
+
+  fig, axes = plt.subplots(2, 1, sharex=True)
+  ax = axes[0]
+  plt.sca(ax)
+  plt.plot(theta, A[:,:,0])
+  plt.plot(theta, A[:,:,1])
+  plt.plot(theta, A[:,:,2])
+  plt.grid(True)
+
+  plt.sca(ax)
+  ax = axes[1]
+  plt.sca(ax)
+  plt.plot(theta, B[:,:,0])
+  set_pi_xticks('1/2')
+  plt.grid(True)
+
+  plt.tight_layout()
 
 def main():
   verify_free_motion_transverse_dynamics()
+  plt.pause(0.001)
   verify_transverse_dynamics()
+  plt.pause(0.001)
   test_transverse_linearization()
+  plt.pause(0.001)
+  show_theta_trajectory()
+  show_trasnverse_linearization_coefs()
+  plt.show()
 
 if __name__ == '__main__':
   main()

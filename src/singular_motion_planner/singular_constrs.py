@@ -1,12 +1,9 @@
-from double_pendulum.dynamics import (
-  DoublePendulumDynamics,
-  DoublePendulumParam
-)
+from common.mechsys import MechanicalSystem
 import casadi as ca
 import numpy as np
 
 
-def get_sing_constr_at(dynamics : DoublePendulumDynamics, q_sing : np.ndarray):
+def get_sing_constr_at(dynamics : MechanicalSystem, q_sing : np.ndarray):
   J = ca.DM([
     [0, -1],
     [1, 0]

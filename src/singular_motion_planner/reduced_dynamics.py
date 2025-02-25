@@ -1,6 +1,4 @@
-from double_pendulum.dynamics import (
-  DoublePendulumDynamics,
-)
+from common.mechsys import MechanicalSystem
 import casadi as ca
 import numpy as np
 from scipy.integrate import solve_ivp
@@ -8,7 +6,7 @@ from common.trajectory import Trajectory
 
 
 class ReducedDynamics:
-  def __init__(self, dynamics : DoublePendulumDynamics, constr : ca.Function):
+  def __init__(self, dynamics : MechanicalSystem, constr : ca.Function):
     s = ca.SX.sym('s')
 
     Q = constr(s)
@@ -116,7 +114,7 @@ def solve_reduced(rd : ReducedDynamics, sdiap, ds0, **solver_args) -> Trajectory
   )
 
 def reconstruct_trajectory(constr : ca.Function, reduced : ReducedDynamics, 
-                           dynamics : DoublePendulumDynamics,
+                           dynamics : MechanicalSystem,
                            reduced_traj : Trajectory) -> Trajectory:
 
   s_expr = reduced.s

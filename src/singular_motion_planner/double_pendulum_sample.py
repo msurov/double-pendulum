@@ -13,8 +13,8 @@ from double_pendulum.dynamics import (
 import casadi as ca
 import matplotlib.pyplot as plt
 from double_pendulum.anim import draw, animate
-from double_pendulum.motion_planner.singular_constrs import get_sing_constr_at
-from double_pendulum.motion_planner.reduced_dynamics import (
+from singular_motion_planner.singular_constrs import get_sing_constr_at
+from singular_motion_planner.reduced_dynamics import (
   ReducedDynamics,
   solve_reduced,
   compute_time,
@@ -74,7 +74,7 @@ def get_cartesian_rect(traj : Trajectory, par : DoublePendulumParam):
     [ymin, ymax]
   ])
 
-def motion_schematic(traj : Trajectory, par : DoublePendulumParam):
+def motion_schematic(traj : Trajectory, par : DoublePendulumParam, savetofile=None):
   d = traj.phase - traj.phase[0]
   d = np.linalg.norm(d, axis=1)
   i, = np.nonzero(d < 1e-5)
@@ -83,22 +83,22 @@ def motion_schematic(traj : Trajectory, par : DoublePendulumParam):
   q2 = traj.coords[i//4]
   q3 = traj.coords[i//2]
 
-  with plt.style.context('science'):
-    fig,ax = plt.subplots(1, 1, num='schematic', figsize=(6, 4))
-    ax.set_aspect(1)
-    draw(q1, par, alpha=1, color='#3030E0', linewidth=2)
-    draw(q2, par, alpha=1, color='#3030C0', linewidth=2)
-    draw(q3, par, alpha=1, color='#3030A0', linewidth=2)
-    r = get_cartesian_rect(traj, par)
-    xdiap, ydiap = enlarge_rect(r, 1.05)
-    ax.set_xlim(*xdiap)
-    ax.set_ylim(*ydiap)
+  fig,ax = plt.subplots(1, 1, num=f'schematic at {q1[0]:.2f}, {q1[1]:.2f}', figsize=(6, 4))
+  ax.set_aspect(1)
+  draw(q1, par, alpha=1, color='#3030E0', linewidth=2)
+  draw(q2, par, alpha=1, color='#3030C0', linewidth=2)
+  draw(q3, par, alpha=1, color='#3030A0', linewidth=2)
+  r = get_cartesian_rect(traj, par)
+  xdiap, ydiap = enlarge_rect(r, 1.05)
+  ax.set_xlim(*xdiap)
+  ax.set_ylim(*ydiap)
 
-    plt.grid(True)
-    plt.tight_layout()
-    plt.savefig('data/horizontal_oscillations_schematic.pdf')
+  plt.grid(True)
+  plt.tight_layout()
+  if savetofile is not None:
+    plt.savefig(savetofile)
 
-def show_phase_prortrait(reduced : ReducedDynamics, reduced_traj : Trajectory):
+def show_phase_prortrait(reduced : ReducedDynamics, reduced_traj : Trajectory, savetofile=None):
   sleft = np.min(reduced_traj.coords)
   sright = np.max(reduced_traj.coords)
   dsmin = np.min(reduced_traj.vels)
@@ -106,6 +106,8 @@ def show_phase_prortrait(reduced : ReducedDynamics, reduced_traj : Trajectory):
 
   # with plt.style.context('science'):
   #   plt.figure('phase', figsize=(6, 4))
+  s0 = reduced_traj.coords[0,0]
+  plt.figure(num=f'phase portrait at {s0:.2f}', figsize=(6, 4))
   plt.axhline(0, color='black', alpha=0.5, lw=1)
   plt.axvline(0, color='black', alpha=0.5, lw=1)
 
@@ -131,10 +133,13 @@ def show_phase_prortrait(reduced : ReducedDynamics, reduced_traj : Trajectory):
   add_annotation(R'$\dot\theta$', (8, 210))
 
   plt.tight_layout()
-  plt.savefig('data/horizontal_oscillations_phase.pdf')
 
-def show_trajectory_projections(traj : Trajectory, reduced_traj : Trajectory):
-  fig, axes = plt.subplots(2, 2, sharex=True)
+  if savetofile is not None:
+    plt.savefig(savetofile)
+
+def show_trajectory_projections(traj : Trajectory, reduced_traj : Trajectory, savetofile=None):
+  q0 = traj.coords[0]
+  fig, axes = plt.subplots(2, 2, sharex=True, num=f'trajectory projections at {q0[0]:.2f}, {q0[1]:.2f}')
   ax = axes[0,0]
   plt.sca(ax)
   plt.grid(True)
@@ -163,8 +168,12 @@ def show_trajectory_projections(traj : Trajectory, reduced_traj : Trajectory):
 
   plt.tight_layout()
 
-def show_trajectory(traj : Trajectory, reduced_traj : Trajectory):
-  fig, axes = plt.subplots(2, 2, sharex=True)
+  if savetofile is not None:
+    plt.savefig(savetofile)
+
+def show_trajectory(traj : Trajectory, reduced_traj : Trajectory, savetofile=None):
+  q0 = traj.coords[0]
+  fig, axes = plt.subplots(2, 2, sharex=True, num=f'trajectory at {q0[0]:.2f}, {q0[1]:.2f}')
   ax = axes[0,0]
   plt.sca(ax)
   plt.grid(True)
@@ -193,6 +202,9 @@ def show_trajectory(traj : Trajectory, reduced_traj : Trajectory):
 
   plt.tight_layout()
 
+  if savetofile is not None:
+    plt.savefig(savetofile)
+
 def process_sing_traj_at_sing_point(singpt):
   par = double_pendulum_param_default
   dynamics = DoublePendulumDynamics(par)
@@ -206,11 +218,8 @@ def process_sing_traj_at_sing_point(singpt):
   tr_orig = reconstruct_trajectory(constr, reduced, dynamics, tr_reduced)
 
   show_trajectory(tr_orig, tr_reduced)
-  # show_phase_prortrait(reduced, tr_closed)
-  plt.show()
-
+  show_phase_prortrait(reduced, tr_closed)
   motion_schematic(tr_orig, par)
-  plt.show()
 
 def main():
   positions = [
@@ -233,6 +242,10 @@ def main():
   ]
   for pos in positions:
     process_sing_traj_at_sing_point(pos)
+    # plt.pause(0.001)
+    plt.show()
+
+  plt.show()
 
 def show_sample_traj():
   par = double_pendulum_param_default
@@ -247,12 +260,10 @@ def show_sample_traj():
   tr_reduced = traj_repeat(tr_closed, 2)
   tr_orig = reconstruct_trajectory(constr, reduced, dynamics, tr_reduced)
 
-  # show_trajectory(tr_orig, tr_reduced)
+  show_trajectory(tr_orig, tr_reduced)
   show_phase_prortrait(reduced, tr_closed)
+  motion_schematic(tr_orig, par)
   plt.show()
-
-  # motion_schematic(tr_orig, par)
-  # plt.show()
 
 if __name__ == '__main__':
   plt.rcParams.update({
@@ -262,5 +273,5 @@ if __name__ == '__main__':
   })
 
   np.set_printoptions(suppress=True)
-  # main()
-  show_sample_traj()
+  main()
+  # show_sample_traj()

@@ -1,20 +1,32 @@
-import casadi as ca
-import numpy as np
-from dataclasses import dataclass
-from double_pendulum.dynamics import (
-  DoublePendulumDynamics
+"""
+transverse_dynamics
+===================
+
+Classes
+-------
+TransverseCoordinates : implemets methods for coordinates transform from Cartesian n-dim space to
+  cylindrical S1 x Rn-1. The transformation works for stabilizing periodic trajectories.
+TransverseDynamics : implements methods for computing dynamics in the given transverse coordinates
+
+TODO:
+  * Adapt the class TransverseDynamics for use with abstract dynamical system DynamicalSystem
+  * Imeplement several base classes with common interface for constructing transverse coordinates
+"""
+
+from common.mechsys import MechanicalSystem
+from common.trajectory import Trajectory
+from common.bspline_sym import (
+  MXSpline,
+  make_interp_spline
 )
-from common.trajectory import (
-  Trajectory, traj_affine_transform
-)
-from common.bspline_sym import MXSpline
 from common.numpy_utils import (
   cont_angle, 
   is_ascending
 )
-import matplotlib.pyplot as plt
-from scipy.interpolate import make_interp_spline
 from typing import Tuple
+import casadi as ca
+import numpy as np
+from dataclasses import dataclass
 
 
 @dataclass
@@ -79,6 +91,8 @@ class TransverseCoordinates:
     y = (traj.phase - self.par.proj_plane_origin) @ self.par.proj_plane_y  
     theta = np.arctan2(-y, x)
     cont_angle(theta)
+    self.theta_min = theta[0]
+    self.theta_max = theta[-1]
 
     assert is_ascending(theta)
     if np.all(traj.phase[-1] == traj.phase[0]):
@@ -98,7 +112,7 @@ class TransverseCoordinates:
   def __verify_solvability(self, A):
     npts = 1000
     det_vals = np.zeros(npts)
-    theta = np.linspace(0, 2 * np.pi, npts)
+    theta = np.linspace(self.theta_min, self.theta_max, npts)
 
     for i in range(npts):
       A_val = ca.substitute(A, self.theta, theta[i])
@@ -169,26 +183,31 @@ def compute_theta(phase : np.ndarray, par : TransverseCoordinatesPar) -> np.ndar
   x = (phase - par.proj_plane_origin) @ par.proj_plane_x
   y = (phase - par.proj_plane_origin) @ par.proj_plane_y
   theta = -np.arctan2(y, x)
+  if isinstance(theta, np.ndarray):
+    cont_angle(theta)
   return theta
 
 def compute_transverse(phase : np.ndarray, coords : TransverseCoordinates) -> Tuple[np.ndarray, np.ndarray]:
   match np.shape(phase):
-    case npts,4:
+    case (npts, dim):
       arr = np.array([coords.forward_transform_fun(e) for e in phase], float)
       theta = arr[:,0,0]
+      cont_angle(theta)
       xi = arr[:,1:,0]
-    case (4,):
+    case (dim,):
       arr = coords.forward_transform_fun(phase)
       theta = float(arr[0])
-      xi = np.reshape(arr[1:], (3,))
+      xi = np.reshape(arr[1:], (dim - 1,))
     case _: assert False
 
   return theta, xi
 
 class TransverseDynamics:
-  def __init__(self, dynamics : DoublePendulumDynamics, coords : TransverseCoordinates):
+  def __init__(self, dynamics : MechanicalSystem, coords : TransverseCoordinates):
     xdim,_ = dynamics.rhs_expr.shape
     udim,_ = dynamics.u.shape
+
+    self.transverse_coords = coords
 
     self.u_stab = ca.MX.sym('u_stab', udim)
     self.xi = coords.xi
@@ -206,7 +225,7 @@ class TransverseDynamics:
     self.B_fun = ca.Function('B', [coords.theta], [self.B_expr])
     self.rest_fun = ca.Function('B', [coords.theta], [self.rest_expr])
 
-  def __init_transverse_dynamics(self, dynamics : DoublePendulumDynamics, coords : TransverseCoordinates):
+  def __init_transverse_dynamics(self, dynamics : MechanicalSystem, coords : TransverseCoordinates):
     dot_x = dynamics.rhs(
       coords.inverse_transform_expr,
       coords.u_ref_expr + self.u_stab

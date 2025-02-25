@@ -1,13 +1,12 @@
 import casadi as ca
 from double_pendulum.dynamics.parameters import DoublePendulumParam
 from typing import List
-
+from common.mechsys import MechanicalSystem
 
 sin = ca.sin
 cos = ca.cos
 SX = ca.SX
 jacobian = ca.jacobian
-
 
 def get_links_positions(par : DoublePendulumParam, thetas : SX) -> List[SX]:
   R"""
@@ -75,7 +74,7 @@ def get_coriolis_mat(M : SX, thetas : SX, dthetas : SX) -> SX:
   C = J - J.T / 2
   return C
 
-class DoublePendulumDynamics:
+class DoublePendulumDynamics(MechanicalSystem):
   R"""
     Symbolic dynamics of double pendulum system
     based on CasADi symbolic package

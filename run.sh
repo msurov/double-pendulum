@@ -2,4 +2,4 @@
 
 sourve .venv/bin/activate
 pip install . --no-deps
-python3 src/double_pendulum/transverse_dynamics/transverse_dynamics_sample.py
+python3 src/transverse_dynamics/transverse_coordinates_sample.py

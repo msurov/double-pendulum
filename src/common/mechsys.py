@@ -1,27 +1,26 @@
-from abc import ABC, abstractmethod
+import casadi as ca
 
 
-class MechanicalSystem(ABC):
-  @abstractmethod
-  def M(self, q):
-    pass
+class MechanicalSystem:
+  def __init__(self):
+    self.q = ca.MX.zeros(2)
+    self.dq = ca.MX.zeros(2)
+    self.u = ca.MX.zeros(1)
 
-  @abstractmethod
-  def C(self, q, dq):
-    pass
+    self.M_expr = ca.MX.zeros(2, 2)
+    self.C_expr = ca.MX.zeros(2, 2)
+    self.G_expr = ca.MX.zeros(2, 1)
+    self.B_expr = ca.MX.zeros(2, 1)
+    self.U_expr = ca.MX.zeros(1)
+    self.K_expr = ca.MX.zeros(1)
 
-  @abstractmethod
-  def G(self, q):
-    pass
+    self.ddq_expr = ca.MX.zeros(2)
+    self.rhs_expr = ca.MX.zeros(4)
 
-  @abstractmethod
-  def B(self, q):
-    pass
-
-  @abstractmethod
-  def U(self, q):
-    pass
-
-  @abstractmethod
-  def K(self, q, dq):
-    pass
+    self.M = lambda q: None
+    self.C = lambda q, dq: None
+    self.G = lambda q: None
+    self.B = lambda q: None
+    self.U = lambda q: None
+    self.K = lambda q, dq: None
+    self.rhs = lambda state, u: None

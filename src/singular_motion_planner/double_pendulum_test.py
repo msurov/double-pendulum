@@ -1,10 +1,10 @@
-from double_pendulum.motion_planner.singular_constrs import get_sing_constr_at
+from singular_motion_planner.singular_constrs import get_sing_constr_at
 from double_pendulum.dynamics import (
   DoublePendulumDynamics,
   DoublePendulumParam,
   double_pendulum_param_default
 )
-from double_pendulum.motion_planner.reduced_dynamics import ReducedDynamics
+from singular_motion_planner.reduced_dynamics import ReducedDynamics
 import numpy as np
 
 
