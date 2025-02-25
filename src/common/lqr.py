@@ -99,13 +99,18 @@ def lqr_ltv_periodic(
 
     P0 = np.zeros((n, n), float)
     p0 = np.reshape(P0, (-1,))
+    mismatch = None
 
     for i in range(100):
-        print('# periodic LQR iteration', i)
+        print('# periodic LQR iteration', i, ', mismatch', mismatch)
         sol = solve_ivp(rhs, [t[-1], t[0]], p0, t_eval=t[::-1], **solve_ivp_arg)
+        if sol.status != 0:
+            return None
+
         P = np.reshape(sol.y.T, (npts, n, n))
         if np.allclose(P[0], P[-1], atol=1e-5, rtol=1e-5):
             break
+        mismatch = np.linalg.matrix_norm(P[0] - P[-1])
         P0 = P[-1]
         p0 = np.reshape(P0, (-1,))
 
@@ -114,6 +119,8 @@ def lqr_ltv_periodic(
     for i in range(npts):
         K[i] = -inv_R @ B[i].T @ P[i]
 
+    P[-1] = P[0]
+    K[-1] = K[0]
     return K, P
 
 def lqr_ltv(
@@ -177,7 +184,7 @@ def lqr_ltv_solve_fine(
     R"""
         Brief
         -----
-        Solve the matrix Riccati differential equation with periodic coefficients \
+        Solve the matrix Riccati differential equation \
                 and compute feedback controller stabilizing coefficients
 
         Params
@@ -248,7 +255,7 @@ def lqr_ltv_solve_euler(
     R"""
         Brief
         -----
-        Solve the matrix Riccati differential equation with periodic coefficients \
+        Solve the matrix Riccati differential equation \
                 and compute feedback controller stabilizing coefficients
 
         Params

@@ -6,8 +6,8 @@ from double_pendulum.dynamics import DoublePendulumParam
 from common.trajectory import Trajectory
 
 class DoublePendulumAnim:
-  def __init__(self, par : DoublePendulumParam, color='black', linewidth=3, **plotargs):
-    self.line, = plt.plot([0,0,0], [0,1,2], '-o', linewidth=linewidth, color=color, **plotargs)
+  def __init__(self, par : DoublePendulumParam, color='black', linewidth=6, markersize=20, **plotargs):
+    self.line, = plt.plot([0,0,0], [0,1,2], '-o', linewidth=linewidth, markersize=markersize, color=color, **plotargs)
     self.l1, self.l2 = par.lengths
 
   def move(self, q):
@@ -58,7 +58,7 @@ def draw(q : np.ndarray, par : DoublePendulumParam, **plot_args):
   model.move(q)
   return model.elems()
 
-def animate(traj : Trajectory, par : DoublePendulumParam, fps=60, speedup=1):
+def animate(traj : Trajectory, par : DoublePendulumParam, fps=60, speedup=1, videopath=None):
   q = traj.coords
   t = traj.time
   qfun = make_interp_spline(t, q, k=1)
@@ -66,7 +66,7 @@ def animate(traj : Trajectory, par : DoublePendulumParam, fps=60, speedup=1):
   wb = compute_viewbox(q, par)
   xmin, xmax, ymin, ymax = inflate_viewbox(*wb, 10)
 
-  fig, ax = plt.subplots(figsize=(4 * (xmax - xmin) / (ymax - ymin), 4))
+  fig, ax = plt.subplots(figsize=(6 * (xmax - xmin) / (ymax - ymin), 6), num='double pendulum sim')
   plt.gca().set(xlim=[xmin, xmax], ylim=[ymin, ymax])
   plt.gca().set_aspect(1)
 
@@ -81,33 +81,10 @@ def animate(traj : Trajectory, par : DoublePendulumParam, fps=60, speedup=1):
     return model.elems()
 
   anim = animation.FuncAnimation(fig, drawframe, frames=nframes, interval=1000/fps, blit=True)
+  plt.tight_layout()
+
   rc('animation', html='jshtml')
+  if videopath:
+    anim.save(videopath, fps=fps, bitrate=-1, extra_args=['-pix_fmt', 'yuv420p'])
+
   return anim
-
-"""
-def animate2(traj : Trajectory, par : DoublePendulumAnim, fps=60):
-  q = traj.coords
-  t = traj.time
-  qfun = make_interp_spline(t, q, k=1)
-
-  wb = compute_viewbox(q, par)
-  xmin, xmax, ymin, ymax = inflate_viewbox(*wb, 10)
-
-  fig, axes = plt.subplots(1, 2, figsize=(8 * (xmax - xmin) / (ymax - ymin), 4))
-  plt.sca(axes[0])
-  plt.axis('equal')
-  axes[0].set_ylim((ymin, ymax))
-  axes[0].set_xlim((xmin, xmax))
-  model = DoublePendulumAnim(par)
-  interval = t[-1] - t[0]
-  nframes = int(interval * fps)
-
-  def drawframe(iframe):
-    ti = iframe / fps + t[0]
-    model.move(qfun(ti))
-    return model.elems()
-
-  anim = animation.FuncAnimation(fig, drawframe, frames=nframes, interval=1000/fps, blit=True)
-  rc('animation', html='jshtml')
-  return anim
-"""

@@ -51,8 +51,9 @@ def make_sample_data():
   trans_dyn = TransverseDynamics(dynamics, coords)
 
   return {
-    'par': trans_par,
+    'dynamics_par': par,
     'dynamics': dynamics,
+    'trans_par': trans_par,
     'trans_dyn': trans_dyn,
     'constr': constr,
     'reduced': reduced,

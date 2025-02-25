@@ -14,31 +14,13 @@ import casadi as ca
 import matplotlib.pyplot as plt
 from double_pendulum.anim import draw, animate
 from singular_motion_planner.singular_constrs import get_sing_constr_at
+from singular_motion_planner.plots import show_reduced_dynamics_phase_prortrait
 from singular_motion_planner.reduced_dynamics import (
   ReducedDynamics,
   solve_reduced,
   compute_time,
   reconstruct_trajectory
 )
-import scienceplots
-from typing import List, Tuple
-
-
-def add_annotation(text : str, textpos : Tuple[int, int]):
-  bbox = {
-    'boxstyle': 'round',
-    'fc': '1.0',
-    'lw': 0,
-    'alpha': 0.8
-  }
-  annotate_par = {
-    'xycoords': 'axes points',
-    'font': {
-      'size': 18
-    },
-    'bbox': bbox
-  }
-  return plt.annotate(text, textpos, **annotate_par)
 
 def enlarge_rect(r, coef):
   c = np.mean(r, axis=1)
@@ -98,46 +80,7 @@ def motion_schematic(traj : Trajectory, par : DoublePendulumParam, savetofile=No
   if savetofile is not None:
     plt.savefig(savetofile)
 
-def show_phase_prortrait(reduced : ReducedDynamics, reduced_traj : Trajectory, savetofile=None):
-  sleft = np.min(reduced_traj.coords)
-  sright = np.max(reduced_traj.coords)
-  dsmin = np.min(reduced_traj.vels)
-  dsmax = np.max(reduced_traj.vels)
-
-  # with plt.style.context('science'):
-  #   plt.figure('phase', figsize=(6, 4))
-  s0 = reduced_traj.coords[0,0]
-  plt.figure(num=f'phase portrait at {s0:.2f}', figsize=(6, 4))
-  plt.axhline(0, color='black', alpha=0.5, lw=1)
-  plt.axvline(0, color='black', alpha=0.5, lw=1)
-
-  s1 = sleft * 1.2
-  s2 = sright * 1.2
-  ds1 = dsmin * 1.2
-  ds2 = dsmax * 1.2
-  s = np.linspace(s1, s2, 30)
-  ds = np.linspace(ds1, ds2, 30)
-  X,Y = np.meshgrid(s, ds)
-  U = np.zeros(X.shape)
-  V = np.zeros(X.shape)
-  for i in range(len(s)):
-    for j in range(len(ds)):
-      U[j,i] = ds[j]
-      V[j,i] = (-reduced.beta(s[i]) * ds[j]**2 - reduced.gamma(s[i])) / reduced.alpha(s[i])
-
-  plt.streamplot(X, Y, U, V, color='lightblue')
-  plt.plot(reduced_traj.coords, reduced_traj.vels, lw=2, color='darkblue', alpha=1)
-  plt.gca().set_xlim(s1, s2)
-  plt.gca().set_ylim(ds1, ds2)
-  add_annotation(R'$\theta$', (340, 10))
-  add_annotation(R'$\dot\theta$', (8, 210))
-
-  plt.tight_layout()
-
-  if savetofile is not None:
-    plt.savefig(savetofile)
-
-def show_trajectory_projections(traj : Trajectory, reduced_traj : Trajectory, savetofile=None):
+def show_trajectory_projections(traj : Trajectory, savetofile=None):
   q0 = traj.coords[0]
   fig, axes = plt.subplots(2, 2, sharex=True, num=f'trajectory projections at {q0[0]:.2f}, {q0[1]:.2f}')
   ax = axes[0,0]
@@ -171,7 +114,7 @@ def show_trajectory_projections(traj : Trajectory, reduced_traj : Trajectory, sa
   if savetofile is not None:
     plt.savefig(savetofile)
 
-def show_trajectory(traj : Trajectory, reduced_traj : Trajectory, savetofile=None):
+def show_trajectory(traj : Trajectory, savetofile=None):
   q0 = traj.coords[0]
   fig, axes = plt.subplots(2, 2, sharex=True, num=f'trajectory at {q0[0]:.2f}, {q0[1]:.2f}')
   ax = axes[0,0]
@@ -217,8 +160,8 @@ def process_sing_traj_at_sing_point(singpt):
   tr_reduced = traj_repeat(tr_closed, 2)
   tr_orig = reconstruct_trajectory(constr, reduced, dynamics, tr_reduced)
 
-  show_trajectory(tr_orig, tr_reduced)
-  show_phase_prortrait(reduced, tr_closed)
+  show_trajectory(tr_orig)
+  show_reduced_dynamics_phase_prortrait(reduced, tr_closed)
   motion_schematic(tr_orig, par)
 
 def main():
@@ -260,8 +203,8 @@ def show_sample_traj():
   tr_reduced = traj_repeat(tr_closed, 2)
   tr_orig = reconstruct_trajectory(constr, reduced, dynamics, tr_reduced)
 
-  show_trajectory(tr_orig, tr_reduced)
-  show_phase_prortrait(reduced, tr_closed)
+  show_trajectory(tr_orig)
+  show_reduced_dynamics_phase_prortrait(reduced, tr_closed)
   motion_schematic(tr_orig, par)
   plt.show()
 

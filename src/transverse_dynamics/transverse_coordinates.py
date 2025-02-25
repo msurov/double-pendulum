@@ -98,8 +98,10 @@ class TransverseCoordinates:
     if np.all(traj.phase[-1] == traj.phase[0]):
       bc_type = 'periodic'
       assert np.allclose(theta[-1] - theta[0], 2 * np.pi)
+      self.periodic = True
     else:
       bc_type = None
+      self.periodic = False
 
     self.xsp = make_interp_spline(theta, traj.phase, k=5, bc_type=bc_type)
     self.x_ref = MXSpline(self.xsp)

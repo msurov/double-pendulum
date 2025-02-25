@@ -68,10 +68,14 @@ def get_control_mar(par : DoublePendulumParam) -> SX:
   B[par.actiated_joint,0] = 1
   return B
 
-def get_coriolis_mat(M : SX, thetas : SX, dthetas : SX) -> SX:
-  Mdq = M @ dthetas
-  J = jacobian(Mdq, thetas)
-  C = J - J.T / 2
+def get_coriolis_mat(M : SX, q : SX, dq : SX) -> SX:
+  # Mdq = M @ dthetas
+  # J = jacobian(Mdq, thetas)
+  # C = J - J.T / 2
+  C1 = ca.jtimes(M, q, dq)
+  C2 = 0.5 * ca.jacobian(M @ dq, q).T
+  C = C1 - C2
+  C = ca.simplify(C)
   return C
 
 class DoublePendulumDynamics(MechanicalSystem):

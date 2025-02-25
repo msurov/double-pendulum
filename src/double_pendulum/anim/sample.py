@@ -1,4 +1,4 @@
-from .anim import draw
+from anim import draw
 import matplotlib.pyplot as plt
 from double_pendulum.dynamics.parameters import DoublePendulumParam, load
 
