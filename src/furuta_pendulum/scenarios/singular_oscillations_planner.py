@@ -1,18 +1,15 @@
-import numpy as np
+from furuta_pendulum.dynamics import (
+  FurutaPendulumDynamics,
+  FurutaPendulumPar,
+  furuta_pendulum_param_default
+)
+from furuta_pendulum.anim import draw, animate, motion_schematic
 from common.trajectory import (
   Trajectory,
   traj_join, 
   traj_forth_and_back, 
   traj_repeat
 )
-from double_pendulum.dynamics import (
-  DoublePendulumDynamics,
-  DoublePendulumParam,
-  double_pendulum_param_default
-)
-import casadi as ca
-import matplotlib.pyplot as plt
-from double_pendulum.anim import draw, animate
 from singular_motion_planner.singular_constrs import get_sing_constr_at
 from singular_motion_planner.plots import show_reduced_dynamics_phase_prortrait
 from singular_motion_planner.reduced_dynamics import (
@@ -21,64 +18,10 @@ from singular_motion_planner.reduced_dynamics import (
   compute_time,
   reconstruct_trajectory
 )
+import casadi as ca
+import matplotlib.pyplot as plt
+import numpy as np
 
-def enlarge_rect(r, coef):
-  c = np.mean(r, axis=1)
-  w = r[:,1] - r[:,0]
-  return np.array([c - w * coef / 2, c + w * coef / 2]).T
-
-def get_traj_bounding_rect(traj : Trajectory):
-  qmin = np.min(traj.coords, axis=0)
-  qmax = np.max(traj.coords, axis=0)
-  return np.array([qmin, qmax]).T
-
-def get_cartesian_rect(traj : Trajectory, par : DoublePendulumParam):
-  q1, q2 = traj.coords.T
-  x1 = par.lengths[0] * np.sin(q1)
-  y1 = par.lengths[0] * np.cos(q1)
-  x2 = x1 + par.lengths[0] * np.sin(q1 + q2)
-  y2 = y1 + par.lengths[0] * np.cos(q1 + q2)
-
-  xmin = min(0, np.min(x1))
-  xmin = min(xmin, np.min(x2))
-
-  xmax = max(0, np.max(x1))
-  xmax = max(xmax, np.max(x2))
-
-  ymin = min(0, np.min(y1))
-  ymin = min(ymin, np.min(y2))
-
-  ymax = max(0, np.max(y1))
-  ymax = max(ymax, np.max(y2))
-
-  return np.array([
-    [xmin, xmax],
-    [ymin, ymax]
-  ])
-
-def motion_schematic(traj : Trajectory, par : DoublePendulumParam, savetofile=None):
-  d = traj.phase - traj.phase[0]
-  d = np.linalg.norm(d, axis=1)
-  i, = np.nonzero(d < 1e-5)
-  i = i[1]
-  q1 = traj.coords[0]
-  q2 = traj.coords[i//4]
-  q3 = traj.coords[i//2]
-
-  fig,ax = plt.subplots(1, 1, num=f'schematic at {q1[0]:.2f}, {q1[1]:.2f}', figsize=(6, 4))
-  ax.set_aspect(1)
-  draw(q1, par, alpha=1, color='#3030E0', linewidth=2)
-  draw(q2, par, alpha=1, color='#3030C0', linewidth=2)
-  draw(q3, par, alpha=1, color='#3030A0', linewidth=2)
-  r = get_cartesian_rect(traj, par)
-  xdiap, ydiap = enlarge_rect(r, 1.05)
-  ax.set_xlim(*xdiap)
-  ax.set_ylim(*ydiap)
-
-  plt.grid(True)
-  plt.tight_layout()
-  if savetofile is not None:
-    plt.savefig(savetofile)
 
 def show_trajectory_projections(traj : Trajectory, savetofile=None):
   q0 = traj.coords[0]
@@ -165,47 +108,29 @@ def process_sing_traj_at_sing_point(singpt):
   motion_schematic(tr_orig, par)
 
 def main():
-  positions = [
-    [-2.045583727546234, 0.6462469356355233],
-    [-1.7050253662106756, -3.30435292667277],
-    [11.690270453301533, 2.0109207709898262],
-    [1.0, -2.5],
-    [2.5, 1.3],
-    [-1, 2.5708],
-    [-1, 2.4],
-    [-1, 2.7],
-    [-2, 2.8],
-    [-0.5, 2.5],
-    [-1, 0.6],
-    [-1.2, 0.8],
-    [-2, 0.9],
-    [-2.5, 2.8],
-    [ 2.35619449, -0.78539816],
-    [-1.04719755,  2.61799388]
-  ]
-  for pos in positions:
-    process_sing_traj_at_sing_point(pos)
-    # plt.pause(0.001)
-    plt.show()
-
-  plt.show()
+  pass
 
 def show_sample_traj():
-  par = double_pendulum_param_default
-  dynamics = DoublePendulumDynamics(par)
-  singpt = np.array([-2.2, 1.12])
-  constr = get_sing_constr_at(dynamics, singpt)
+  par = furuta_pendulum_param_default
+  dynamics = FurutaPendulumDynamics(par)
+  singpt = [4, -2.]
+
+  constr = get_sing_constr_at(dynamics, singpt, scale=1000)
   reduced = ReducedDynamics(dynamics, constr)
-  tr_left = solve_reduced(reduced, [-0.05, -1e-4], 0.0, max_step=1e-4)
-  tr_right = solve_reduced(reduced, [0.08, 1e-4], 0.0, max_step=1e-4)
+  tr_left = solve_reduced(reduced, [-0.4, -1e-3], 0.0, max_step=1e-3)
+  tr_right = solve_reduced(reduced, [0.4, 1e-3], 0.0, max_step=1e-3)
   tr_up = traj_join(tr_left, tr_right[::-1])
   tr_closed = traj_forth_and_back(tr_up)
   tr_reduced = traj_repeat(tr_closed, 2)
+  print(tr_reduced.time[-1])
   tr_orig = reconstruct_trajectory(constr, reduced, dynamics, tr_reduced)
 
   show_trajectory(tr_orig)
+  show_trajectory_projections(tr_orig)
   show_reduced_dynamics_phase_prortrait(reduced, tr_closed)
   motion_schematic(tr_orig, par)
+  # a = animate(tr_orig, par, speedup=0.2)
+
   plt.show()
 
 if __name__ == '__main__':
@@ -216,5 +141,5 @@ if __name__ == '__main__':
   })
 
   np.set_printoptions(suppress=True)
-  main()
-  # show_sample_traj()
+  # main()
+  show_sample_traj()

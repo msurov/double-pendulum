@@ -52,6 +52,7 @@ def draw(q : np.ndarray, par : DoublePendulumParam, **plot_args):
   wb = compute_viewbox(q, par)
   xmin, xmax, ymin, ymax = inflate_viewbox(*wb, 10)
   plt.axis('equal')
+  # ax.set_aspect('equal', anchor='C')
   ax.set_xlim((xmin, xmax))
   ax.set_ylim((ymin, ymax))
   model = DoublePendulumAnim(par, **plot_args)

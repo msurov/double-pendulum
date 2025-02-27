@@ -3,7 +3,7 @@ import casadi as ca
 import numpy as np
 
 
-def get_sing_constr_at(dynamics : MechanicalSystem, q_sing : np.ndarray):
+def get_sing_constr_at(dynamics : MechanicalSystem, q_sing : np.ndarray, scale=1):
   J = ca.DM([
     [0, -1],
     [1, 0]
@@ -44,7 +44,7 @@ def get_sing_constr_at(dynamics : MechanicalSystem, q_sing : np.ndarray):
   F_val = ca.evalf(ca.substitute(F, q, q_sing))
 
   theta = ca.SX.sym('theta')
-  constr_expr = q_sing + N_val * theta + 0.5 * k * F_val * theta**2
+  constr_expr = q_sing + N_val * theta / scale + 0.5 * k * F_val * theta**2 / scale**2
   constr_fun = ca.Function('constr', [theta], [constr_expr])
   return constr_fun
  

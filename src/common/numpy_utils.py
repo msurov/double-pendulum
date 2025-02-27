@@ -1,6 +1,7 @@
 import numpy as np
 from bisect import bisect
-
+from scipy.integrate import cumulative_simpson, cumulative_trapezoid
+from typing import Union
 
 def cont_angle(a : np.ndarray) -> np.ndarray:
   '''
@@ -23,23 +24,53 @@ def skew(a : float, b : float) -> float:
   bx, by = b
   return ax*by - ay*bx
 
-def rotmat(a : float) -> np.ndarray:
+def rotmat2d(a : float) -> np.ndarray:
   return np.array([
     [np.cos(a), -np.sin(a)],
     [np.sin(a), np.cos(a)]
   ])
 
-def rotmat_deriv(a : float) -> np.ndarray:
+def rotmat2d_deriv(a : float) -> np.ndarray:
   return np.array([
     [-np.sin(a), -np.cos(a)],
     [np.cos(a), -np.sin(a)]
   ])
 
-def integrate_trapz(x : np.ndarray, y : np.ndarray) -> np.ndarray:
-  s = np.zeros(y.shape)
-  s[1:] = (y[1:] + y[:-1]) * np.diff(x) / 2
-  s = np.cumsum(s)
-  return s
+def integrate_array(
+    x : np.ndarray,
+    y : np.ndarray,
+    method : Union['simpson', 'trapz'] = 'simpson',
+    I0 : Union[float, np.ndarray, None] = None
+  ) -> np.ndarray:
+  if method == 'simpson':
+    return integrate_simp(x=x, y=y, I0=I0)
+  elif method == 'trapz':
+    return integrate_trapz(x=x, y=y, I0=I0)
+  assert False, 'Unknown method ' + str(method)
+
+def integrate_trapz(
+    x : np.ndarray,
+    y : np.ndarray,
+    I0 : Union[float, np.ndarray, None] = None
+  ) -> np.ndarray:
+  npts, = x.shape
+  assert y.shape[0] == npts
+  res = cumulative_trapezoid(x=x, y=y, initial=0, axis=0)
+  if I0 is not None:
+    res += np.reshape(I0, (1,) + y.shape[1:])
+  return res
+
+def integrate_simp(
+    x : np.ndarray,
+    y : np.ndarray,
+    I0 : Union[float, np.ndarray, None] = None
+  ) -> np.ndarray:
+  npts, = x.shape
+  assert y.shape[0] == npts
+  if I0 is None:
+    I0 = 0 * y[0,...]
+  I0 = np.reshape(I0, (1,) + y.shape[1:])
+  return cumulative_simpson(x=x, y=y, initial=I0, axis=0)
 
 def linear_interp(xx : np.ndarray, yy : np.ndarray, x : float) -> np.ndarray:
   i = bisect(xx, x)

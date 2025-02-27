@@ -1,4 +1,4 @@
-from transverse_dynamics.sample_data import make_sample_data
+from double_pendulum.scenarios.sample_data import make_sample_data
 from scipy.integrate import solve_ivp
 from transverse_dynamics.transverse_feedback import (
   TranverseFeedbackController,
@@ -105,7 +105,7 @@ def integrate_closed_loop_system():
   traj = data['traj']
 
   par = TranverseFeedbackControllerPar(
-    Q = np.eye(3),
+    Q = np.diag([5., 5., 1.]),
     R = 1e-2 * np.eye(1),
     nsteps = 200
   )
@@ -200,4 +200,6 @@ def run_simulator():
   a = animate(res.traj, data['dynamics_par'], speedup=0.25, videopath='data/stab.mp4')
   plt.show()
 
-run_simulator()
+if __name__ == "__main__":
+  # integrate_closed_loop_system()
+  run_simulator()

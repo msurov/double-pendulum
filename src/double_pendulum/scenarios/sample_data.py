@@ -57,6 +57,7 @@ def make_sample_data():
     'trans_dyn': trans_dyn,
     'constr': constr,
     'reduced': reduced,
+    'traj_reduced': tr_closed,
     'coords': coords,
     'traj': tr_orig,
     'traj_spline': trajsp,

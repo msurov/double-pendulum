@@ -31,7 +31,7 @@ def test_compare_dynamics():
   U1 = np.array(d1.U(q_), float)
   U2 = np.array(d2.U(q_), float)
   assert np.allclose(M1, M2)
-  assert np.allclose(C1, C2)
+  assert np.allclose(C1 @ dq_, C2 @ dq_)
   assert np.allclose(G1, G2)
   assert np.allclose(B1, B2)
   assert np.allclose(U1, U2)

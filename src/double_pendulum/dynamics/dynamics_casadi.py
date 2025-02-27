@@ -65,7 +65,7 @@ def get_gravity_mat(U : SX, thetas : SX) -> SX:
 
 def get_control_mar(par : DoublePendulumParam) -> SX:
   B = SX.zeros(2,1)
-  B[par.actiated_joint,0] = 1
+  B[par.actiated_joint, 0] = 1
   return B
 
 def get_coriolis_mat(M : SX, q : SX, dq : SX) -> SX:
@@ -93,6 +93,7 @@ class DoublePendulumDynamics(MechanicalSystem):
     B = get_control_mar(par)
     C = get_coriolis_mat(M, q, dq)
     K = dq.T @ M @ dq / 2
+    E = U + K
 
     self.q = q
     self.dq = dq
@@ -103,6 +104,7 @@ class DoublePendulumDynamics(MechanicalSystem):
     self.B_expr = B
     self.U_expr = U
     self.K_expr = K
+    self.E_expr = E
 
     state = ca.vertcat(q, dq)
     self.ddq_expr = ca.pinv(M) @ (-C @ dq - G + B @ u)
@@ -114,4 +116,5 @@ class DoublePendulumDynamics(MechanicalSystem):
     self.B = ca.Function('B', [q], [self.B_expr])
     self.U = ca.Function('U', [q], [self.U_expr])
     self.K = ca.Function('K', [q, dq], [self.K_expr])
+    self.E = ca.Function('E', [q, dq], [self.E_expr])
     self.rhs = ca.Function('RHS', [state, u], [self.rhs_expr])

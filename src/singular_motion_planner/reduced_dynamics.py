@@ -82,7 +82,6 @@ def solve_reduced(rd : ReducedDynamics, sdiap, ds0, **solver_args) -> Trajectory
 
   def stop(s, y):
     if y[0] <= 0 and abs(s - sdiap[0]) > eps:
-      print('ZZZZZZZZZZZ')
       return 0.
     return 1.
 

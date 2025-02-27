@@ -18,7 +18,7 @@ from scipy.interpolate import make_interp_spline
 from scipy.integrate import solve_ivp
 import matplotlib.pyplot as plt
 import casadi as ca
-from transverse_dynamics.sample_data import make_sample_data
+from double_pendulum.scenarios.sample_data import make_sample_data
 
 
 def verify_free_motion_transverse_dynamics():
@@ -42,7 +42,6 @@ def verify_free_motion_transverse_dynamics():
   theta = sol.t
   lines_transverse = plt.plot(theta, xi)
 
-  par = sampledata['par']
   dyn = sampledata['dynamics']
   x0 = coords.inverse_transform_fun(theta0, xi0)
   x0 = np.reshape(x0, (4,))
@@ -90,13 +89,13 @@ def verify_transverse_dynamics():
   theta = sol.t
   lines_transverse = plt.plot(theta, xi)
 
-  par = sampledata['par']
+  trans_par = sampledata['trans_par']
   dyn = sampledata['dynamics']
   x0 = coords.inverse_transform_fun(theta0, xi0)
   x0 = np.reshape(x0, (4,))
 
   def rhs_orig(t, x):
-    theta = compute_theta(x, par)
+    theta = compute_theta(x, trans_par)
     u = coords.usp(theta) + stab_input(theta)
     dx = dyn.rhs(x, u)
     return np.reshape(dx, (-1,))
@@ -158,7 +157,7 @@ def show_theta_trajectory():
   coords = sampledata['coords']
   transdyn = sampledata['trans_dyn']
   traj = sampledata['traj']
-  transpar = sampledata['par']
+  transpar = sampledata['trans_par']
   theta = compute_theta(traj.phase, transpar)
   plt.plot(traj.time, theta)
   plt.xlabel(R't', fontsize=16)

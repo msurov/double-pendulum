@@ -13,6 +13,7 @@ class MechanicalSystem:
     self.B_expr = ca.MX.zeros(2, 1)
     self.U_expr = ca.MX.zeros(1)
     self.K_expr = ca.MX.zeros(1)
+    self.E_expr = ca.MX.zeros(1)
 
     self.ddq_expr = ca.MX.zeros(2)
     self.rhs_expr = ca.MX.zeros(4)
@@ -23,4 +24,5 @@ class MechanicalSystem:
     self.B = lambda q: None
     self.U = lambda q: None
     self.K = lambda q, dq: None
+    self.E = lambda q, dq: None
     self.rhs = lambda state, u: None

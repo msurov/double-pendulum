@@ -8,7 +8,7 @@ from typing import Optional
 class Trajectory:
   time : np.ndarray
   phase : np.ndarray
-  control : Optional[np.ndarray]
+  control : Optional[np.ndarray] = None
 
   def __post_init__(self):
     self.phase = np.array(self.phase, float)

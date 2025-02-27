@@ -25,7 +25,7 @@ from transverse_dynamics.transverse_coordinates import (
 )
 from scipy.interpolate import make_interp_spline
 import casadi as ca
-from transverse_dynamics.sample_data import make_sample_data
+from double_pendulum.scenarios.sample_data import make_sample_data
 
 
 def test_forward_transform():
