@@ -20,8 +20,10 @@ from common.bspline_sym import (
   make_interp_spline
 )
 from common.numpy_utils import (
-  cont_angle, 
-  is_ascending
+  cont_angle,
+  is_ascending,
+  wedge,
+  elementwise_dot
 )
 from typing import Tuple
 import casadi as ca
@@ -86,10 +88,21 @@ class TransverseCoordinates:
     self.forward_transform_fun = ca.Function('forward_transform', [self.x], [self.forward_transform_expr])
     self.forward_jac_fun = ca.Function('forward_jac', [self.x], [self.forward_jac_expr])
 
+  def __verify_transversality(self, traj : Trajectory):
+    dx = np.diff(traj.phase, axis=0)
+    mx = 0.5 * (traj.phase[1:] + traj.phase[:-1])
+    J = wedge(self.par.proj_plane_x, self.par.proj_plane_y)
+    val = elementwise_dot(
+      (mx - self.par.proj_plane_origin) @ J, dx
+    )
+    assert np.all(val > 0), "Section is not transverse"
+
   def __init_curve(self, traj : Trajectory):
+    self.__verify_transversality(traj)
+
     x = (traj.phase - self.par.proj_plane_origin) @ self.par.proj_plane_x
-    y = (traj.phase - self.par.proj_plane_origin) @ self.par.proj_plane_y  
-    theta = np.arctan2(-y, x)
+    y = (traj.phase - self.par.proj_plane_origin) @ self.par.proj_plane_y
+    theta = np.arctan2(y, x)
     cont_angle(theta)
     self.theta_min = theta[0]
     self.theta_max = theta[-1]
@@ -139,13 +152,13 @@ class TransverseCoordinates:
     x_ref_expr = self.x_ref_expr
 
     A = ca.vertcat(
-      a * ca.sin(theta) + b * ca.cos(theta),
-      a * ca.cos(theta) - b * ca.sin(theta),
+      a * ca.sin(theta) - b * ca.cos(theta),
+      a * ca.cos(theta) + b * ca.sin(theta),
       T
     )
     B = ca.vertcat(
-      (a * ca.sin(theta) + b * ca.cos(theta)) @ x0,
-      (a * ca.cos(theta) - b * ca.sin(theta)) @ x_ref_expr + xi[-1],
+      (a * ca.sin(theta) - b * ca.cos(theta)) @ x0,
+      (a * ca.cos(theta) + b * ca.sin(theta)) @ x_ref_expr + xi[-1],
       xi[0:-1] + T @ self.x_ref_expr
     )
     self.__verify_solvability(A)
@@ -170,11 +183,11 @@ class TransverseCoordinates:
     x = self.x
     T = ca.DM(self.par.transverse_projection_mat)
 
-    theta = -ca.arctan2(b @ (x - x0), a @ (x - x0))
+    theta = ca.arctan2(b @ (x - x0), a @ (x - x0))
     x_ref = self.x_ref(theta)
     xi = ca.vertcat(
       T @ (x - x_ref),
-      (a * ca.cos(theta) - b * ca.sin(theta)) @ (x - x_ref)
+      (a * ca.cos(theta) + b * ca.sin(theta)) @ (x - x_ref)
     )
     self.xi_expr = xi
     self.theta_expr = theta
@@ -184,7 +197,7 @@ class TransverseCoordinates:
 def compute_theta(phase : np.ndarray, par : TransverseCoordinatesPar) -> np.ndarray:
   x = (phase - par.proj_plane_origin) @ par.proj_plane_x
   y = (phase - par.proj_plane_origin) @ par.proj_plane_y
-  theta = -np.arctan2(y, x)
+  theta = np.arctan2(y, x)
   if isinstance(theta, np.ndarray):
     cont_angle(theta)
   return theta
@@ -258,4 +271,3 @@ class TransverseDynamics:
     expr = ca.substitute(expr, self.xi, ca.DM.zeros(*self.xi.shape))
     rest = ca.simplify(expr)
     self.rest_expr = rest
-  

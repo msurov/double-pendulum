@@ -30,14 +30,14 @@ class FurutaPendulumPar:
   gravity_accel : float
 
 furuta_pendulum_param_default = FurutaPendulumPar(
-  link_1_mass = 0.150,
+  link_1_mass = 0.100,
   link_2_mass = 0.025,
   link_1_length = 0.1,
-  link_2_length = 0.1,
+  link_2_length = 0.2,
   link_1_inertia_tensor = np.diag([0., 0.00015, 0.00015]),
-  link_2_inertia_tensor = np.diag([0., 0.00003, 0.00003]),
+  link_2_inertia_tensor = np.diag([0., 0.00015, 0.00015]),
   link_1_mass_center = np.array([0.01, 0., 0.]),
-  link_2_mass_center = np.array([0.03, 0., 0.]),
+  link_2_mass_center = np.array([0.12, 0., 0.]),
   link_1_orient = np.eye(3),
   link_2_orient = np.array([
     [0.,  0., 1.],

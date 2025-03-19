@@ -89,11 +89,15 @@ def linear_interp(xx : np.ndarray, yy : np.ndarray, x : float) -> np.ndarray:
 def normalized(v : np.ndarray) -> np.ndarray:
   return v / np.linalg.norm(v)
 
-def dot(a, b):
+def dot(a : np.ndarray, b : np.ndarray) -> float:
   return np.dot(a, b)
 
-def skew(a, b):
+def skew(a : np.ndarray, b : np.ndarray) -> float:
   return a[0] * b[1] - a[1] * b[0]
+
+def wedge(a : np.ndarray, b : np.ndarray) -> np.ndarray:
+  Q = np.outer(a, b)
+  return Q - Q.T
 
 def is_ascending(a : np.ndarray) -> bool:
   return np.all(np.diff(a) > 0)
@@ -103,7 +107,10 @@ def are_angles_close(a : np.ndarray, b : np.ndarray) -> bool:
   rounded = np.round(normed)
   return np.allclose(normed, rounded)
 
-def vectors_dif(a, b):
+def vectors_dif(a : np.ndarray, b : np.ndarray) -> float:
   a = np.reshape(a, (-1,))
   b = np.reshape(b, (-1,))
   return 1 - np.dot(a, b) / (np.linalg.norm(a) * np.linalg.norm(b))
+
+def elementwise_dot(a : np.ndarray, b : np.ndarray) -> np.ndarray:
+  return np.sum(a * b, axis=-1)

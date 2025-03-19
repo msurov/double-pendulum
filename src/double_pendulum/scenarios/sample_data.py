@@ -42,7 +42,7 @@ def make_sample_data():
       [ 0.,  0., 1., 1.],
     ]),
     proj_plane_x = np.array([20., -20., 0.,  0.]),
-    proj_plane_y = np.array([ 0.,   0., 1., -1.]),
+    proj_plane_y = np.array([ 0.,   0., -1., 1.]),
     proj_plane_origin = np.concatenate((singpt, [0, 0]))
   )
 

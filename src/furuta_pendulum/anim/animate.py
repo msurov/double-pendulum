@@ -8,29 +8,38 @@ from scipy.interpolate import make_interp_spline
 
 
 class FurutaPendulumVis:
-  def __init__(self, par : FurutaPendulumPar):
+  def __init__(self, par : FurutaPendulumPar, color='blue'):
     self.get_vert_pos = vertex_pos_functor(par)
-    self.__create_joint(par)
-    self.__create_links([0, 0])
+    self.__create_axis(par)
+    self.__create_links([0, 0], color)
 
-  def __create_joint(self, par : FurutaPendulumPar):
-    ez = np.array([0, 0, 1])
+  def __create_axis(self, par : FurutaPendulumPar):
+    ez = np.array([0, 0, 0.05])
     l = par.link_1_orient @ ez
     p = par.joint_1_pos
     pts = np.array([p - l, p + l])
-    self.join1, = plt.plot(pts[:,0], pts[:,1], pts[:,2], ls='--', lw=2, color='grey', alpha=0.5)
+    self.axis, = plt.plot(pts[:,0], pts[:,1], pts[:,2], ls='--', lw=2, color='black', alpha=0.5)
 
-  def __create_links(self, q : np.ndarray):
+  def __create_links(self, q : np.ndarray, color):
     pts = self.get_vert_pos(q)
-    links, = plt.plot(pts[:,0], pts[:,1], pts[:,2], 'o-', lw=4, markersize=10)
+    links, = plt.plot(pts[:,0], pts[:,1], pts[:,2], '-', color=color, lw=6, alpha=1)
+    joints, = plt.plot(pts[:,0], pts[:,1], pts[:,2], 'o', color='black', markersize=12, alpha=1)
     self.links = links
-  
+    self.joints = joints
+    
   def elems(self):
-    return self.links, self.join1
-  
+    return self.links, self.joints, self.axis
+
+  def set_links_properties(self, **kwargs):
+    self.links.set(**kwargs)
+
+  def set_joints_properties(self, **kwargs):
+    self.joints.set(**kwargs)
+
   def move(self, q : np.ndarray):
     pts = self.get_vert_pos(q)
     self.links.set_data_3d(pts[:,0], pts[:,1], pts[:,2])
+    self.joints.set_data_3d(pts[:,0], pts[:,1], pts[:,2])
 
 def vertex_pos_functor(par : FurutaPendulumPar):
   ex = np.array([1., 0., 0.])
@@ -54,7 +63,7 @@ def vertex_pos_functor(par : FurutaPendulumPar):
 def init_axes(center : np.array, areasz : float, fig=None):
   if fig is None:
     fig = plt.figure()
-  ax = fig.add_subplot(projection='3d', proj_type='ortho')
+  ax = fig.add_subplot(projection='3d', proj_type='persp')
   cx,cy,cz = center
   ax.autoscale(enable=False)
   ax.set_xbound(cx - areasz/2, cx + areasz/2)
@@ -94,13 +103,12 @@ def get_view_area(par : FurutaPendulumPar, configurations=None):
   w = np.max(pmax - pmin)
   return pc, w
 
-def draw(q, par : FurutaPendulumPar, **plot_args):
+def draw(q, par : FurutaPendulumPar, color='blue'):
   fig = plt.figure(figsize=(6, 6))
   center, areasz = get_view_area(par)
   ax = init_axes(center, areasz, fig)
-  pend = FurutaPendulumVis(par)
+  pend = FurutaPendulumVis(par, color=color)
   pend.move(q)
-  pend.links.set(**plot_args)
 
 def motion_schematic(traj : Trajectory, par : FurutaPendulumPar):
   d = traj.phase - traj.phase[0]
@@ -112,19 +120,16 @@ def motion_schematic(traj : Trajectory, par : FurutaPendulumPar):
   q3 = traj.coords[i//2]
 
   fig = plt.figure('Furuta Pendulum Schematic', figsize=(6, 5))
+  plt.grid(True)
   center, areasz = get_view_area(par, traj.coords)
   ax = init_axes(center, areasz, fig)
-  vis1 = FurutaPendulumVis(par)
+  vis1 = FurutaPendulumVis(par, color='#3030E0')
   vis1.move(q1)
-  vis1.links.set(alpha=1, color='#3030E0', linewidth=2)
-  vis2 = FurutaPendulumVis(par)
+  vis2 = FurutaPendulumVis(par, color='#3030C0')
   vis2.move(q2)
-  vis2.links.set(alpha=1, color='#3030C0', linewidth=2)
-  vis3 = FurutaPendulumVis(par)
+  vis3 = FurutaPendulumVis(par, color='#3030A0')
   vis3.move(q3)
-  vis3.links.set(alpha=1, color='#3030A0', linewidth=2)
 
-  plt.grid(True)
   plt.tight_layout()
   return fig
 
@@ -134,7 +139,7 @@ def animate(traj : Trajectory, par : FurutaPendulumPar, fps=60, speedup=1, video
   qfun = make_interp_spline(t, q, k=1)
   center, areasz = get_view_area(par, q)
 
-  fig = plt.figure('Furuta Pendulum Sim', figsize=(6, 5))
+  fig = plt.figure('Furuta Pendulum Sim', figsize=(8, 7))
   ax = init_axes(center, areasz, fig)
   vis = FurutaPendulumVis(par)
 

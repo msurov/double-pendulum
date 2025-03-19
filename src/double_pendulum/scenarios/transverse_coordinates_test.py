@@ -18,11 +18,6 @@ from common.numpy_utils import (
   vectors_dif,
   cont_angle
 )
-from transverse_dynamics.transverse_coordinates import (
-  TransverseCoordinates,
-  TransverseCoordinatesPar,
-  TransverseDynamics
-)
 from scipy.interpolate import make_interp_spline
 import casadi as ca
 from double_pendulum.scenarios.sample_data import make_sample_data

@@ -201,5 +201,5 @@ def run_simulator():
   plt.show()
 
 if __name__ == "__main__":
-  # integrate_closed_loop_system()
+  integrate_closed_loop_system()
   run_simulator()
