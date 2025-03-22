@@ -8,9 +8,6 @@ from common.trajectory import (
 from common.plots import set_pi_xticks, set_pi_yticks
 import matplotlib.pyplot as plt
 from transverse_dynamics.transverse_coordinates import (
-  TransverseCoordinates,
-  TransverseCoordinatesPar,
-  TransverseDynamics,
   compute_theta,
   compute_transverse
 )

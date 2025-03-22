@@ -1,6 +1,6 @@
 import numpy as np
 import sympy as sy
-from .parameters import DoublePendulumParam2
+from double_pendulum.dynamics.parameters import DoublePendulumParam2
 from typing import List, Tuple
 
 
@@ -33,7 +33,7 @@ class DoublePendulumDynamics:
       [-p5 * sin(q1 + q2)]
     ])
     B = sy.zeros(2, 1)
-    B[par.actiated_joint] = 1
+    B[par.actuated_joint] = 1
 
     self.u = u
     self.q = q

@@ -31,7 +31,7 @@ def get_test_par() -> DoublePendulumParam:
     mass_centers=[0.5, 0.5],
     masses=[0.2, 0.2],
     inertia=[0.05, 0.05],
-    actiated_joint=0,
+    actuated_joint=0,
     gravity_accel=9.81
   )
 

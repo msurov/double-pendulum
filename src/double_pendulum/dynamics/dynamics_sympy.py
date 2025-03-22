@@ -1,6 +1,6 @@
 import numpy as np
 import sympy as sy
-from .parameters import DoublePendulumParam
+from double_pendulum.dynamics.parameters import DoublePendulumParam
 from typing import List, Tuple
 
 sin = sy.sin
@@ -70,7 +70,7 @@ def get_gravity_mat(U : Symbol, thetas : Tuple[Symbol]) -> Matrix:
 
 def get_control_mar(par : DoublePendulumParam) -> Matrix:
   B = sy.zeros(2,1)
-  B[par.actiated_joint,0] = 1
+  B[par.actuated_joint,0] = 1
   return B
 
 def get_coriolis_mat(M : Matrix, thetas : Tuple[Symbol], dq : Tuple[Symbol]) -> Matrix:

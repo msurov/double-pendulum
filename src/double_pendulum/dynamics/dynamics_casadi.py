@@ -65,7 +65,7 @@ def get_gravity_mat(U : SX, thetas : SX) -> SX:
 
 def get_control_mar(par : DoublePendulumParam) -> SX:
   B = SX.zeros(2,1)
-  B[par.actiated_joint, 0] = 1
+  B[par.actuated_joint, 0] = 1
   return B
 
 def get_coriolis_mat(M : SX, q : SX, dq : SX) -> SX:

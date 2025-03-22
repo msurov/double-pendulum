@@ -51,8 +51,8 @@ def show_reduced_dynamics_phase_prortrait(reduced : ReducedDynamics, reduced_tra
   plt.plot(reduced_traj.coords, reduced_traj.vels, lw=2, color='darkblue', alpha=1)
   plt.gca().set_xlim(s1, s2)
   plt.gca().set_ylim(ds1, ds2)
-  add_annotation(R'$\theta$', (340, 10))
-  add_annotation(R'$\dot\theta$', (8, 210))
+  add_annotation(R'$\phi$', (340, 10))
+  add_annotation(R'$\dot\phi$', (8, 210))
   plt.tight_layout()
 
   if savetofile is not None:
