@@ -3,6 +3,7 @@ from double_pendulum.dynamics.parameters import (
   DoublePendulumParam,
   DoublePendulumParam2,
   double_pendulum_param_default,
+  double_pendulum_param_disturbed,
   convert_parameters
 )
 from double_pendulum.dynamics.dynamics_sympy import (

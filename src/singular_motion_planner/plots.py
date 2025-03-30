@@ -6,6 +6,70 @@ import scienceplots
 from typing import Tuple
 
 
+def show_trajectory_projections(traj : Trajectory):
+  q0 = traj.coords[0]
+  fig, axes = plt.subplots(2, 2, sharex=True, num=f'trajectory projections at {q0[0]:.2f}, {q0[1]:.2f}')
+  ax = axes[0,0]
+  plt.sca(ax)
+  plt.grid(True)
+  plt.plot(traj.coords[:,0], traj.coords[:,1])
+  plt.ylabel(R'$q_2$', fontsize=18)
+
+  ax = axes[0,1]
+  plt.sca(ax)
+  plt.grid(True)
+  plt.plot(traj.coords[:,0], traj.vels[:,0])
+  plt.ylabel(R'$\dot q_1$', fontsize=18)
+
+  ax = axes[1,0]
+  plt.sca(ax)
+  plt.grid(True)
+  plt.plot(traj.coords[:,0], traj.vels[:,1])
+  plt.xlabel(R'$q_1$', fontsize=18)
+  plt.ylabel(R'$\dot q_2$', fontsize=18)
+
+  ax = axes[1,1]
+  plt.sca(ax)
+  plt.grid(True)
+  plt.plot(traj.coords[:,0], traj.control)
+  plt.xlabel(R'$q_1$', fontsize=18)
+  plt.ylabel(R'$u$', fontsize=18)
+
+  plt.tight_layout()
+  return fig
+
+def show_trajectory(traj : Trajectory):
+  q0 = traj.coords[0]
+  fig, axes = plt.subplots(2, 2, sharex=True, num=f'trajectory at {q0[0]:.2f}, {q0[1]:.2f}')
+  ax = axes[0,0]
+  plt.sca(ax)
+  plt.grid(True)
+  plt.plot(traj.time, traj.coords[:,1])
+  plt.ylabel(R'$q_2$', fontsize=18)
+
+  ax = axes[0,1]
+  plt.sca(ax)
+  plt.grid(True)
+  plt.plot(traj.time, traj.vels[:,0])
+  plt.ylabel(R'$\dot q_1$', fontsize=18)
+
+  ax = axes[1,0]
+  plt.sca(ax)
+  plt.grid(True)
+  plt.plot(traj.time, traj.vels[:,1])
+  plt.xlabel(R'$t$', fontsize=18)
+  plt.ylabel(R'$\dot q_2$', fontsize=18)
+
+  ax = axes[1,1]
+  plt.sca(ax)
+  plt.grid(True)
+  plt.plot(traj.time, traj.control)
+  plt.xlabel(R'$t$', fontsize=18)
+  plt.ylabel(R'$u$', fontsize=18)
+
+  plt.tight_layout()
+  return fig
+
 def add_annotation(text : str, textpos : Tuple[int, int]):
   bbox = {
     'boxstyle': 'round',
@@ -16,7 +80,7 @@ def add_annotation(text : str, textpos : Tuple[int, int]):
   annotate_par = {
     'xycoords': 'axes points',
     'font': {
-      'size': 18
+      'size': 22
     },
     'bbox': bbox
   }

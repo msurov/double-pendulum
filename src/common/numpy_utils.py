@@ -114,3 +114,51 @@ def vectors_dif(a : np.ndarray, b : np.ndarray) -> float:
 
 def elementwise_dot(a : np.ndarray, b : np.ndarray) -> np.ndarray:
   return np.sum(a * b, axis=-1)
+
+def filter_strictly_increasing(arr):
+  nelems, = arr.shape
+  if nelems == 0:
+    return None
+
+  imin = np.argmin(arr)
+  result = np.zeros(nelems)
+  result[0] = arr[imin]
+  nresult = 0
+
+  for i in range(imin + 1, nelems):
+    if arr[i] > result[nresult]:
+      nresult += 1
+      result[nresult] = arr[i]
+
+  result.resize(nresult + 1)
+  return result
+
+
+def get_max_increasing_interval(arr):
+  nelems, = np.shape(arr)
+
+  if nelems == 0:
+    return (0, 0)
+
+  if nelems == 1:
+    return (0, 1)
+
+  best_interval_len = 0
+  best_interval_start = 0
+  cur_interval_start = 0
+
+  for i in range(1, nelems):
+    if arr[i] <= arr[i-1]:
+      # interval ended
+      cur_len = i - cur_interval_start
+      if cur_len > best_interval_len:
+        best_interval_len = cur_len
+        best_interval_start = cur_interval_start
+      cur_interval_start = i
+  
+  cur_len = nelems - cur_interval_start
+  if cur_len > best_interval_len:
+    best_interval_len = cur_len
+    best_interval_start = cur_interval_start
+
+  return (best_interval_start, best_interval_start + best_interval_len)

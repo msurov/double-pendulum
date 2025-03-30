@@ -5,6 +5,7 @@ from common.trajectory import (
   traj_forth_and_back, 
   traj_repeat
 )
+from common.geom_utils import enlarge_rect
 from double_pendulum.dynamics import (
   DoublePendulumDynamics,
   DoublePendulumParam
@@ -138,11 +139,6 @@ def get_constr(isample : int) -> ca.Function:
     + ca.DM(constr[1]) * s \
     + ca.DM(constr[2]) * s**2 / 2
   return ca.Function('constr', [s], [expr])
-
-def enlarge_rect(r, coef):
-  c = np.mean(r, axis=1)
-  w = r[:,1] - r[:,0]
-  return np.array([c - w * coef / 2, c + w * coef / 2]).T
 
 def get_traj_bounding_rect(traj : Trajectory):
   qmin = np.min(traj.coords, axis=0)

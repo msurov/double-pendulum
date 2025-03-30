@@ -100,14 +100,33 @@ def show_trajectory(traj : Trajectory, savetofile=None):
     plt.savefig(savetofile)
 
 def show_sample_traj():
-  par = furuta_pendulum_param_default
+  par = FurutaPendulumPar(
+    link_1_mass = 0.100,
+    link_2_mass = 0.025,
+    link_1_length = 0.1,
+    link_2_length = 0.2,
+    link_1_inertia_tensor = np.diag([0., 0.00015, 0.00015]),
+    link_2_inertia_tensor = np.diag([0., 0.00015, 0.00015]),
+    link_1_mass_center = np.array([0.01, 0., 0.]),
+    link_2_mass_center = np.array([0.12, 0., 0.]),
+    link_1_orient = np.eye(3),
+    link_2_orient = np.array([
+      [0.,  0., 1.],
+      [0., -1., 0.],
+      [1.,  0., 0.]
+    ]),
+    joint_1_pos = np.array([0., 0., 0.]),
+    joint_2_pos = np.array([0.1, 0., 0.]),
+    gravity_accel = 9.81
+  )
   dynamics = FurutaPendulumDynamics(par)
   singpt = [-2., -2.2]
 
   constr = get_sing_constr_at(dynamics, singpt, scale=1000)
+  assert constr is not None
   reduced = ReducedDynamics(dynamics, constr)
-  tr_left = solve_reduced(reduced, [-0.8, -1e-3], 0.0, max_step=1e-3)
-  tr_right = solve_reduced(reduced, [0.8, 1e-3], 0.0, max_step=1e-3)
+  tr_left = solve_reduced(reduced, [-0.8, -0.5e-3], 0.0, max_step=1e-3)
+  tr_right = solve_reduced(reduced, [0.8, 0.5e-3], 0.0, max_step=1e-3)
   tr_up = traj_join(tr_left, tr_right[::-1])
   tr_closed = traj_forth_and_back(tr_up)
   tr_reduced = traj_repeat(tr_closed, 2)

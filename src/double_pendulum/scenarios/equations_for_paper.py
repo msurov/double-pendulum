@@ -2,6 +2,10 @@ from double_pendulum.dynamics.dynamics_sympy_v2 import (
   DoublePendulumParam2,
   DoublePendulumDynamics
 )
+from double_pendulum.dynamics import (
+  double_pendulum_param_default,
+  convert_parameters
+)
 from double_pendulum.dynamics import dynamics_sympy
 import sympy as sy
 
@@ -77,4 +81,9 @@ def test():
   # sy.pprint(dyn.M_expr)
   # sy.pprint(dyn.B_expr)
 
-test()
+def print_system_parameters():
+  par = double_pendulum_param_default
+  par2 = convert_parameters(par)
+  print(par2)
+
+print_system_parameters()

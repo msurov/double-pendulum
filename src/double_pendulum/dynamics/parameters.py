@@ -86,3 +86,11 @@ double_pendulum_param_default = DoublePendulumParam(
   actuated_joint=0,
   gravity_accel=9.81
 )
+double_pendulum_param_disturbed = DoublePendulumParam(
+  lengths=[0.98, 1.03],
+  mass_centers=[0.51, 0.49],
+  masses=[0.19, 0.21],
+  inertia=[0.052, 0.051],
+  actuated_joint=0,
+  gravity_accel=9.8
+)

@@ -143,8 +143,8 @@ class TransverseCoordinates:
     R"""
       x = x(theta, xi)
     """
-    a = ca.DM(self.par.proj_plane_x).T
-    b = ca.DM(self.par.proj_plane_y).T
+    pi_x = ca.DM(self.par.proj_plane_x).T
+    pi_y = ca.DM(self.par.proj_plane_y).T
     x0 = ca.DM(self.par.proj_plane_origin)
     T = ca.DM(self.par.transverse_projection_mat)
     theta = self.theta
@@ -152,13 +152,13 @@ class TransverseCoordinates:
     x_ref_expr = self.x_ref_expr
 
     A = ca.vertcat(
-      a * ca.sin(theta) - b * ca.cos(theta),
-      a * ca.cos(theta) + b * ca.sin(theta),
+      pi_x * ca.sin(theta) - pi_y * ca.cos(theta),
+      pi_x * ca.cos(theta) + pi_y * ca.sin(theta),
       T
     )
     B = ca.vertcat(
-      (a * ca.sin(theta) - b * ca.cos(theta)) @ x0,
-      (a * ca.cos(theta) + b * ca.sin(theta)) @ x_ref_expr + xi[-1],
+      (pi_x * ca.sin(theta) - pi_y * ca.cos(theta)) @ x0,
+      (pi_x * ca.cos(theta) + pi_y * ca.sin(theta)) @ x_ref_expr + xi[-1],
       xi[0:-1] + T @ self.x_ref_expr
     )
     self.__verify_solvability(A)
@@ -177,17 +177,17 @@ class TransverseCoordinates:
       theta = theta(x)
       xi = xi(x)
     """
-    a = ca.DM(self.par.proj_plane_x).T
-    b = ca.DM(self.par.proj_plane_y).T
+    pi_x = ca.DM(self.par.proj_plane_x).T
+    pi_y = ca.DM(self.par.proj_plane_y).T
     x0 = ca.DM(self.par.proj_plane_origin)
     x = self.x
     T = ca.DM(self.par.transverse_projection_mat)
 
-    theta = ca.arctan2(b @ (x - x0), a @ (x - x0))
+    theta = ca.arctan2(pi_y @ (x - x0), pi_x @ (x - x0))
     x_ref = self.x_ref(theta)
     xi = ca.vertcat(
       T @ (x - x_ref),
-      (a * ca.cos(theta) + b * ca.sin(theta)) @ (x - x_ref)
+      (pi_x * ca.cos(theta) + pi_y * ca.sin(theta)) @ (x - x_ref)
     )
     self.xi_expr = xi
     self.theta_expr = theta

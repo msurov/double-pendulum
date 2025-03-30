@@ -161,6 +161,31 @@ def show_theta_trajectory():
   plt.ylabel(R'$\theta$', fontsize=16)
   plt.grid(True)
   set_pi_yticks('1/4')
+
+  plt.figure('projection onto pi plane:')
+  traj = sampledata['traj']
+  trans_par = sampledata['trans_par']
+  x0 = trans_par.proj_plane_origin
+  pi_x = trans_par.proj_plane_x
+  pi_y = trans_par.proj_plane_y
+
+  x = (traj.phase - x0) @ pi_x
+  y = (traj.phase - x0) @ pi_y
+  singpt = x0[0:2]
+  plt.plot(x, y)
+  plt.grid(True)
+
+  fig, axes = plt.subplots(2, 1, sharex=True, num='trajectory wrt theta')
+  plt.sca(axes[0])
+  plt.plot(theta, traj.coords)
+  plt.axhline(singpt[0], ls='--', color='grey')
+  plt.axhline(singpt[1], ls='--', color='grey')
+  plt.grid(True)
+  plt.sca(axes[1])
+  plt.plot(theta, traj.vels)
+  set_pi_xticks('1/2')
+  plt.grid(True)
+
   plt.tight_layout()
 
 def show_trasnverse_linearization_coefs():
@@ -173,15 +198,20 @@ def show_trasnverse_linearization_coefs():
   fig, axes = plt.subplots(2, 1, sharex=True)
   ax = axes[0]
   plt.sca(ax)
+  plt.title('matrix A')
   plt.plot(theta, A[:,:,0])
   plt.plot(theta, A[:,:,1])
   plt.plot(theta, A[:,:,2])
+  plt.legend([R'$A_{11}$', R'$A_{21}$', R'$B_{31}$',
+              R'$A_{12}$', R'$A_{22}$', R'$B_{32}$',
+              R'$A_{13}$', R'$A_{23}$', R'$B_{33}$'])
   plt.grid(True)
 
   plt.sca(ax)
   ax = axes[1]
   plt.sca(ax)
   plt.plot(theta, B[:,:,0])
+  plt.legend([R'$B_1$', R'$B_2$', R'$B_3$'])
   set_pi_xticks('1/2')
   plt.grid(True)
 
@@ -195,6 +225,7 @@ def main():
   test_transverse_linearization()
   plt.pause(0.001)
   show_theta_trajectory()
+  plt.pause(0.001)
   show_trasnverse_linearization_coefs()
   plt.show()
 
