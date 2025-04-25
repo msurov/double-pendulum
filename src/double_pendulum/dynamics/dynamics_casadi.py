@@ -91,6 +91,11 @@ class DoublePendulumDynamics(MechanicalSystem):
     U = get_potential_energy(par, q)
     G = get_gravity_mat(U, q)
     B = get_control_mar(par)
+    J = ca.DM([
+      [0, -1],
+      [1, 0]
+    ])
+    B_perp = B.T @ J
     C = get_coriolis_mat(M, q, dq)
     K = dq.T @ M @ dq / 2
     E = U + K
@@ -102,6 +107,7 @@ class DoublePendulumDynamics(MechanicalSystem):
     self.C_expr = C
     self.G_expr = G
     self.B_expr = B
+    self.B_perp_expr = B_perp
     self.U_expr = U
     self.K_expr = K
     self.E_expr = E
@@ -114,6 +120,7 @@ class DoublePendulumDynamics(MechanicalSystem):
     self.C = ca.Function('C', [q, dq], [self.C_expr])
     self.G = ca.Function('G', [q], [self.G_expr])
     self.B = ca.Function('B', [q], [self.B_expr])
+    self.B_perp = ca.Function('B_perp', [q], [self.B_perp_expr])
     self.U = ca.Function('U', [q], [self.U_expr])
     self.K = ca.Function('K', [q, dq], [self.K_expr])
     self.E = ca.Function('E', [q, dq], [self.E_expr])

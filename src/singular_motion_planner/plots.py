@@ -78,7 +78,7 @@ def add_annotation(text : str, textpos : Tuple[int, int]):
     'alpha': 0.8
   }
   annotate_par = {
-    'xycoords': 'axes points',
+    'xycoords': 'axes fraction',
     'font': {
       'size': 22
     },
@@ -86,7 +86,7 @@ def add_annotation(text : str, textpos : Tuple[int, int]):
   }
   return plt.annotate(text, textpos, **annotate_par)
 
-def show_reduced_dynamics_phase_prortrait(reduced : ReducedDynamics, reduced_traj : Trajectory, savetofile=None):
+def show_reduced_dynamics_phase_prortrait(reduced : ReducedDynamics, reduced_traj : Trajectory, coord_name=None):
   sleft = np.min(reduced_traj.coords)
   sright = np.max(reduced_traj.coords)
   dsmin = np.min(reduced_traj.vels)
@@ -115,9 +115,9 @@ def show_reduced_dynamics_phase_prortrait(reduced : ReducedDynamics, reduced_tra
   plt.plot(reduced_traj.coords, reduced_traj.vels, lw=2, color='darkblue', alpha=1)
   plt.gca().set_xlim(s1, s2)
   plt.gca().set_ylim(ds1, ds2)
-  add_annotation(R'$\phi$', (340, 10))
-  add_annotation(R'$\dot\phi$', (8, 210))
+  if coord_name:
+    xtext = f'${coord_name}$'
+    ytext = f'$\\dot {coord_name}$'
+    add_annotation(xtext, (0.92, 0.05))
+    add_annotation(ytext, (0.05, 0.85))
   plt.tight_layout()
-
-  if savetofile is not None:
-    plt.savefig(savetofile)

@@ -1,7 +1,11 @@
 import numpy as np
 from bisect import bisect
 from scipy.integrate import cumulative_simpson, cumulative_trapezoid
-from typing import Union
+from typing import Union, Optional, Tuple
+
+
+def min_eigval(A : np.ndarray) -> float:
+  return np.min(np.real(np.linalg.eigvals(A)))
 
 def cont_angle(a : np.ndarray) -> np.ndarray:
   '''
@@ -162,3 +166,10 @@ def get_max_increasing_interval(arr):
     best_interval_start = cur_interval_start
 
   return (best_interval_start, best_interval_start + best_interval_len)
+
+def map_array(fun : callable, arr : np.ndarray, elem_size : Optional[Tuple] = None) -> np.ndarray:
+  nelems = np.shape(arr)[0]
+  result = np.array([fun(e) for e in arr])
+  if elem_size:
+    result = np.reshape(result, (nelems, *elem_size))
+  return result

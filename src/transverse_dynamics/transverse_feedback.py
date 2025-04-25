@@ -32,24 +32,30 @@ class TranverseFeedbackControllerPar:
 
 class TranverseFeedbackController:
   def __init__(self, dynamics : TransverseDynamics, par : TranverseFeedbackControllerPar):
-    ltv = tabulate_linsys(dynamics, par.nsteps)
+    theta = np.linspace(
+      dynamics.transverse_coords.theta_min,
+      dynamics.transverse_coords.theta_max, 
+      par.nsteps
+    )
+
     if dynamics.transverse_coords.periodic:
-      res = lqr_ltv_periodic(ltv.t, ltv.A, ltv.B, par.Q, par.R, max_step=1e-3)
+      res = lqr_ltv_periodic(theta, dynamics.A_fun, dynamics.B_fun, par.Q, par.R)
       if res is None:
         assert False, "Can't solve LQR"
       bc_type = 'periodic'
     else:
       assert par.S is not None
-      res = lqr_ltv(ltv.t, ltv.A, ltv.B, par.Q, par.R, par.S, max_step=1e-3)
+      res = lqr_ltv(theta, dynamics.A_fun, dynamics.B_fun, par.Q, par.R, par.S)
       if res is None:
         assert False, "Can't solve LQR"
       bc_type = None
 
     K, P = res
-    self.Ksp = make_interp_spline(ltv.t, K, k=3, bc_type=bc_type)
-    self.Psp = make_interp_spline(ltv.t, P, k=3, bc_type=bc_type)
+    self.Ksp = make_interp_spline(theta, K, k=3, bc_type=bc_type)
+    self.Psp = make_interp_spline(theta, P, k=3, bc_type=bc_type)
     self.coords_transform = dynamics.transverse_coords.forward_transform_fun
     self.u_ref = dynamics.transverse_coords.usp
+    self.state = None
   
   def compute_stab_control(self, theta : float, xi : np.ndarray) -> np.ndarray:
     K = self.Ksp(theta)
@@ -63,10 +69,15 @@ class TranverseFeedbackController:
     K = self.Ksp(theta)
     u_stab = K @ xi
     u = self.u_ref(theta) + u_stab
+    P = self.Psp(theta)
+    V = xi.T @ P @ xi / 2
+
+    self.state = [theta, *xi, *u_stab, V]
 
     if full_output:
-      P = self.Psp(theta)
-      V = xi.T @ P @ xi / 2
       return u, u_stab, theta, xi, V
 
     return u
+
+  def __call__(self, _, x):
+    return self.compute(x)

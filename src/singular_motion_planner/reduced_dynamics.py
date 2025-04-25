@@ -17,7 +17,7 @@ class ReducedDynamics:
     C = dynamics.C(Q, dQ)
     G = dynamics.G(Q)
     B = dynamics.B(Q)
-    B_perp = ca.DM([[0, 1]])
+    B_perp = dynamics.B_perp(Q)
 
     self.alpha_expr = B_perp @ M @ dQ
     self.dalpha_expr = ca.jacobian(self.alpha_expr, s)
@@ -124,24 +124,25 @@ def reconstruct_trajectory(constr : ca.Function, reduced : ReducedDynamics,
   dq_expr = Dconstr_expr * ds_expr
   dds_expr = (-reduced.beta_expr * ds_expr**2 - reduced.gamma_expr) / reduced.alpha_expr
   ddq_expr = Dconstr_expr * dds_expr + DDconstr_expr * ds_expr**2
-  Bt = dynamics.B(constr_expr).T
-  u_expr = Bt @ (dynamics.M(constr_expr) @ ddq_expr + dynamics.C(constr_expr, dq_expr) @ dq_expr + dynamics.G(constr_expr)) / (Bt @ Bt.T)
+  B = dynamics.B(constr_expr)
+  tmp = dynamics.M(constr_expr) @ ddq_expr + dynamics.C(constr_expr, dq_expr) @ dq_expr + dynamics.G(constr_expr)
+  u_expr = ca.solve(B.T @ B, B.T @ tmp)
   u_fun = ca.Function('u', [s_expr, ds_expr], [u_expr])
   dq_fun = ca.Function('dq', [s_expr, ds_expr], [dq_expr])
 
-  nq,_ = constr(0.).shape
+  nq, nm = dynamics.B_expr.shape
   nt, = reduced_traj.time.shape
   state = np.zeros((nt, 2 * nq))
-  u = np.zeros(nt)
+  u = np.zeros((nt, nm))
 
   for i in range(nt):
     s = reduced_traj.coords[i]
     ds = reduced_traj.vels[i]
     q = constr(s)
     dq = dq_fun(s, ds)
-    u[i] = float(u_fun(s, ds))
-    state[i,0:nq] = np.reshape(q, (-1,))
-    state[i,nq:] = np.reshape(dq, (-1,))
+    u[i,:] = np.reshape(u_fun(s, ds), (nm,))
+    state[i,0:nq] = np.reshape(q, (nq,))
+    state[i,nq:] = np.reshape(dq, (nq,))
 
   return Trajectory(
     time = reduced_traj.time,

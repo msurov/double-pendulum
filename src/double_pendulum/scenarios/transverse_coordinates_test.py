@@ -35,7 +35,7 @@ def test_forward_transform():
     assert np.allclose(xi, 0)
   
   maxtime = 2 * sampledata['traj_period']
-  trajsp = sampledata['traj_spline']
+  trajsp = sampledata['traj_of_time']
 
   np.random.seed(0)
   for i in range(100):
@@ -88,7 +88,7 @@ def test_inverse_jacobian():
 
 def test_forward_jacobian():
   sampledata = make_sample_data()
-  traj_spline = sampledata['traj_spline']
+  traj_spline = sampledata['traj_of_time']
   coords = sampledata['coords']
   max_time = 2 * sampledata['traj_period']
 

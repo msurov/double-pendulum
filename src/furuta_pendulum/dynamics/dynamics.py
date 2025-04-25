@@ -15,6 +15,7 @@ class FurutaPendulumDynamics(MechanicalSystem):
     self.G_expr = ca.jacobian(self.U_expr, self.q).T
     self.C_expr = self.compute_C(self.M_expr, self.q, self.dq)
     self.B_expr = ca.DM([[1], [0]])
+    self.B_perp_expr = ca.DM([[0, 1]])
     self.K_expr = self.dq.T @ self.M_expr @ self.dq / 2
     self.E_expr = self.K_expr + self.U_expr
     self.ddq_expr = ca.solve(self.M_expr, -self.C_expr @ self.dq - self.G_expr + self.B_expr * self.u)
@@ -24,6 +25,7 @@ class FurutaPendulumDynamics(MechanicalSystem):
     self.C = ca.Function('C', [self.q, self.dq], [self.C_expr])
     self.G = ca.Function('G', [self.q], [self.G_expr])
     self.B = ca.Function('B', [self.q], [self.B_expr])
+    self.B_perp = ca.Function('B_perp', [self.q], [self.B_perp_expr])
     self.U = ca.Function('U', [self.q], [self.U_expr])
     self.K = ca.Function('K', [self.q, self.dq], [self.K_expr])
     self.E = ca.Function('E', [self.q, self.dq], [self.E_expr])

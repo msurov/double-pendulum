@@ -4,14 +4,11 @@ import numpy as np
 
 
 def get_sing_constr_at(dynamics : MechanicalSystem, q_sing : np.ndarray, scale=1):
-  J = ca.DM([
-    [0, -1],
-    [1, 0]
-  ])
   B = dynamics.B_expr
-  B_perp = (J @ B).T
+  B_perp = dynamics.B_perp_expr
+  G = dynamics.G_expr
 
-  gam = ca.evalf(ca.substitute(B_perp @ dynamics.G_expr, dynamics.q, q_sing))
+  gam = ca.evalf(ca.substitute(B_perp @ G, dynamics.q, q_sing))
   if abs(gam) < 1e-6:
     return None
 
@@ -22,7 +19,6 @@ def get_sing_constr_at(dynamics : MechanicalSystem, q_sing : np.ndarray, scale=1
   dq = dynamics.dq
   M = dynamics.M_expr
   C = dynamics.C_expr
-  G = dynamics.G_expr
 
   N = ca.solve(M, B)
   P = M @ B_perp.T

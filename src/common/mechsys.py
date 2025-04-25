@@ -7,6 +7,7 @@ class MechanicalSystem:
     self.dq = ca.MX.zeros(2)
     self.u = ca.MX.zeros(1)
 
+    self.B_perp_expr = ca.MX.zeros(1, 2)
     self.M_expr = ca.MX.zeros(2, 2)
     self.C_expr = ca.MX.zeros(2, 2)
     self.G_expr = ca.MX.zeros(2, 1)

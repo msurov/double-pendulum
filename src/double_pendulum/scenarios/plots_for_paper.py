@@ -317,7 +317,7 @@ def plot_nonlin_simulation_results():
   plt.grid(True)
   plt.plot(sim_traj.coords[:,0], sim_traj.vels[:,0], **real_curve_par)
   plt.plot(orig_traj.coords[:,0], orig_traj.vels[:,0], **ref_curve_par)
-  add_annotation(R'$\dot q_1$', [-0.20, 0.50])
+  add_annotation(R'$\dot q_1$', [-0.25, 0.57])
 
   plt.sca(axes[0,1])
   plt.grid(True)
@@ -330,8 +330,8 @@ def plot_nonlin_simulation_results():
   n = orig_traj.time.shape[0] // 2
   plt.plot(sim_traj.coords[:,0], sim_traj.coords[:,1], **real_curve_par)
   plt.plot(orig_traj.coords[:n,0], orig_traj.coords[:n,1], **ref_curve_par)
-  add_annotation(R'$q_2$', [-0.20, 0.50])
-  add_annotation(R'$q_1$', [0.65, -0.18])
+  add_annotation(R'$q_2$', [-0.25, 0.57])
+  add_annotation(R'$q_1$', [0.70, -0.18])
 
   plt.sca(axes[1,1])
   plt.grid(True)
@@ -339,7 +339,7 @@ def plot_nonlin_simulation_results():
   plt.plot(sim_traj.coords[:,0], sim_traj.control, **real_curve_par)
   plt.plot(orig_traj.coords[:n,0], orig_traj.control[:n], **ref_curve_par)
   add_annotation(R'$u$', [-0.18, 0.50])
-  add_annotation(R'$q_1$', [0.65, -0.18])
+  add_annotation(R'$q_1$', [0.70, -0.18])
 
   plt.tight_layout(h_pad=-0.1)
   plt.savefig('fig/nonlin-sim-results.pdf')
@@ -393,6 +393,6 @@ if __name__ == '__main__':
 
   # plot_trajectories()
   # plot_linear_system_components()
-  plot_feedback_coefs()
-  # plot_nonlin_simulation_results()
+  # plot_feedback_coefs()
+  plot_nonlin_simulation_results()
   # plot_phase_portrait()

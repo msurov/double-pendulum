@@ -3,7 +3,8 @@ from scipy.linalg import solve_continuous_are
 from scipy.interpolate import make_interp_spline
 from scipy.integrate import solve_ivp
 import matplotlib.pyplot as plt
-from typing import Tuple
+from typing import Tuple, Callable, Union
+from common.linsys import solve_mat_ivp
 
 
 def lqr_lti(
@@ -40,13 +41,68 @@ def lqr_lti(
     K = -np.linalg.inv(R) @ (B.T @ P)
     return K, P
 
+def __lqr_ltv_periodic(
+            t : np.ndarray,
+            A_fun : np.ndarray,
+            B_fun : np.ndarray,
+            Q_fun : np.ndarray,
+            R_fun : np.ndarray,
+            **solve_ivp_args
+    ) -> Tuple[np.ndarray, np.ndarray]:
+
+    t0 = t[0]
+    npts, = np.shape(t)
+    n,m = B_fun(t0).shape
+
+    assert A_fun(t0).shape == (n, n)
+    assert Q_fun(t0).shape == (n, n)
+    assert R_fun(t0).shape == (m, m)
+
+    def rhs(t, P):
+        A = A_fun(t)
+        B = B_fun(t)
+        R = R_fun(t)
+        Q = Q_fun(t)
+        M = B @ np.linalg.solve(R, B.T)
+        AT_P = A.T @ P
+        dP = -AT_P - AT_P.T + P @ M @ P - Q
+        return dP
+
+    P0 = np.zeros((n, n), float)
+    mismatch = None
+
+    for i in range(100):
+        print('# periodic LQR iteration', i, ', mismatch', mismatch)
+        sol = solve_mat_ivp(rhs, [t[-1], t[0]], P0, t_eval=t[::-1], **solve_ivp_args)
+        if sol is None:
+            return None
+
+        P = sol[1]
+        if np.allclose(P[0], P[-1], atol=1e-5, rtol=1e-5):
+            break
+
+        mismatch = np.linalg.matrix_norm(P[0] - P[-1])
+        P0 = P[-1]
+        p0 = np.reshape(P0, (-1,))
+
+    P = P[::-1]
+    K = np.zeros((npts, m, n))
+    for i in range(npts):
+        R = R_fun(t[i])
+        B = B_fun(t[i])
+        K[i,:,:] = -np.linalg.solve(R, B.T) @ P[i,:,:]
+
+    P[-1] = P[0]
+    K[-1] = K[0]
+    return K, P
+
 def lqr_ltv_periodic(
             t : np.ndarray,
-            A : np.ndarray,
-            B : np.ndarray,
-            Q : np.ndarray,
-            R : np.ndarray,
-            **solve_ivp_arg
+            A : Union[np.ndarray, Callable],
+            B : Union[np.ndarray, Callable],
+            Q : Union[np.ndarray, Callable],
+            R : Union[np.ndarray, Callable],
+            **solve_ivp_args
     ) -> Tuple[np.ndarray, np.ndarray]:
     R"""
         Brief
@@ -74,54 +130,45 @@ def lqr_ltv_periodic(
         P : ndarray, (K, N, N)
             solution of Riccati equation
     """
+    if isinstance(A, np.ndarray):
+        A_fun = make_interp_spline(t, A, k=3, bc_type='periodic')
+    elif isinstance(A, Callable):
+        A_fun = A
+    else:
+        assert False, f'Incorrect type of argument A: {type(A)}'
 
-    npts,n,m = B.shape
-    assert A.shape == (npts, n, n)
-    assert Q.shape == (n, n)
-    assert R.shape == (m, m)
+    if isinstance(B, np.ndarray):
+        B_fun = make_interp_spline(t, B, k=3, bc_type='periodic')
+    elif isinstance(B, Callable):
+        B_fun = B
+    else:
+        assert False, f'Incorrect type of argument B: {type(B)}'
 
-    A[-1] = A[0]
-    B[-1] = B[0]
-    
-    fun_A = make_interp_spline(t, A, k=3, bc_type='periodic')
-    inv_R = np.linalg.inv(R)
-    M = np.array([B[i] @ inv_R @ B[i].T for i in range(npts)])
-    fun_M = make_interp_spline(t, M, bc_type='periodic')
+    if isinstance(Q, np.ndarray):
+        if Q.ndim == 3:
+            Q_fun = make_interp_spline(t, Q, k=3, bc_type='periodic')
+        elif Q.ndim == 2:
+            Q_fun = lambda _: Q
+        else:
+            assert False, f'Incorrect shape of argument Q: {Q.shape}'
+    elif isinstance(Q, Callable):
+        Q_fun = Q
+    else:
+        assert False, f'Incorrect type of argument Q: {type(Q)}'
 
-    def rhs(t, p):
-        P = np.reshape(p, (n,n))
-        A_ = fun_A(t)
-        M_ = fun_M(t)
-        ATP = A_.T @ P
-        dP = -ATP - ATP.T + P @ M_ @ P - Q
-        dp = np.reshape(dP, (-1,))
-        return dp
+    if isinstance(R, np.ndarray):
+        if R.ndim == 3:
+            R_fun = make_interp_spline(t, R, k=3, bc_type='periodic')
+        elif R.ndim == 2:
+            R_fun = lambda _: R
+        else:
+            assert False, f'Incorrect shape of argument Q: {Q.shape}'
+    elif isinstance(R, Callable):
+        R_fun = R
+    else:
+        assert False, f'Incorrect type of argument Q: {type(R)}'
 
-    P0 = np.zeros((n, n), float)
-    p0 = np.reshape(P0, (-1,))
-    mismatch = None
-
-    for i in range(100):
-        print('# periodic LQR iteration', i, ', mismatch', mismatch)
-        sol = solve_ivp(rhs, [t[-1], t[0]], p0, t_eval=t[::-1], **solve_ivp_arg)
-        if sol.status != 0:
-            return None
-
-        P = np.reshape(sol.y.T, (npts, n, n))
-        if np.allclose(P[0], P[-1], atol=1e-5, rtol=1e-5):
-            break
-        mismatch = np.linalg.matrix_norm(P[0] - P[-1])
-        P0 = P[-1]
-        p0 = np.reshape(P0, (-1,))
-
-    P = P[::-1]
-    K = np.zeros((npts, m, n))
-    for i in range(npts):
-        K[i] = -inv_R @ B[i].T @ P[i]
-
-    P[-1] = P[0]
-    K[-1] = K[0]
-    return K, P
+    return __lqr_ltv_periodic(t, A_fun, B_fun, Q_fun, R_fun, **solve_ivp_args)
 
 def lqr_ltv(
             t : np.ndarray,

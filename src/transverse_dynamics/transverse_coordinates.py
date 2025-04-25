@@ -125,7 +125,7 @@ class TransverseCoordinates:
     self.u_ref_expr = self.u_ref(self.theta)
 
   def __verify_solvability(self, A):
-    npts = 1000
+    npts = 100
     det_vals = np.zeros(npts)
     theta = np.linspace(self.theta_min, self.theta_max, npts)
 

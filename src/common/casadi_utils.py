@@ -47,3 +47,12 @@ def compute_angvel_jac(R, x):
   )
   jac = ca.simplify(jac)
   return jac
+
+def mat_sx(elems):
+  nrows = len(elems)
+  ncols = len(elems[0])
+  m = ca.SX.zeros(nrows, ncols)
+  for row in range(nrows):
+    for col in range(ncols):
+      m[row,col] = elems[row][col]
+  return m
