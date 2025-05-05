@@ -14,12 +14,16 @@ from common.trajectory import (
   traj_forth_and_back, 
   traj_repeat
 )
-from common.numpy_utils import cont_angle
-from transverse_dynamics.transverse_coordinates import (
-  TransverseCoordinates,
-  TransverseCoordinatesPar,
-  TransverseDynamics,
-  compute_theta
+from common.numpy_utils import (
+  cont_angle,
+  map_array
+)
+from transverse_dynamics.cylindrical_transverse_coordinates import (
+  CylindricalTransverseCoordinates,
+  CylindricalTransverseCoordinatesPar,
+)
+from transverse_dynamics.transverse_dynamics import (
+  TransverseDynamics
 )
 from scipy.interpolate import make_interp_spline
 import matplotlib.pyplot as plt
@@ -38,7 +42,7 @@ def make_sample_data():
   tr_closed = traj_forth_and_back(tr_up)
   tr_orig = reconstruct_trajectory(constr, reduced, dynamics, tr_closed)
 
-  trans_par = TransverseCoordinatesPar(
+  trans_par = CylindricalTransverseCoordinatesPar(
     transverse_projection_mat = np.array([
       [1/0.4, 1/0.125, 0.,  0.],
       [ 0.,  0., 1/10., 1/3.333],
@@ -48,12 +52,12 @@ def make_sample_data():
     proj_plane_origin = np.concatenate((singpt, [0, 0]))
   )
 
-  coords = TransverseCoordinates(tr_orig, trans_par)
+  coords = CylindricalTransverseCoordinates(tr_orig, trans_par)
   traj_of_time = make_interp_spline(tr_orig.time, tr_orig.phase, k=5, bc_type='periodic')
   ctrl_of_time = make_interp_spline(tr_orig.time, tr_orig.control, k=3, bc_type='periodic')
   trans_dyn = TransverseDynamics(dynamics, coords)
-
-  theta = compute_theta(tr_orig.phase, trans_par)
+  theta = map_array(lambda x: coords.forward_transform_fun(x)[0], tr_orig.phase, 1)
+  cont_angle(theta)
   traj_of_theta = make_interp_spline(theta, tr_orig.phase, k=5, bc_type='periodic')
   ctrl_of_theta = make_interp_spline(theta, tr_orig.control, k=3, bc_type='periodic')
 

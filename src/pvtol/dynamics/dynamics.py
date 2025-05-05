@@ -38,8 +38,8 @@ class PVTOLAircraftDynamics(MechanicalSystem):
     self.B_expr = B
     self.B_perp_expr = B_perp
 
-    state = ca.vertcat(q, dq)
-    self.ddq_expr = ca.pinv(M) @ (-C @ dq - G + B @ u)
+    self.phase = ca.vertcat(q, dq)
+    self.ddq_expr = ca.solve(M, -C @ dq - G + B @ u)
     self.rhs_expr = ca.vertcat(dq, self.ddq_expr)
 
     self.M = ca.Function('M', [q], [self.M_expr])
@@ -47,4 +47,16 @@ class PVTOLAircraftDynamics(MechanicalSystem):
     self.G = ca.Function('G', [q], [self.G_expr])
     self.B = ca.Function('B', [q], [self.B_expr])
     self.B_perp = ca.Function('B_perp', [q], [self.B_perp_expr])
-    self.rhs = ca.Function('RHS', [state, u], [self.rhs_expr])
+    self.rhs = ca.Function('RHS', [self.phase, u], [self.rhs_expr])
+
+    self.f_expr = ca.vertcat(
+      dq,
+      ca.solve(M, -C @ dq - G)
+    )
+    self.g_expr = ca.vertcat(
+      ca.DM.zeros(3, 2),
+      ca.solve(M, B)
+    )
+
+    self.f = ca.Function('f', [self.phase], [self.f_expr])
+    self.g = ca.Function('g', [self.phase], [self.g_expr])

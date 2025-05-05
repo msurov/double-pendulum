@@ -1,5 +1,5 @@
 # Double Pendulum System Motion Control
-![double pendulum](doc/double-pendulum.svg)
+![double pendulum](fig/pendubot-anim.gif)
 
 
 The project:

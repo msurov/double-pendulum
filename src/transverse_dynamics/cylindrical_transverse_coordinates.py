@@ -4,16 +4,10 @@ transverse_dynamics
 
 Classes
 -------
-TransverseCoordinates : implemets methods for coordinates transform from Cartesian n-dim space to
+CylindricalTransverseCoordinates : implemets methods for coordinates transform from Cartesian n-dim space to
   cylindrical S1 x Rn-1. The transformation works for stabilizing periodic trajectories.
-TransverseDynamics : implements methods for computing dynamics in the given transverse coordinates
-
-TODO:
-  * Adapt the class TransverseDynamics for use with abstract dynamical system DynamicalSystem
-  * Imeplement several base classes with common interface for constructing transverse coordinates
 """
 
-from common.mechsys import MechanicalSystem
 from common.trajectory import Trajectory
 from common.bspline_sym import (
   MXSpline,
@@ -23,22 +17,23 @@ from common.numpy_utils import (
   cont_angle,
   is_ascending,
   wedge,
-  elementwise_dot
+  elementwise_dot,
+  map_array
 )
-from typing import Tuple
 import casadi as ca
 import numpy as np
 from dataclasses import dataclass
+from .transverse_dynamics import TransverseCoordinates
 
 
 @dataclass
-class TransverseCoordinatesPar:
+class CylindricalTransverseCoordinatesPar:
   transverse_projection_mat : np.ndarray
   proj_plane_x : np.ndarray
   proj_plane_y : np.ndarray
   proj_plane_origin : np.ndarray
 
-class TransverseCoordinates:
+class CylindricalTransverseCoordinates(TransverseCoordinates):
   R"""
     Forward transformation
     \[
@@ -57,7 +52,7 @@ class TransverseCoordinates:
     spanned by the vectors [proj_plane_x, proj_plane_y]
   """
 
-  def __init__(self, traj : Trajectory, par : TransverseCoordinatesPar):
+  def __init__(self, traj : Trajectory, par : CylindricalTransverseCoordinatesPar):
     self.par = par
 
     n = traj.dim
@@ -194,6 +189,7 @@ class TransverseCoordinates:
     self.forward_transform_expr = ca.vertcat(self.theta_expr, self.xi_expr)
     self.forward_jac_expr = ca.jacobian(self.forward_transform_expr, x)
 
+"""
 def compute_theta(phase : np.ndarray, par : TransverseCoordinatesPar) -> np.ndarray:
   x = (phase - par.proj_plane_origin) @ par.proj_plane_x
   y = (phase - par.proj_plane_origin) @ par.proj_plane_y
@@ -202,10 +198,10 @@ def compute_theta(phase : np.ndarray, par : TransverseCoordinatesPar) -> np.ndar
     cont_angle(theta)
   return theta
 
-def compute_transverse(phase : np.ndarray, coords : TransverseCoordinates) -> Tuple[np.ndarray, np.ndarray]:
+def compute_transverse(phase : np.ndarray, coords : CylindricalTransverseCoordinates) -> Tuple[np.ndarray, np.ndarray]:
   match np.shape(phase):
     case (npts, dim):
-      arr = np.array([coords.forward_transform_fun(e) for e in phase], float)
+      arr = map_array(coords.forward_transform_fun, phase, (dim,))
       theta = arr[:,0,0]
       cont_angle(theta)
       xi = arr[:,1:,0]
@@ -216,58 +212,4 @@ def compute_transverse(phase : np.ndarray, coords : TransverseCoordinates) -> Tu
     case _: assert False
 
   return theta, xi
-
-class TransverseDynamics:
-  def __init__(self, dynamics : MechanicalSystem, coords : TransverseCoordinates):
-    xdim,_ = dynamics.rhs_expr.shape
-    udim,_ = dynamics.u.shape
-
-    self.transverse_coords = coords
-
-    self.u_stab = ca.MX.sym('u_stab', udim)
-    self.xi = coords.xi
-    self.theta = coords.theta
-
-    self.D_xi_expr = None
-    self.__init_transverse_dynamics(dynamics, coords)
-    self.D_xi_fun = ca.Function('Dxi', [coords.theta, coords.xi, self.u_stab], [self.D_xi_expr])
-
-    self.A_expr = None
-    self.B_expr = None
-    self.rest_expr = None
-    self.__linearize_transverse_dynamics()
-    self.A_fun = ca.Function('A', [coords.theta], [self.A_expr])
-    self.B_fun = ca.Function('B', [coords.theta], [self.B_expr])
-    self.rest_fun = ca.Function('B', [coords.theta], [self.rest_expr])
-
-  def __init_transverse_dynamics(self, dynamics : MechanicalSystem, coords : TransverseCoordinates):
-    dot_x = dynamics.rhs(
-      coords.inverse_transform_expr,
-      coords.u_ref_expr + self.u_stab
-    )
-    self.dot_x_expr = dot_x
-    time_deriv_theta_xi = ca.solve(coords.inverse_jac_expr, dot_x)
-    time_deriv_theta = time_deriv_theta_xi[0]
-    time_deriv_xi = time_deriv_theta_xi[1:]
-    self.time_deriv_theta_expr = time_deriv_theta
-    self.time_deriv_xi_expr = time_deriv_xi
-    D_xi_expr = time_deriv_xi / time_deriv_theta
-    self.D_xi_expr = D_xi_expr
-
-  def __linearize_transverse_dynamics(self):
-    expr = ca.substitute(self.D_xi_expr, self.u_stab, ca.DM.zeros(*self.u_stab.shape))
-    expr = ca.jacobian(expr, self.xi)
-    expr = ca.substitute(expr, self.xi, ca.DM.zeros(*self.xi.shape))
-    A = ca.simplify(expr)
-    self.A_expr = A
-
-    expr = ca.jacobian(self.D_xi_expr, self.u_stab)
-    expr = ca.substitute(expr, self.u_stab, ca.DM.zeros(*self.u_stab.shape))
-    expr = ca.substitute(expr, self.xi, ca.DM.zeros(*self.xi.shape))
-    B = ca.simplify(expr)
-    self.B_expr = B
-
-    expr = ca.substitute(self.D_xi_expr, self.u_stab, ca.DM.zeros(*self.u_stab.shape))
-    expr = ca.substitute(expr, self.xi, ca.DM.zeros(*self.xi.shape))
-    rest = ca.simplify(expr)
-    self.rest_expr = rest
+"""

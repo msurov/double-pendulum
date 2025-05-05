@@ -88,8 +88,7 @@ def solve_reduced(rd : ReducedDynamics, sdiap, ds0, **solver_args) -> Trajectory
   eps = 1e-6
   stop.terminal = True
   y0 = ds0**2/2
-  # sol = solve_ivp(rhs, sdiap, [y0], **solver_args, events=stop)
-  sol = solve_ivp(rhs, sdiap, [y0], **solver_args)
+  sol = solve_ivp(rhs, sdiap, [y0], **solver_args, events=stop)
   s, y = filter_out_duplicates(sol.t, sol.y[0])
 
   if len(s) <= 3:

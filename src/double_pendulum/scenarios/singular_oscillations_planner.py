@@ -5,6 +5,7 @@ from common.trajectory import (
   traj_forth_and_back, 
   traj_repeat
 )
+from common.mechsys import MechanicalSystem
 from double_pendulum.dynamics import (
   DoublePendulumDynamics,
   DoublePendulumParam,
@@ -39,8 +40,8 @@ def process_sing_traj_at_sing_point(singpt):
   dynamics = DoublePendulumDynamics(par)
   constr = get_sing_constr_at(dynamics, singpt)
   reduced = ReducedDynamics(dynamics, constr)
-  tr_left = solve_reduced(reduced, [-0.02, -1e-4], 0.0, max_step=1e-4)
-  tr_right = solve_reduced(reduced, [0.02, 1e-4], 0.0, max_step=1e-4)
+  tr_left = solve_reduced(reduced, [-0.3, -1e-4], 0.0, max_step=1e-4)
+  tr_right = solve_reduced(reduced, [0.2, 1e-4], 0.0, max_step=1e-4)
   tr_up = traj_join(tr_left, tr_right[::-1])
   tr_closed = traj_forth_and_back(tr_up)
   tr_reduced = traj_repeat(tr_closed, 2)
@@ -52,22 +53,23 @@ def process_sing_traj_at_sing_point(singpt):
 
 def sample_trajectories():
   positions = [
-    [-2.045583727546234, 0.6462469356355233],
-    [-1.7050253662106756, -3.30435292667277],
-    [11.690270453301533, 2.0109207709898262],
-    [1.0, -2.5],
-    [2.5, 1.3],
-    [-1, 2.5708],
-    [-1, 2.4],
-    [-1, 2.7],
-    [-2, 2.8],
-    [-0.5, 2.5],
-    [-1, 0.6],
-    [-1.2, 0.8],
-    [-2, 0.9],
-    [-2.5, 2.8],
-    [ 2.35619449, -0.78539816],
-    [-1.04719755,  2.61799388]
+    # [-2.045583727546234, 0.6462469356355233],
+    # [-1.7050253662106756, -3.30435292667277],
+    # [11.690270453301533, 2.0109207709898262],
+    # [1.0, -2.5],
+    # [2.5, 1.3],
+    # [-1, 2.5708],
+    # [-1, 2.4],
+    # [-1, 2.7],
+    # [-2, 2.8],
+    # [-0.5, 2.5],
+    # [-1, 0.6],
+    # [-1.2, 0.8],
+    # [-2, 0.9],
+    # [-2.5, 2.8],
+    # [ 2.35619449, -0.78539816],
+    # [-1.04719755,  2.61799388]
+    [-1.0, 2.5]
   ]
   for pos in positions:
     process_sing_traj_at_sing_point(pos)
@@ -94,5 +96,5 @@ if __name__ == '__main__':
   })
 
   np.set_printoptions(suppress=True)
-  show_sample_traj()
-  # sample_trajectories()
+  # show_sample_traj()
+  sample_trajectories()

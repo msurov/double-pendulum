@@ -46,7 +46,7 @@ from singular_motion_planner.singular_constrs import get_sing_constr_at
 from scipy.integrate import solve_ivp
 
 from transverse_dynamics.transverse_coordinates import (
-  TransverseCoordinates,
+  CylindricalTransverseCoordinates,
   TransverseCoordinatesPar,
 )
 
@@ -113,7 +113,7 @@ def compute_traj_data(par):
     proj_plane_y = np.array([ 0.,   0., -1/10., 1/3.333]),
     proj_plane_origin = np.concatenate((singpt, [0, 0]))
   )
-  coords = TransverseCoordinates(tr_orig, trans_par)
+  coords = CylindricalTransverseCoordinates(tr_orig, trans_par)
   trans_dyn = TransverseDynamics(dynamics, coords)
 
   return {

@@ -167,9 +167,16 @@ def get_max_increasing_interval(arr):
 
   return (best_interval_start, best_interval_start + best_interval_len)
 
-def map_array(fun : callable, arr : np.ndarray, elem_size : Optional[Tuple] = None) -> np.ndarray:
+def map_array(fun : callable, arr : np.ndarray, elem_size : Union[Tuple|None|int] = None) -> np.ndarray:
   nelems = np.shape(arr)[0]
   result = np.array([fun(e) for e in arr])
-  if elem_size:
-    result = np.reshape(result, (nelems, *elem_size))
+  match elem_size:
+    case 1:
+      result = np.reshape(result, (nelems,))
+    case None:
+      pass
+    case tuple(_):
+      result = np.reshape(result, (nelems, *elem_size))
+    case _:
+      assert False, 'Incorrect value of elem_size'
   return result

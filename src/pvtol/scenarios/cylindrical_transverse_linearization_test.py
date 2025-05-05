@@ -1,8 +1,6 @@
 from scipy.integrate import solve_ivp
-from transverse_dynamics.transverse_coordinates import (
-  TransverseCoordinates,
-  TransverseDynamics
-)
+from transverse_dynamics.cylindrical_transverse_coordinates import CylindricalTransverseCoordinates
+from transverse_dynamics.transverse_dynamics import TransverseDynamics
 import numpy as np
 import matplotlib.pyplot as plt
 from common.trajectory import Trajectory
@@ -18,8 +16,8 @@ from common.lqr import lqr_ltv_periodic
 from common.linsys import solve_gramian_mat
 
 
-def plot_linsys():
-  data = make_sample_data()
+def plot_ltv_controllability_gramian():
+  data = make_sample_data('tictoc')
   transdyn = data['transverse_dynamics']
   trans_coords = data['transverse_coordinates']
   ref_traj = data['traj']
@@ -31,8 +29,12 @@ def plot_linsys():
   t, W, F = solve_gramian_mat(transdyn.A_fun, transdyn.B_fun, [0, 2*np.pi], max_step=1e-3)
   evs = map_array(lambda w: np.sort(np.linalg.eigvals(w)), W)
 
-  plt.plot(t, evs)
+  WT = W[-1]
+  print(WT)
 
+  evals = np.linalg.eigvals(WT)
+  print(*evals)
+  plt.plot(t, evs)
   plt.show()
 
 if __name__ == "__main__":
@@ -41,4 +43,6 @@ if __name__ == "__main__":
     "font.family": "sans-serif",
     "font.sans-serif": "Helvetica",
   })
-  plot_linsys()
+  np.set_printoptions(suppress=True)
+  plot_ltv_controllability_gramian()
+

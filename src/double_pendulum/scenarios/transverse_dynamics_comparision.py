@@ -5,12 +5,12 @@ from common.trajectory import (
   traj_forth_and_back, 
   traj_repeat
 )
+from common.numpy_utils import (
+  map_array,
+  cont_angle
+)
 from common.plots import set_pi_xticks, set_pi_yticks
 import matplotlib.pyplot as plt
-from transverse_dynamics.transverse_coordinates import (
-  compute_theta,
-  compute_transverse
-)
 from scipy.interpolate import make_interp_spline
 from scipy.integrate import solve_ivp
 import matplotlib.pyplot as plt
@@ -44,13 +44,18 @@ def verify_free_motion_transverse_dynamics():
   x0 = np.reshape(x0, (4,))
 
   def rhs_orig(t, x):
-    theta,_ = compute_transverse(x, coords)
+    theta_xi = coords.forward_transform_fun(x)
+    theta = float(theta_xi[0])
     u_ref = coords.usp(theta)
     dx = dyn.rhs(x, u_ref)
     return np.reshape(dx, (-1,))
 
   sol = solve_ivp(rhs_orig, [0., 0.06], x0, max_step=1e-4)
-  theta, xi = compute_transverse(sol.y.T, coords)
+
+  tmp = map_array(coords.forward_transform_fun, sol.y.T, (4,))
+  theta = tmp[:,0]
+  cont_angle(theta)
+  xi = tmp[:,1:4]
   lines_orig = plt.plot(theta, xi, ls='--', lw=2)
 
   plt.legend(lines_transverse + lines_orig, 
@@ -92,13 +97,19 @@ def verify_transverse_dynamics():
   x0 = np.reshape(x0, (4,))
 
   def rhs_orig(t, x):
-    theta = compute_theta(x, trans_par)
+    theta_xi = coords.forward_transform_fun(x)
+    theta = float(theta_xi[0])
     u = coords.usp(theta) + stab_input(theta)
     dx = dyn.rhs(x, u)
     return np.reshape(dx, (-1,))
 
   sol = solve_ivp(rhs_orig, [0., 0.06], x0, max_step=1e-4)
-  theta, xi = compute_transverse(sol.y.T, coords)
+
+  tmp = map_array(coords.forward_transform_fun, sol.y.T, (4,))
+  theta = tmp[:,0]
+  cont_angle(theta)
+  xi = tmp[:,1:4]
+
   lines_orig = plt.plot(theta, xi, ls='--', lw=2)
 
   plt.legend(lines_transverse + lines_orig, 
@@ -155,7 +166,8 @@ def show_theta_trajectory():
   transdyn = sampledata['trans_dyn']
   traj = sampledata['traj']
   transpar = sampledata['trans_par']
-  theta = compute_theta(traj.phase, transpar)
+  theta = map_array(coords.forward_transform_fun, traj.phase, (4,))[:,0]
+  cont_angle(theta)
   plt.plot(traj.time, theta)
   plt.xlabel(R't', fontsize=16)
   plt.ylabel(R'$\theta$', fontsize=16)
