@@ -45,7 +45,11 @@ def integrate(
   npts, = t.shape
   u = np.array([control_input(t[i], q[i], dq[i]) for i in range(npts)])
   u = np.reshape(u, (npts, udim))
-  E = np.reshape([sys.E(q[i], dq[i]) for i in range(npts)], (npts,))
+  if hasattr(sys, 'E'):
+    E = np.reshape([sys.E(q[i], dq[i]) for i in range(npts)], (npts,))
+  else:
+    E = None
+
   W = np.reshape([(dq[i,np.newaxis,:] @ sys.B(q[i]) @ u[i]) for i in range(npts)], (npts,))
 
   return MechanicalSystemTrajectory(
