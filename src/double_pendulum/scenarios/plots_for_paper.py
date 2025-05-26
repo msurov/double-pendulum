@@ -45,7 +45,7 @@ from double_pendulum.anim import (
 from singular_motion_planner.singular_constrs import get_sing_constr_at
 from scipy.integrate import solve_ivp
 
-from transverse_dynamics.transverse_coordinates import (
+from transverse_dynamics.cylindrical_transverse_coordinates import (
   CylindricalTransverseCoordinates,
   TransverseCoordinatesPar,
 )

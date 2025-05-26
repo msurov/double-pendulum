@@ -16,7 +16,7 @@ class Animate:
     def drawframe(iframe):
       t = speedup * iframe / fps
       self.update(t)
-      return self.elems
+      return self.patches
 
     self.anim = animation.FuncAnimation(fig, drawframe, frames=nframes, interval=1000/fps, blit=True)
     if videopath:
@@ -27,7 +27,7 @@ class Animate:
       a.update(t)
 
   @property
-  def elems(self):
-    elems = reduce(operator.add, (a.elems for a in self.animators), tuple())
-    elems = tuple(elems)
-    return elems
+  def patches(self):
+    patches = reduce(lambda acc, obj: acc + obj.patches, self.animators, tuple())
+    patches = tuple(patches)
+    return patches

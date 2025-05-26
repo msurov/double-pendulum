@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from common.numpy_utils import cont_angle, map_array
 from common.plots import set_pi_xticks, set_pi_yticks
-from transverse_dynamics.transverse_coordinates import TransverseDynamics
+from transverse_dynamics.transverse_dynamics import TransverseDynamics
 from transverse_dynamics.transverse_feedback import TranverseFeedbackController
 from pvtol.sim import SimulationResult
 

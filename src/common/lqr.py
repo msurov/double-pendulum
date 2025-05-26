@@ -4,7 +4,7 @@ from scipy.interpolate import make_interp_spline
 from scipy.integrate import solve_ivp
 import matplotlib.pyplot as plt
 from typing import Tuple, Callable, Union
-from common.linsys import solve_mat_ivp
+from common.linsys import solve_symmat_ivp, solve_mat_ivp
 
 
 def lqr_lti(
@@ -41,6 +41,15 @@ def lqr_lti(
     K = -np.linalg.inv(R) @ (B.T @ P)
     return K, P
 
+def project_to_psd(A : np.ndarray) -> np.ndarray:
+    A_sym = (A + A.T) / 2
+    eigvals, eigvecs = np.linalg.eigh(A_sym)
+    maxeigval = np.max(eigvals)
+    maxeigval = max(maxeigval, 1e-12)
+    eigvals_clipped = np.maximum(eigvals, maxeigval * 1e-10)
+    A_pdf = eigvecs @ np.diag(eigvals_clipped) @ eigvecs.T
+    return A_pdf
+
 def __lqr_ltv_periodic(
             t : np.ndarray,
             A_fun : np.ndarray,
@@ -65,7 +74,7 @@ def __lqr_ltv_periodic(
         Q = Q_fun(t)
         M = B @ np.linalg.solve(R, B.T)
         AT_P = A.T @ P
-        dP = -AT_P - AT_P.T + P @ M @ P - Q
+        dP = -AT_P - AT_P.T + P @ M @ P.T - Q
         return dP
 
     P0 = np.zeros((n, n), float)
@@ -83,7 +92,7 @@ def __lqr_ltv_periodic(
 
         mismatch = np.linalg.matrix_norm(P[0] - P[-1])
         P0 = P[-1]
-        p0 = np.reshape(P0, (-1,))
+        P0 = project_to_psd(P0)
 
     P = P[::-1]
     K = np.zeros((npts, m, n))
@@ -269,18 +278,15 @@ def lqr_ltv_solve_fine(
     M = np.array([B[i] @ inv_R[i] @ B[i].T for i in range(npts)])
     fun_M = make_interp_spline(t, M)
 
-    def rhs(t, p):
-        P = np.reshape(p, (n,n))
+    def rhs(t, P):
         A_ = fun_A(t)
         Q_ = fun_Q(t)
         M_ = fun_M(t)
         ATP = A_.T @ P
         dP = -ATP - ATP.T + P @ M_ @ P - Q_
-        dp = np.reshape(dP, (-1,))
-        return dp
+        return dP
 
-    s = np.reshape(S, (-1,))
-    sol = solve_ivp(rhs, [t[-1], t[0]], s, t_eval=t[::-1], max_step=1e-2)
+    sol = solve_symmat_ivp(rhs, [t[-1], t[0]], S, t_eval=t[::-1], max_step=1e-2)
     P = np.reshape(sol.y.T, (npts, n, n))
     P = P[::-1]
 

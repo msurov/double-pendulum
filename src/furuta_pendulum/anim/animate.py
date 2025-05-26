@@ -26,8 +26,9 @@ class FurutaPendulumVis:
     joints, = plt.plot(pts[:,0], pts[:,1], pts[:,2], 'o', color='black', markersize=12, alpha=1)
     self.links = links
     self.joints = joints
-    
-  def elems(self):
+  
+  @property
+  def patches(self):
     return self.links, self.joints, self.axis
 
   def set_links_properties(self, **kwargs):
@@ -149,7 +150,7 @@ def animate(traj : Trajectory, par : FurutaPendulumPar, fps=60, speedup=1, video
   def drawframe(iframe):
     ti = speedup * iframe / fps + t[0]
     vis.move(qfun(ti))
-    return vis.elems()
+    return vis.patches()
 
   anim = animation.FuncAnimation(fig, drawframe, frames=nframes, interval=1000/fps, blit=True)
   plt.tight_layout()

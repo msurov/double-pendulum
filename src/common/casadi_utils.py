@@ -56,3 +56,12 @@ def mat_sx(elems):
     for col in range(ncols):
       m[row,col] = elems[row][col]
   return m
+
+def lie(f, g, x):
+  return ca.jtimes(g, x, f) - ca.jtimes(f, x, g)
+
+def ad(f, g, k, x):
+  result = g
+  for i in range(k):
+    result = lie(f, result, x)
+  return result

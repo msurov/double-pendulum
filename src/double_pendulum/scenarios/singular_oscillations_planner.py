@@ -38,10 +38,11 @@ from double_pendulum.scenarios.sample_data import make_sample_data
 def process_sing_traj_at_sing_point(singpt):
   par = double_pendulum_param_default
   dynamics = DoublePendulumDynamics(par)
-  constr = get_sing_constr_at(dynamics, singpt)
+  constr = get_sing_constr_at(dynamics, singpt, 10)
   reduced = ReducedDynamics(dynamics, constr)
-  tr_left = solve_reduced(reduced, [-0.3, -1e-4], 0.0, max_step=1e-4)
-  tr_right = solve_reduced(reduced, [0.2, 1e-4], 0.0, max_step=1e-4)
+  eps = 1e-3
+  tr_left = solve_reduced(reduced, [-0.2, -eps/2], 0.0, max_step=eps)
+  tr_right = solve_reduced(reduced, [0.2, eps/2], 0.0, max_step=eps)
   tr_up = traj_join(tr_left, tr_right[::-1])
   tr_closed = traj_forth_and_back(tr_up)
   tr_reduced = traj_repeat(tr_closed, 2)
@@ -69,7 +70,8 @@ def sample_trajectories():
     # [-2.5, 2.8],
     # [ 2.35619449, -0.78539816],
     # [-1.04719755,  2.61799388]
-    [-1.0, 2.5]
+    # [-1.0, 2.5],
+    [3*np.pi/4, -1.0]
   ]
   for pos in positions:
     process_sing_traj_at_sing_point(pos)

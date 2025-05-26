@@ -23,5 +23,5 @@ class AnimPVTOLAircraft:
     self.pvtol_view.move(q)
 
   @property
-  def elems(self):
-    return self.pvtol_view.elems
+  def patches(self):
+    return self.pvtol_view.patches

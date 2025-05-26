@@ -24,7 +24,7 @@ class PVTOLView:
     self.model.set_transform(self.transform1 + t + self.transform2)
   
   @property
-  def elems(self):
+  def patches(self):
     return self.model,
 
 def draw(ax, q, size=1):

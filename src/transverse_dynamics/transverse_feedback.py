@@ -1,4 +1,4 @@
-from transverse_dynamics.transverse_coordinates import TransverseDynamics
+from transverse_dynamics.transverse_dynamics import TransverseDynamics
 from common.lqr import lqr_ltv, lqr_ltv_periodic
 from scipy.interpolate import make_interp_spline
 from dataclasses import dataclass
@@ -31,21 +31,21 @@ class TranverseFeedbackControllerPar:
   S : np.ndarray = None
 
 class TranverseFeedbackController:
-  def __init__(self, dynamics : TransverseDynamics, par : TranverseFeedbackControllerPar):
+  def __init__(self, dynamics : TransverseDynamics, par : TranverseFeedbackControllerPar, **integ_args):
     theta = np.linspace(
       dynamics.transverse_coords.theta_min,
       dynamics.transverse_coords.theta_max, 
-      par.nsteps
+      par.nsteps,
     )
 
     if dynamics.transverse_coords.periodic:
-      res = lqr_ltv_periodic(theta, dynamics.A_fun, dynamics.B_fun, par.Q, par.R)
+      res = lqr_ltv_periodic(theta, dynamics.A_fun, dynamics.B_fun, par.Q, par.R, **integ_args)
       if res is None:
         assert False, "Can't solve LQR"
       bc_type = 'periodic'
     else:
       assert par.S is not None
-      res = lqr_ltv(theta, dynamics.A_fun, dynamics.B_fun, par.Q, par.R, par.S)
+      res = lqr_ltv(theta, dynamics.A_fun, dynamics.B_fun, par.Q, par.R, par.S, **integ_args)
       if res is None:
         assert False, "Can't solve LQR"
       bc_type = None

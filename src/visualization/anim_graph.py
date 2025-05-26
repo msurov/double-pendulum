@@ -29,7 +29,7 @@ class AnimGraph:
       line.set_data(tarr, y)
   
   @property
-  def elems(self):
+  def patches(self):
     return self.lines
 
 class AnimScope:
@@ -67,7 +67,7 @@ class AnimScope:
       line.set_data(x, y[:,i])
 
   @property
-  def elems(self):
+  def patches(self):
     return tuple(self.lines)
 
 class AnimTrace:
@@ -95,7 +95,7 @@ class AnimTrace:
     self.line.set_data(x, y)
 
   @property
-  def elems(self):
+  def patches(self):
     return self.line,
 
 def test_graph():
@@ -110,7 +110,7 @@ def test_graph():
   def update(i):
     t = i / fps
     graph.update(t)
-    return graph.elems
+    return graph.patches
 
   anim = animation.FuncAnimation(fig, update, frames=nframes, interval=1000/fps, blit=True)
   plt.show()
@@ -131,7 +131,7 @@ def test_scope():
   def update(i):
     t = i / fps
     scope.update(t)
-    return scope.elems
+    return scope.patches
 
   anim = animation.FuncAnimation(fig, update, frames=nframes, interval=1000/fps, blit=True)
   plt.show()
@@ -151,7 +151,7 @@ def test_trace():
   def update(i):
     t = i / fps
     scope.update(t)
-    return scope.elems
+    return scope.patches
 
   anim = animation.FuncAnimation(fig, update, frames=nframes, interval=1000/fps, blit=True)
   plt.show()

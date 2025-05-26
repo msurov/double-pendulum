@@ -32,6 +32,8 @@ class DoublePendulumSimulatorPar:
   motor_delay : float
   motor_noise : float
   motor_torque_max : float
+  coords_max : float = 100.
+  vels_max : float = 200.
 
 @dataclass
 class SimulationResult:
@@ -64,11 +66,18 @@ class DoublePendulumSimulator:
     self.motor_noise = sim_par.motor_noise
     self.torque_max = sim_par.motor_torque_max
 
+    self.coords_max = sim_par.coords_max
+    self.vels_max = sim_par.vels_max
+
     self.system_signals = None
     self.dynamics_state = None
     self.time = None
 
+    self.ok = True
+
   def __update_signals(self):
+    self.ok &= np.all(np.abs(self.dynamics_state[0:2]) < self.coords_max)
+    self.ok &= np.all(np.abs(self.dynamics_state[2:4]) < self.vels_max)
     theta12 = self.dynamics_state[0:2]
     theta12 = discretize(theta12, self.encoder_step)
     theta12 = self.encoder_delay(self.time, theta12)
@@ -119,12 +128,16 @@ class DoublePendulumSimulator:
     while self.time < tend:
       if not integrator.successful():
         print('[warn] integrator doesn\'t feel good')
+        break
 
       # step of integration
       integrator.integrate(self.time + self.step)
       self.time = integrator.t
       self.dynamics_state = integrator.y
       self.__update_signals()
+      if not self.ok:
+        print('[warn] system state went out of bounds')
+        break
       self.__update_control()
 
       solt.append(self.time)
@@ -148,7 +161,7 @@ class DoublePendulumSimulator:
     return result
 
 simulator_parameters_ideal = DoublePendulumSimulatorPar(
-  timestep = 1e-3,
+  timestep = 0.2e-3,
   encoder_delay = 0,
   encoder_ppr = 10**4,
   motor_delay = 0,
