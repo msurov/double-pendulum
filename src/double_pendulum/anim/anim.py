@@ -92,7 +92,7 @@ def get_view_parameters(par : DoublePendulumParam) -> DoublePendulumViewParam:
   return DoublePendulumViewParam(
     links_length = [l1, l2],
     links_width = [w1, w2],
-    joints_radius = [w1, w2, w2]
+    joints_radius = [1.2 * w1, 1.2 * w2, 1.2 * w2]
   )
 
 class DoublePendulumView:
@@ -105,9 +105,9 @@ class DoublePendulumView:
     self.objects = [
       Link(self.w1, self.l1, fc=view_par.links_face[0], ec=view_par.links_edge[0], alpha=alpha),
       Link(self.w2, self.l2, fc=view_par.links_face[1], ec=view_par.links_edge[1], alpha=alpha),
-      Joint(r1, fc=view_par.joints_face[0], ec=view_par.joints_edge[0], alpha=alpha),
-      Joint(r2, fc=view_par.joints_face[1], ec=view_par.joints_edge[1], alpha=alpha),
-      Joint(r3, fc=view_par.joints_face[2], ec=view_par.joints_edge[2], alpha=alpha),
+      Joint(r1, fc=view_par.joints_face[0], ec=view_par.joints_edge[0]),
+      Joint(r2, fc=view_par.joints_face[1], ec=view_par.joints_edge[1]),
+      Joint(r3, fc=view_par.joints_face[2], ec=view_par.joints_edge[2]),
     ]
     self.move([0, 0])
 

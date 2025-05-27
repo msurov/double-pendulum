@@ -37,17 +37,23 @@ from double_pendulum.scenarios.transverse_feedback_closed_loop_sim import (
   TranverseFeedbackControllerPar,
   TransverseDynamics,
 )
-
+from common.linsys import solve_gramian_mat
+from common.numpy_utils import (
+  min_eigval,
+  map_array
+)
 from double_pendulum.anim import (
   motion_schematic,
-  motion_schematic_v2
+  motion_schematic_v2,
+  DoublePendulumViewParam,
+  get_view_parameters
 )
 from singular_motion_planner.singular_constrs import get_sing_constr_at
 from scipy.integrate import solve_ivp
 
 from transverse_dynamics.cylindrical_transverse_coordinates import (
   CylindricalTransverseCoordinates,
-  TransverseCoordinatesPar,
+  CylindricalTransverseCoordinatesPar,
 )
 
 
@@ -88,11 +94,6 @@ def compute_autonomous_fund_mat(trans_dyn, interval, **integ_args):
   F = sol.y.T.reshape((npts, n, n))
   return sol.t, F
 
-def compute_gramian(t, F, B):
-  integrand = np.array([(f @ b @ b.T @ f.T) for f, b in zip(F, B)])
-  G = integrate_array(t, integrand)
-  return G
-
 def compute_traj_data(par):
   dynamics = DoublePendulumDynamics(par)
   singpt = [-np.pi/4, 3*np.pi/4]
@@ -104,7 +105,7 @@ def compute_traj_data(par):
   tr_closed = traj_forth_and_back(tr_up)
   tr_orig = reconstruct_trajectory(constr, reduced, dynamics, tr_closed)
 
-  trans_par = TransverseCoordinatesPar(
+  trans_par = CylindricalTransverseCoordinatesPar(
     transverse_projection_mat = np.array([
       [1/0.4, 1/0.125, 0.,  0.],
       [ 0.,  0., 1/10., 1/3.333],
@@ -136,7 +137,8 @@ def plot_trajectories():
   plt.savefig('fig/pendubot-reference-trajectory-projections.pdf')
   fig = show_reduced_dynamics_phase_prortrait(reduced, traj_reduced)
   plt.savefig('fig/pendubot-phase-portrait.pdf')
-  fig = motion_schematic(traj, par)
+  view_par = get_view_parameters(par)
+  fig = motion_schematic(traj, view_par)
   fig.gca().axes.xaxis.set_ticklabels([])
   fig.gca().axes.yaxis.set_ticklabels([])
   fig.tight_layout()
@@ -146,14 +148,13 @@ def plot_trajectories():
 def compute_ltv_data(data):
   trans_dyn = data['transverse_dynamics']
   coords = data['transverse_coords']
-  theta, F = compute_autonomous_fund_mat(trans_dyn, [0, 2*np.pi], max_step=1e-3)
-  A = np.array([trans_dyn.A_fun(w) for w in theta], float)
-  B = np.array([trans_dyn.B_fun(e) for e in theta])
-  G = compute_gramian(theta, F, B)
-  Gmin = [np.min(np.linalg.eigvals(e)) for e in G]
+  theta, W, F = solve_gramian_mat(trans_dyn.A_fun, trans_dyn.B_fun, [0, 2*np.pi], max_step=1e-3)
+  W_min = map_array(min_eigval, W, 1)
+  A = map_array(trans_dyn.A_fun, theta)
+  B = map_array(trans_dyn.B_fun, theta)  
   return {
-    'gramian': G,
-    'gramian_min_eigval': Gmin,
+    'gramian': W,
+    'gramian_min_eigval': W_min,
     'theta': theta,
     'A': A,
     'B': B
@@ -197,7 +198,7 @@ def plot_linear_system_components():
   plt.grid(True)
   plt.plot(theta, Gmin)
   plt.legend([R'$\min \mathrm{eigval} (G)$'], **legend_par)
-  plt.yticks([0, 5e-5, 10e-5], [R'$0$', R'$5 \cdot 10^{-5}$', R'$10^{-4}$'])
+  # plt.yticks([0, 5e-5, 10e-5], [R'$0$', R'$5 \cdot 10^{-5}$', R'$10^{-4}$'])
 
   set_pi_xticks('1/4', fontsize=16)
   plt.tight_layout(h_pad=-0.5)
@@ -391,8 +392,8 @@ if __name__ == '__main__':
     "font.sans-serif": "Helvetica",
   })
 
-  # plot_trajectories()
-  # plot_linear_system_components()
-  # plot_feedback_coefs()
+  plot_trajectories()
+  plot_linear_system_components()
+  plot_feedback_coefs()
   plot_nonlin_simulation_results()
-  # plot_phase_portrait()
+  plot_phase_portrait()

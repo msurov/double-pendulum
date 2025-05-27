@@ -21,6 +21,7 @@ from singular_motion_planner.reduced_dynamics import (
   solve_reduced,
   reconstruct_trajectory
 )
+from common.numpy_utils import map_array
 from common.trajectory import (
   Trajectory,
   traj_join, 
@@ -70,7 +71,7 @@ def get_constr(par : DoublePendulumParam):
   par2 = convert_parameters(par)
   p1,p2,p3,p4,p5 = par2.p
   g = par2.gravity_accel
-  qs = ca.DM([3*ca.pi/4, -ca.pi/4])
+  qs = ca.DM([-ca.pi/4, 3*ca.pi/4])
   k = -p2*p3**2*ca.sin(qs[1]) - 1/3*p2**2*p3*ca.sin(2*qs[1])
 
   theta = ca.SX.sym('theta')
@@ -87,9 +88,11 @@ def make_sample_traj(dynamics, par):
   constr_data = get_constr(par)
   constr = constr_data['constr']
   reduced = ReducedDynamics(dynamics, constr)
+  eps = 1e-2
+
   # verify_reduced_dynamics(par, reduced)
-  tr_1 = solve_reduced(reduced, [-4., -1e-3], 0.0, max_step=1e-3)
-  tr_2 = solve_reduced(reduced, [1.0, 1e-3], 0.0, max_step=1e-3)[::-1]
+  tr_1 = solve_reduced(reduced, [-3.9, -eps/2], 0.0, max_step=eps)
+  tr_2 = solve_reduced(reduced, [3.8, eps/2], 0.0, max_step=eps)[::-1]
   tr_reduced = reduce(traj_join, 
     [
       tr_1,
@@ -130,59 +133,71 @@ def make_preview():
   reduced_dynamics = data['reduced_dynamics']
   reduced_traj = data['reduced_traj']
 
-  eps = 1e-3
-  fig, axes = plt.subplots(1, 2, figsize=(8, 4), width_ratios=(1.2, 1))
+  if False:
+    theta = np.linspace(-10, 10)
+    alpha = map_array(reduced_dynamics.alpha, theta, 1)
+    beta = map_array(reduced_dynamics.beta, theta, 1)
+    gamma = map_array(reduced_dynamics.gamma, theta, 1)
 
-  theta_2 = brentq(reduced_dynamics.alpha, 1.8, 2.0)
-  theta_2 = float(theta_2)
-  dtheta_2 = np.sqrt(-reduced_dynamics.gamma(theta_2) / reduced_dynamics.beta(theta_2))
-  dtheta_2 = float(dtheta_2)
+    plt.plot(theta, alpha * 1000)
+    plt.plot(theta, beta * 1000)
+    plt.plot(theta, gamma)
 
-  dtheta_1 = np.sqrt(-reduced_dynamics.gamma(0) / reduced_dynamics.beta(0))
-  dtheta_1 = float(dtheta_1)
+    plt.axhline(0, color='black')
+    plt.grid(True)
+    plt.show()
+    exit()
+
+  fig, axes = plt.subplots(1, 2, figsize=(8, 4), width_ratios=(0.85, 1))
+
+  theta_min = -12
+  saddle_sing = brentq(reduced_dynamics.alpha, -12, -5)
+  node_sing = 0.
+  theta_max = 6.
+  node_speed = np.sqrt(-reduced_dynamics.gamma(node_sing) / reduced_dynamics.beta(node_sing))
+  node_speed = float(node_speed)
+  step = 0.5
+  eps = 1e-2
+  speed_max = 100
+
+  saddle_speed = np.sqrt(-reduced_dynamics.gamma(saddle_sing) / reduced_dynamics.beta(saddle_sing))
+  saddle_speed = float(saddle_speed)
 
   ax = axes[1]
   plt.sca(ax)
   plt.grid(True, lw=0.5, ls='--')
-  plt.axvline(0, ls='--', lw=1, color='#404040')
-  plt.axhline(0, ls='--', lw=1, color='#404040')
-  plt.axvline(theta_2, ls='--', lw=1, color='#404040')
+  plt.axvline(saddle_sing, ls='--', lw=1, color='#404040')
+  plt.axhline(0, ls='-', lw=1, color='#404040')
+  plt.axvline(node_sing, ls='--', lw=1, color='#404040')
 
-  if False:
-    for x0 in np.linspace(-0.2, -4, 12, endpoint=False):
-      show_phase_curve(reduced_dynamics, [x0, -eps], eps)
+  if True:
+    for x0 in np.linspace(saddle_sing - step, theta_min, 4, endpoint=False):
+      show_phase_curve(reduced_dynamics, [x0, theta_min], eps)
+      show_phase_curve(reduced_dynamics, [x0, theta_min], speed_max)
 
-    for x0 in np.linspace(-0.2, -1.5, 10, endpoint=False):
-      show_phase_curve(reduced_dynamics, [x0, -eps], 100)
+    for x0 in np.linspace(saddle_sing + step, node_sing - step, 10):
+      show_phase_curve(reduced_dynamics, [x0, node_sing - eps], eps)
+      show_phase_curve(reduced_dynamics, [x0, node_sing - eps], speed_max)
 
-    for x0 in np.linspace(-5, -4, 3, endpoint=False):
-      show_phase_curve(reduced_dynamics, [x0, -eps], eps)
+    for x0 in np.linspace(node_sing + step, theta_max, 6):
+      show_phase_curve(reduced_dynamics, [x0, node_sing + eps], eps)
+      show_phase_curve(reduced_dynamics, [x0, node_sing + eps], speed_max)
 
-    for dx0 in np.linspace(30, 120, 8, endpoint=False):
-      show_phase_curve(reduced_dynamics, [-5, -eps], dx0)
+    for dx0 in np.linspace(speed_max/3, speed_max, 4, endpoint=False):
+      show_phase_curve(reduced_dynamics, [theta_max, node_sing - eps], dx0)
 
-    for x0 in np.linspace(0.2, 1., 3, endpoint=False):
-      show_phase_curve(reduced_dynamics, [x0, eps], eps)
-      show_phase_curve(reduced_dynamics, [x0, eps], 100)
-
-    for x0 in np.linspace(theta_2 - 0.1, 1., 4):
-      show_phase_curve(reduced_dynamics, [x0, eps], eps)
-      show_phase_curve(reduced_dynamics, [x0, eps], 100)
-
-    for x0 in np.linspace(theta_2 + 0.1, 3.0, 8):
-      show_phase_curve(reduced_dynamics, [x0, 3.0], 100)
-      show_phase_curve(reduced_dynamics, [x0, 3.0], eps)
-
-  show_phase_curve(reduced_dynamics, [theta_2 + eps, 3.0], dtheta_2)
-  show_phase_curve(reduced_dynamics, [theta_2 - eps, eps], dtheta_2)
+    show_phase_curve(reduced_dynamics, [saddle_sing + eps, node_sing - eps], saddle_speed)
+    show_phase_curve(reduced_dynamics, [saddle_sing - eps, theta_min], saddle_speed)
 
   plt.plot(reduced_traj.coords, reduced_traj.vels, lw=2, color='#C04040')
-  plt.xlim(-4.5, 2.8)
-  plt.ylim(-100, 100)
-  plt.yticks([-60, -30, 0, 30, 60], [])
-  plt.xticks(np.arange(-4, 3), [])
-  # add_annotation(R'$\theta$', [0.5, -0.15], fontsize=18)
-  # add_annotation(R'$\dot\theta$', [-0.08, 0.53], fontsize=18)
+  plt.xlim(theta_min, theta_max)
+  plt.ylim(-speed_max, speed_max)
+  plt.yticks(np.linspace(-speed_max, speed_max, 7), [])
+
+  step = abs(saddle_sing - node_sing) / 3
+  plt.xticks(np.arange(saddle_sing, theta_max, step), [])
+  add_annotation(R'$\theta$', [0.92, 0.05], fontsize=20)
+  add_annotation(R'$\dot\theta$', [0.03, 0.88], fontsize=20)
   plt.tick_params(direction='in')
 
   arrprop1 = {
@@ -192,41 +207,6 @@ def make_preview():
     'lw': 1.,
     'color': '#202020',
   }
-  bbox = {
-    'boxstyle': 'round',
-    'fc': '1.0',
-    'lw': 0.5,
-    'alpha': 1
-  }
-
-  plt.title('Phase portrait of singular reduced dynamics', fontdict={'size': 13})
-
-  plt.annotate(
-    '',
-    xy = (0.0 - 0.05, -dtheta_1 + 1),
-    xytext = (0.5, 0.35),
-    xycoords = 'data',
-    textcoords = 'axes fraction',
-    arrowprops = arrprop1
-  )
-  plt.annotate(
-    '',
-    xy = (theta_2 - 0.05, -dtheta_2 + 1),
-    xytext = (0.5, 0.4),
-    xycoords = 'data',
-    textcoords = 'axes fraction',
-    arrowprops = arrprop1
-  )
-  plt.annotate(
-    'transition points',
-    (0, 0),
-    (0.20, 0.35),
-    textcoords='axes fraction',
-    xycoords='axes fraction',
-    annotation_clip=False,
-    bbox = bbox,
-    font = {'size': 14},
-  )
 
   arrprop2 = {
     'arrowstyle': "Simple, tail_width=0.05, head_width=0.5, head_length=0.7",
@@ -236,39 +216,58 @@ def make_preview():
     'color': '#202020',
   }
 
+  bbox = {
+    'boxstyle': 'round',
+    'ec': '#A060A0',
+    'fc': '1.0',
+    'lw': 0.5,
+    'alpha': 0.8
+  }
+
+  plt.title('Phase portrait of singular reduced dynamics', fontdict={'size': 13})
+
   plt.annotate(
     '',
-    xy = (0, -101),
-    xytext = (0.3, -0.22),
+    xy = (saddle_sing + 0.2, -saddle_speed - 1),
+    xytext = (0.33, 0.15),
     xycoords = 'data',
     textcoords = 'axes fraction',
-    annotation_clip=False,
+    arrowprops = arrprop1
+  )
+  plt.annotate(
+    '',
+    xy = (node_sing - 0.2, -node_speed - 1),
+    xytext = (0.54, 0.15),
+    xycoords = 'data',
+    textcoords = 'axes fraction',
     arrowprops = arrprop2
   )
   plt.annotate(
+    'transition\npoints',
+    (0, 0),
+    (0.35, 0.06),
+    textcoords='axes fraction',
+    xycoords='axes fraction',
+    annotation_clip=False,
+    bbox = bbox,
+    font = {'size': 13},
+  )
+
+  plt.annotate(
     'node\nsingularity',
-    (0, -100),
-    (0.3, -0.22),
-    xycoords='data',
+    (0.6, -0.15),
+    (0.6, -0.15),
+    xycoords='axes fraction',
     textcoords='axes fraction',
     annotation_clip=False,
     bbox = bbox,
     font = {'size': 14},
   )
   plt.annotate(
-    '',
-    xy = (theta_2, -101),
-    xytext = (0.6, -0.22),
-    xycoords = 'data',
-    textcoords = 'axes fraction',
-    annotation_clip=False,
-    arrowprops = arrprop2
-  )
-  plt.annotate(
     'saddle\nsingularity',
-    (theta_2, -100),
-    (0.6, -0.22),
-    xycoords='data',
+    (0.1, -0.15),
+    (0.1, -0.15),
+    xycoords='axes fraction',
     textcoords='axes fraction',
     annotation_clip=False,
     bbox = bbox,
@@ -306,27 +305,39 @@ def make_preview():
     view_par = DoublePendulumViewParam()
     view_par.joints_radius = [0.12, 0.12, 0.12]
     view_par.links_width = [0.08, 0.08]
-    view_par.links_face = ('#A0A0F0',) * 2
-    view1 = DoublePendulumView(view_par)
-    view1.move(q_1)
 
+    view_par.links_face = ('#D0D0FF',) * 2
+    view_par.links_edge = ('#A0A0A0',) * 2
+    view_par.joints_face = ('#C0C0C0',) * 3
+    view_par.joints_edge = ('#A0A0A0',) * 3
+    view1 = DoublePendulumView(view_par)
+    view1.move(q_3)
+
+    view_par.links_face = ('#A0A0F0',) * 2
+    view_par.links_edge = ('#808080',) * 2
+    view_par.joints_face = ('#A0A0A0',) * 3
+    view_par.joints_edge = ('#606060',) * 3
     view2 = DoublePendulumView(view_par)
     view2.move(q_2)
 
+    view_par.links_face = ('#D0D0FF',) * 2
+    view_par.links_edge = ('#A0A0A0',) * 2
+    view_par.joints_face = ('#C0C0C0',) * 3
+    view_par.joints_edge = ('#A0A0A0',) * 3
     view3 = DoublePendulumView(view_par)
-    view3.move(q_3)
+    view3.move(q_1)
 
-    for p in view1.patches + view2.patches + view3.patches:
-      ax.add_patch(p)
+    for p in view1.patches + view3.patches + view2.patches:
+      ax.add_patch(p, )
 
   plt.xticks([-1, -0.5, 0, 0.5, 1, 1.5, 2], [])
   plt.yticks([-1, -0.5, 0, 0.5, 1, 1.5, 2], [])
-  plt.xlim(-0.08, 1.85)
-  plt.ylim(-1.2, 0.2)
+  plt.xlim(-1.05, 0.8)
+  plt.ylim(-0.3, 1.4)
 
-  plt.tight_layout(pad=0.5, h_pad=0.1, w_pad=0.1)
+  plt.tight_layout(pad=1, h_pad=0.1, w_pad=0.1)
+  plt.savefig('fig/pendubot-preview.pdf', dpi=300)
   plt.show()
-  # plt.savefig('fig/pendubot-preview.pdf', dpi=300)
 
 if __name__ == "__main__":
   plt.rcParams.update({

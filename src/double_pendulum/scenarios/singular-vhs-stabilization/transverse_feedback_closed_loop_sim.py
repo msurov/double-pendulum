@@ -292,13 +292,13 @@ def run_simulator():
 
   trans_par = TranverseFeedbackControllerPar(
     Q = np.diag([5., 2., 2.]),
-    R = 1e-2 * np.eye(1),
+    R = 1e-1 * np.eye(1),
     nsteps = 200
   )
   fb = DoublePendulumTransverseFeedback(transdyn, trans_par)
 
-  simtime = 8. * (ref_traj.time[-1] - ref_traj.time[0])
-  x0 = np.array([-1.1, 2.2, 0, 0])
+  simtime = 10. * (ref_traj.time[-1] - ref_traj.time[0])
+  x0 = np.array([-1.0, 2.0, 0, 0])
 
   sim = DoublePendulumSimulator(double_pendulum_param_default, simulator_parameters_ideal, fb)
   res = sim.run(x0, 0., simtime)
@@ -309,8 +309,8 @@ def run_simulator():
   traj_of_theta = data['traj_of_theta']
   ctrl_of_theta = data['control_of_theta']
   view_par = get_view_parameters(par)
-  a = make_anim(res, traj_of_theta, ctrl_of_theta, view_par, speedup=0.20, fps=30)
-  # a.anim.save('fig/anim.gif', dpi=100, fps=30)
+  a = make_anim(res, traj_of_theta, ctrl_of_theta, view_par, speedup=0.20, fps=60)
+  a.anim.save('fig/anim.mp4', dpi=150, fps=60)
   plt.show()
 
 if __name__ == "__main__":

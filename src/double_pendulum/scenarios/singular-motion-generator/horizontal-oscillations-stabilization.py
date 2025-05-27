@@ -651,137 +651,12 @@ def motion_schematic(configurations, view_par : DoublePendulumViewParam):
   plt.ylim(-1.2, 0.2)
   plt.show()
 
-def make_preview():
-  par = double_pendulum_param_default
-  dynamics = DoublePendulumDynamics(par)
-  data = make_sample_traj(dynamics, par)
-  reduced_dynamics = data['reduced_dynamics']
-  reduced_traj = data['reduced_traj']
-  q_sing = data['singular_point']
-
-  eps = 1e-3
-  fig, axes = plt.subplots(1, 2, figsize=(10, 4))
-
-  theta = np.linspace(-5, 1.5)
-  alpha = map_array(reduced_dynamics.alpha, theta, 1)
-  beta = map_array(reduced_dynamics.beta, theta, 1)
-  gamma = map_array(reduced_dynamics.gamma, theta, 1)
-
-  theta_2 = brentq(reduced_dynamics.alpha, 1.8, 2.0)
-  theta_2 = float(theta_2)
-  dtheta_2 = np.sqrt(-reduced_dynamics.gamma(theta_2) / reduced_dynamics.beta(theta_2))
-  dtheta_2 = float(dtheta_2)
-
-  dtheta_1 = np.sqrt(-reduced_dynamics.gamma(0) / reduced_dynamics.beta(0))
-  dtheta_1 = float(dtheta_1)
-
-  ax = axes[0]
-  plt.sca(ax)
-  plt.grid(True, lw=0.5, ls='--')
-  plt.axvline(0, ls='--', lw=1, color='#404040')
-  plt.axhline(0, ls='--', lw=1, color='#404040')
-  plt.axvline(theta_2, ls='--', lw=1, color='#404040')
-
-  for x0 in np.linspace(-0.2, -4, 12, endpoint=False):
-    show_phase_curve(reduced_dynamics, [x0, -eps], eps)
-
-  for x0 in np.linspace(-0.2, -1.5, 10, endpoint=False):
-    show_phase_curve(reduced_dynamics, [x0, -eps], 100)
-
-  for x0 in np.linspace(-5, -4, 3, endpoint=False):
-    show_phase_curve(reduced_dynamics, [x0, -eps], eps)
-
-  for dx0 in np.linspace(30, 120, 8, endpoint=False):
-    show_phase_curve(reduced_dynamics, [-5, -eps], dx0)
-
-  for x0 in np.linspace(0.2, 1., 3, endpoint=False):
-    show_phase_curve(reduced_dynamics, [x0, eps], eps)
-    show_phase_curve(reduced_dynamics, [x0, eps], 100)
-
-  for x0 in np.linspace(theta_2 - 0.1, 1., 4):
-    show_phase_curve(reduced_dynamics, [x0, eps], eps)
-    show_phase_curve(reduced_dynamics, [x0, eps], 100)
-
-  for x0 in np.linspace(theta_2 + 0.1, 3.0, 8):
-    show_phase_curve(reduced_dynamics, [x0, 3.0], 100)
-    show_phase_curve(reduced_dynamics, [x0, 3.0], eps)
-
-  show_phase_curve(reduced_dynamics, [theta_2 + eps, 3.0], dtheta_2)
-  show_phase_curve(reduced_dynamics, [theta_2 - eps, eps], dtheta_2)
-
-  plt.plot(reduced_traj.coords, reduced_traj.vels, lw=2, color='#C04040')
-  plt.xlim(-4.5, 2.8)
-  plt.ylim(-100, 100)
-  plt.yticks([-60, -30, 0, 30, 60], [])
-  plt.xticks(np.arange(-4, 3), [])
-  add_annotation(R'$\theta$', [0.5, -0.15], fontsize=18)
-  add_annotation(R'$\dot\theta$', [-0.08, 0.53], fontsize=18)
-  plt.tick_params(direction='in')
-
-  arrowprops = {
-    'arrowstyle': "Simple, tail_width=0.05, head_width=0.5, head_length=0.7",
-    'connectionstyle': "arc3,rad=0",
-    'relpos': (1., 0.),
-    'lw': 1.,
-    'color': '#202020',
-  }
-  plt.annotate(
-    '',
-    xy = (0.0, -dtheta_1),
-    xytext = (0.5, 0.05),
-    xycoords = 'data',
-    textcoords = 'axes fraction',
-    arrowprops = arrowprops
-  )
-  plt.annotate(
-    '',
-    xy = (0.0, -dtheta_2),
-    xytext = (0.5, 0.05),
-    xycoords = 'data',
-    textcoords = 'axes fraction',
-    arrowprops = arrowprops
-  )
-  bbox = {
-    'boxstyle': 'round',
-    'fc': '1.0',
-    'lw': 0.5,
-    'alpha': 1
-  }
-  plt.annotate(
-    'transition points',
-    (0, 0),
-    (0.4, 0.05),
-    textcoords='axes fraction',
-    xycoords='axes fraction',
-    annotation_clip=False,
-    bbox = bbox,
-    font = {'size': 14},
-  )
-
-  # ax = axes[1]
-  # plt.sca(ax)
-  # ax.set_aspect(1)
-
-  # view_par = DoublePendulumViewParam()
-  # view = DoublePendulumView(view_par)
-  # view.move(q_sing)
-
-  # for p in view.patches:
-  #   ax.add_patch(p)
-
-  # plt.xlim(-0.2, 1.8)
-  # plt.ylim(-1.2, 0.2)
-  # plt.xticks([])
-  # plt.yticks([])
-
-  plt.tight_layout(pad=1, h_pad=0.1, w_pad=1)
-  plt.show()
-
-  return fig
-
 def run_simulator():
   par = double_pendulum_param_default
   view_par = get_view_parameters(par)
+
+  par2 = convert_parameters(par)
+  print(par2)
 
   dynamics = DoublePendulumDynamics(par)
   data = make_sample_traj(dynamics, par)
@@ -850,5 +725,4 @@ if __name__ == "__main__":
     "font.sans-serif": "Helvetica",
   })
   # integrate_closed_loop_system()
-  # run_simulator()
-  make_preview()
+  run_simulator()
