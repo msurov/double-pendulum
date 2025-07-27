@@ -180,3 +180,6 @@ def map_array(fun : callable, arr : np.ndarray, elem_size : Union[Tuple|None|int
     case _:
       assert False, 'Incorrect value of elem_size'
   return result
+
+def soft_sign(x, eps=1e-5):
+  return x / (np.abs(x) + eps)

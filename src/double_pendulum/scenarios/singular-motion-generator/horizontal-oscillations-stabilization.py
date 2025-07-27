@@ -196,6 +196,7 @@ def plot_transverse_dynamics(usp : BSpline, sim_traj : Trajectory, controller_st
   plt.legend(ncols=1, fontsize=14, loc='upper right')
   set_pi_xticks('1', fontsize=14)
   add_annotation(R'$\tau$', [0.46, -0.25])
+  plt.ylabel(R'torque [N$\cdot$m]', fontsize=10)
 
   plt.xlim(np.pi - 0.1, 8*np.pi + 0.1)
 
@@ -239,6 +240,7 @@ def make_anim(simres : SimulationResult,
                                  num='animation')
   animators = [
     AnimGraph(axes['xi'], traj_sim.time, xi_sim),
+    # AnimScope(axes['xi'], traj_sim.time, theta_sim, np.array([[10., 1., 100.]]) * xi_sim),
     AnimScope(axes['coords'], traj_sim.time, traj_sim.coords[:,0], traj_sim.coords[:,1], alpha=0.6, lw=1.5),
     AnimScope(axes['vels'], traj_sim.time, traj_sim.coords[:,0], traj_sim.vels[:,0], alpha=0.6, lw=1.5),
     AnimScope(axes['control'], traj_sim.time, theta_sim, traj_sim.control, alpha=0.6, lw=1.5),
@@ -291,7 +293,7 @@ def make_anim(simres : SimulationResult,
 
   fig.tight_layout()
 
-  return Animate(fig, animators, traj_sim.time[-1], fps, speedup, videopath)
+  return Animate(fig, animators, traj_sim.time[-1], fps=fps, speedup=speedup, dpi=300, videopath=videopath)
 
 def get_constr(par : DoublePendulumParam):
   par2 = convert_parameters(par)
@@ -686,7 +688,7 @@ def run_simulator():
   if False:
     plot_ltv(trans_dyn, fb)
 
-  if True:
+  if False:
     fig = plot_fb_gains(fb)
     fig.savefig('fig/pendubot-feedback-gains.pdf')
 
@@ -703,7 +705,7 @@ def run_simulator():
   res_traj = simres.traj
   trans_coords = ctrl_data['trans_coords']
 
-  if True:
+  if False:
     fig = plot_tau(ref_traj, res_traj, simres.ctrl_state, trans_coords)
     fig.savefig('fig/pendubot-tau-of-time.pdf')
 
@@ -713,8 +715,8 @@ def run_simulator():
     fig = plot_transverse_dynamics(trans_coords.usp, simres.traj, simres.ctrl_state)
     fig.savefig('fig/pendubot-transverse.pdf')
 
-  if True:
-    a = make_anim(simres, trans_coords.xsp, trans_coords.usp, view_par, speedup=0.2)
+  if False:
+    a = make_anim(simres, trans_coords.xsp, trans_coords.usp, view_par, speedup=0.2, videopath='fig/pendubot-horizontal-oscillations.mp4')
 
   plt.show()
 

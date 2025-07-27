@@ -64,16 +64,17 @@ def main():
 
   elems = [
     f,
-    ad(f, g1, 0, state),
-    ad(f, g2, 0, state),
+    g1,
+    g2,
     ad(f, g1, 1, state),
     ad(f, g2, 1, state),
     ad(f, g1, 2, state),
   ]
 
   Q = horzcat(*elems)
+
   det_Q = Q.det()
-  det_Q = sy.simplify(det_Q)
+  det_Q = sy.simplify(det_Q)s
 
   # sy.pprint(det_Q)
   print(sy.latex(det_Q))

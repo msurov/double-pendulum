@@ -392,7 +392,7 @@ if __name__ == '__main__':
     "font.sans-serif": "Helvetica",
   })
 
-  plot_trajectories()
+  # plot_trajectories()
   plot_linear_system_components()
   plot_feedback_coefs()
   plot_nonlin_simulation_results()

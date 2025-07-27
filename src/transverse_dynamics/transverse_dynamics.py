@@ -75,6 +75,14 @@ class TransverseDynamics:
     self.B_fun = ca.Function('B', [coords.theta], [self.B_expr])
     self.rest_fun = ca.Function('B', [coords.theta], [self.rest_expr])
 
+    self.t0_expr = None
+    self.At_expr = None
+    self.Bt_expr = None
+    self.__time_dynamics_linearization()
+    self.At_fun = ca.Function('At', [coords.theta], [self.At_expr])
+    self.Bt_fun = ca.Function('Bt', [coords.theta], [self.Bt_expr])
+    self.t0_fun = ca.Function('t0', [coords.theta], [self.t0_expr])
+
   def __init_transverse_dynamics(self, dynamics : MechanicalSystem, coords : TransverseCoordinates):
     dot_x = dynamics.rhs(
       coords.inverse_transform_expr,
@@ -88,6 +96,25 @@ class TransverseDynamics:
     self.time_deriv_xi_expr = time_deriv_xi
     D_xi_expr = time_deriv_xi / time_deriv_theta
     self.D_xi_expr = D_xi_expr
+
+  def __time_dynamics_linearization(self):
+    dt_over_dtheta = 1. / self.time_deriv_theta_expr
+    expr = ca.substitute(dt_over_dtheta, self.u_stab, ca.DM.zeros(*self.u_stab.shape))
+    expr = ca.jacobian(expr, self.xi)
+    expr = ca.substitute(expr, self.xi, ca.DM.zeros(*self.xi.shape))
+    A = ca.simplify(expr)
+
+    expr = ca.jacobian(dt_over_dtheta, self.u_stab)
+    expr = ca.substitute(expr, self.u_stab, ca.DM.zeros(*self.u_stab.shape))
+    expr = ca.substitute(expr, self.xi, ca.DM.zeros(*self.xi.shape))
+    B = ca.simplify(expr)
+
+    expr = ca.substitute(dt_over_dtheta, self.u_stab, ca.DM.zeros(*self.u_stab.shape))
+    expr = ca.substitute(expr, self.xi, ca.DM.zeros(*self.xi.shape))
+    t0 = ca.simplify(expr)
+    self.t0_expr = t0
+    self.At_expr = A
+    self.Bt_expr = B
 
   def __linearize_transverse_dynamics(self):
     expr = ca.substitute(self.D_xi_expr, self.u_stab, ca.DM.zeros(*self.u_stab.shape))
