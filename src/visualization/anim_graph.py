@@ -3,23 +3,30 @@ from matplotlib import animation, rc
 import numpy as np
 
 
+def inflate_interval(xmin, xmax, scale):
+  xm = (xmin + xmax) / 2
+  dx = (xmax - xmin) / 2
+  return xm - dx * scale, xm + dx * scale
+
 class AnimGraph:
-  def __init__(self, ax, t, y):
+  def __init__(self, ax, t, y, setlims=True, **plot_args):
     self.t = np.array(t)
     self.y = np.array(y)
     if self.y.ndim == 1:
       self.y = self.y[:,np.newaxis]
     assert self.y.ndim == 2
-    self.lines = ax.plot(self.t[0:1], self.y[0:1,...])
+    self.lines = ax.plot(self.t[0:1], self.y[0:1,...], **plot_args)
     self.lines = tuple(self.lines)
 
-    tmin = np.min(self.t)
-    tmax = np.max(self.t)
-    ymin = np.min(self.y)
-    ymax = np.max(self.y)
-
-    ax.set_xlim(tmin, tmax)
-    ax.set_ylim(ymin, ymax)
+    if setlims:
+      tmin = np.min(self.t)
+      tmax = np.max(self.t)
+      ymin = np.min(self.y)
+      ymax = np.max(self.y)
+      tmin, tmax = inflate_interval(tmin, tmax, 1.05)
+      ymin, ymax = inflate_interval(ymin, ymax, 1.05)
+      ax.set_xlim(tmin, tmax)
+      ax.set_ylim(ymin, ymax)
 
   def update(self, t):
     mask = self.t <= t
@@ -53,6 +60,7 @@ class AnimScope:
       xmax = np.max(self.x)
       ymin = np.min(self.y)
       ymax = np.max(self.y)
+      ymin, ymax = inflate_interval(ymin, ymax, 1.05)
 
       k = 1.05
       ax.set_xlim(xmax - k * (xmax - xmin), xmin + k * (xmax - xmin))
@@ -83,6 +91,7 @@ class AnimTrace:
       xmax = np.max(self.x)
       ymin = np.min(self.y)
       ymax = np.max(self.y)
+      ymin, ymax = inflate_interval(ymin, ymax, 1.05)
 
       k = 1.05
       ax.set_xlim(xmax - k * (xmax - xmin), xmin + k * (xmax - xmin))
