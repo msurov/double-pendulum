@@ -35,7 +35,6 @@ def show_trajectory_projections(traj : Trajectory):
   plt.xlabel(R'$q_1$', fontsize=18)
   plt.ylabel(R'$u$', fontsize=18)
 
-  plt.tight_layout()
   return fig
 
 def show_trajectory(traj : Trajectory):

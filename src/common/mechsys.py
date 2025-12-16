@@ -1,29 +1,68 @@
 import casadi as ca
+from typing import Callable
 
 
 class MechanicalSystem:
-  def __init__(self):
-    self.q = ca.MX.zeros(2)
-    self.dq = ca.MX.zeros(2)
-    self.u = ca.MX.zeros(1)
+  q : ca.MX
+  ' dim N '
 
-    self.B_perp_expr = ca.MX.zeros(1, 2)
-    self.M_expr = ca.MX.zeros(2, 2)
-    self.C_expr = ca.MX.zeros(2, 2)
-    self.G_expr = ca.MX.zeros(2, 1)
-    self.B_expr = ca.MX.zeros(2, 1)
-    self.U_expr = ca.MX.zeros(1)
-    self.K_expr = ca.MX.zeros(1)
-    self.E_expr = ca.MX.zeros(1)
+  dq : ca.MX
+  ' dim N '
 
-    self.ddq_expr = ca.MX.zeros(2)
-    self.rhs_expr = ca.MX.zeros(4)
+  u : ca.MX
+  ' dim M '
 
-    self.M = lambda q: None
-    self.C = lambda q, dq: None
-    self.G = lambda q: None
-    self.B = lambda q: None
-    self.U = lambda q: None
-    self.K = lambda q, dq: None
-    self.E = lambda q, dq: None
-    self.rhs = lambda state, u: None
+  B_perp_expr : ca.MX
+  ' dim (N - M) x N '
+
+  M_expr : ca.MX
+  ' dim N x N '
+
+  C_expr : ca.MX
+  ' dim N x N '
+
+  G_expr : ca.MX
+  ' dim N x 1'
+
+  B_expr : ca.MX
+  ' dim N x M '
+
+  U_expr : ca.MX
+  ' float '
+
+  K_expr : ca.MX
+  ' float '
+
+  E_expr : ca.MX
+  ' float '
+
+  ddq_expr : ca.MX
+  ' dim N x 1 '
+
+  rhs_expr : ca.MX
+  ' dim 2N x 1'
+
+  M : Callable[[ca.MX], ca.MX]
+  ' M(q) -> float[N x N]'
+
+  C : Callable[[ca.MX, ca.MX], ca.MX]
+  ' C(q, dq) -> float[N x N]'
+
+  G : Callable[[ca.MX], ca.MX]
+  ' G(q) -> float[N x 1]'
+
+  B : Callable[[ca.MX], ca.MX]
+  ' B(q) -> float[N x M]'
+
+  U : Callable[[ca.MX], ca.MX]
+  ' U(q) -> float'
+
+  K : Callable[[ca.MX, ca.MX], ca.MX]
+  ' K(q, dq) -> float'
+
+  E : Callable[[ca.MX, ca.MX], ca.MX]
+  ' E(q, dq) -> float'
+
+  rhs : Callable[[ca.MX, ca.MX], ca.MX]
+  ' rhs(state, u) -> float[2N x 1]'
+

@@ -1,0 +1,339 @@
+#LyX 2.4 created this file. For more info see https://www.lyx.org/
+\lyxformat 620
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\use_default_options true
+\maintain_unincluded_children no
+\language american
+\language_package default
+\inputencoding utf8
+\fontencoding auto
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_roman_osf false
+\font_sans_osf false
+\font_typewriter_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\float_placement class
+\float_alignment class
+\paperfontsize default
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\use_formatted_ref 0
+\use_minted 0
+\use_lineno 0
+\index Index
+\shortcut idx
+\color #008080
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tablestyle default
+\tracking_changes false
+\output_changes false
+\change_bars false
+\postpone_fragile_content true
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\docbook_table_output 0
+\docbook_mathml_prefix 1
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+coords
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $x+l\sin\theta$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $l\cos\theta$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+—
+
+\end_layout
+
+\begin_layout Standard
+speed
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\dot{x}+l\cos\theta\dot{\theta}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $-l\sin\theta\dot{\theta}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+—
+
+\end_layout
+
+\begin_layout Standard
+speed squared
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\dot{x}^{2}+l^{2}\cos^{2}\theta\dot{\theta}^{2}+2\dot{x}l\cos\theta\dot{\theta}+l^{2}\sin^{2}\theta\dot{\theta}^{2}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\dot{x}^{2}+l^{2}\dot{\theta}^{2}+2\dot{x}l\cos\theta\dot{\theta}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+—
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $K=\frac{m_{c}\dot{x}^{2}}{2}+\frac{m_{p}\left(\dot{x}^{2}+l^{2}\dot{\theta}^{2}+2\dot{x}l\cos\theta\dot{\theta}\right)}{2}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $U=m_{p}gl\cos\theta$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $K_{\dot{x}}=m_{c}\dot{x}+m_{p}\left(\dot{x}+l\cos\theta\dot{\theta}\right)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $K_{x}=0$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $K_{\dot{\theta}}=m_{p}\left(l^{2}\dot{\theta}+\dot{x}l\cos\theta\right)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $K_{\theta}=-m_{p}\left(\dot{\theta}\dot{x}l\sin\theta\right)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $U_{x}=0$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $U_{\theta}=-m_{p}gl\sin\theta$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\frac{d}{dt}K_{\dot{x}}=m_{c}\ddot{x}+m_{p}\left(\ddot{x}-l\sin\theta\dot{\theta}^{2}+l\cos\theta\ddot{\theta}\right)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\frac{d}{dt}K_{\dot{\theta}}=m_{p}\left(l^{2}\ddot{\theta}+\ddot{x}l\cos\theta-\dot{x}\dot{\theta}l\sin\theta\right)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+—
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\frac{d}{dt}L_{\dot{x}}-L_{x}=u$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\frac{d}{dt}L_{\dot{\theta}}-L_{\theta}=0$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+–
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\frac{d}{dt}K_{\dot{x}}-K_{x}+U_{x}=u$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\frac{d}{dt}K_{\dot{\theta}}-K_{\theta}+U_{\theta}=0$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+—
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\left(m_{c}+m_{p}\right)\ddot{x}+m_{p}l\cos\theta\ddot{\theta}-m_{p}l\sin\theta\dot{\theta}^{2}=u$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $m_{p}l\cos\theta\ddot{x}+m_{p}l^{2}\ddot{\theta}-m_{p}gl\sin\theta=0$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+—
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document

@@ -159,7 +159,7 @@ class DoublePendulumAnim:
   def patches(self):
     return self.view.patches
 
-def draw(ax, q : np.ndarray, view_par : DoublePendulumViewParam):
+def draw(ax, q : np.ndarray, view_par : DoublePendulumViewParam) -> DoublePendulumView:
   q = np.array(q, float)
   ax = plt.gca()
   wb = compute_viewbox(q, view_par)
@@ -225,16 +225,20 @@ def motion_schematic(traj : Trajectory, view_par : DoublePendulumViewParam):
 
   fig,ax = plt.subplots(1, 1, num=f'schematic at {q1[0]:.2f}, {q1[1]:.2f}', figsize=(6, 4))
   ax.set_aspect(1)
+  view_par.alpha = 0.5
   draw(ax, q1, view_par)
-  draw(ax, q2, view_par)
+
+  view_par.alpha = 0.5
   draw(ax, q3, view_par)
+
+  view_par.alpha = 1
+  draw(ax, q2, view_par)
+
   r = get_cartesian_rect(traj, view_par)
-  xdiap, ydiap = enlarge_rect(r, 1.05)
+  xdiap, ydiap = enlarge_rect(r, 1.15)
   ax.set_xlim(*xdiap)
   ax.set_ylim(*ydiap)
-
   plt.grid(True)
-  plt.tight_layout(pad=0.5)
 
   return fig
 

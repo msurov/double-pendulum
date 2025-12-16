@@ -1,3 +1,4 @@
+import scienceplots
 import matplotlib.pyplot as plt
 from common.mechsys import MechanicalSystem
 from common.plots import set_pi_xticks
@@ -27,7 +28,6 @@ from common.trajectory import (
   traj_repeat
 )
 from double_pendulum.scenarios.singular_oscillations_planner import (
-  show_trajectory_projections,
   show_reduced_dynamics_phase_prortrait,
 )
 from double_pendulum.scenarios.transverse_feedback_closed_loop_sim import (
@@ -126,24 +126,63 @@ def compute_traj_data(par):
     'transverse_dynamics': trans_dyn,
   }
 
-def plot_trajectories():
+def plot_ref_traj():
   par = double_pendulum_param_default
   data = compute_traj_data(par)
   traj = data['traj']
   reduced = data['reduced_dynamics']
   traj_reduced = data['reduced_traj']
 
-  fig = show_trajectory_projections(traj)
-  plt.savefig('fig/pendubot-reference-trajectory-projections.pdf')
-  fig = show_reduced_dynamics_phase_prortrait(reduced, traj_reduced)
-  plt.savefig('fig/pendubot-phase-portrait.pdf')
+  fig, axes = plt.subplots(2, 2, sharex=True, num='reference trajectory projections', figsize=(6, 4))
+
+  ref_curve_par = {
+    'lw': 2,
+    'color': 'blue', 
+    'ls': '-',
+    'alpha': 0.8
+  }
+
+  plt.sca(axes[0,0])
+  plt.grid(True)
+  plt.plot(traj.coords[:,0], traj.vels[:,0], label=R'$\dot q_{*,1}$', **ref_curve_par)
+  plt.ylabel(R'$\dot q_{1}$', fontsize=12)
+
+  plt.sca(axes[0,1])
+  plt.grid(True)
+  plt.plot(traj.coords[:,0], traj.vels[:,1], label=R'$\dot q_{*,2}$', **ref_curve_par)
+  plt.ylabel(R'$\dot q_{2}$', fontsize=12, labelpad=-2)
+
+  plt.sca(axes[1,0])
+  plt.grid(True)
+  n = traj.time.shape[0] // 2
+  plt.plot(traj.coords[:n,0], traj.coords[:n,1], label=R'$q_{*,2}$', **ref_curve_par)
+  plt.ylabel(R'$q_{2}$', fontsize=12, labelpad=2)
+  plt.yticks([2.3, 2.325, 2.35, 2.375, 2.4], ['2.3', '', '', '', '2.4'], fontsize=12)
+  plt.xlabel('$q_1$', fontsize=14)
+
+  plt.sca(axes[1,1])
+  plt.grid(True)
+  n = traj.time.shape[0] // 2
+  plt.plot(traj.coords[:n,0], traj.control[:n], label=R'$u_*$', **ref_curve_par)
+  plt.ylabel(R'$u$', fontsize=12, labelpad=-8)
+  plt.xlabel('$q_1$', fontsize=14)
+
+  plt.tight_layout(pad = 0, h_pad = 0.4, w_pad = 0.2)
+  return fig
+
+
+def plot_motion_schematically():
+  par = double_pendulum_param_default
+  data = compute_traj_data(par)
+  traj = data['traj']
   view_par = get_view_parameters(par)
+  view_par.links_width = [0.08, 0.08]
+  view_par.joints_radius = [0.10, 0.10, 0.10]
   fig = motion_schematic(traj, view_par)
   fig.gca().axes.xaxis.set_ticklabels([])
   fig.gca().axes.yaxis.set_ticklabels([])
-  fig.tight_layout()
-  fig.savefig('fig/pendubot-oscillations-schematically.pdf')
-  plt.show()
+  fig.tight_layout(pad = 0)
+  return fig
 
 def compute_ltv_data(data):
   trans_dyn = data['transverse_dynamics']
@@ -171,40 +210,45 @@ def plot_linear_system_components():
   theta = ltv['theta']
   Gmin = ltv['gramian_min_eigval']
 
-  legend_par = {
-    'loc': 'lower right',
-    'fontsize': 12
-  }
-
   fig, axes = plt.subplots(5, 1, sharex=True, figsize=(6, 6), num='linear system components')
+
   plt.sca(axes[0])
   plt.grid(True)
-  plt.plot(theta, A[:,:,0] @ np.diag([10, 1, 1]))
-  plt.legend([R'$10 \cdot A_{11}$', R'$A_{21}$', R'$A_{31}$'], **legend_par)
+  plt.plot(theta, A[:,:,0] * np.array([[1000, 100, 100]]))
+  plt.legend([R'$10^3 \times A_{11}$', R'$10^2 \times A_{21}$', R'$10^2 \times A_{31}$'], ncols=3, fontsize=10, loc=(0.20, 0.05))
+  plt.yticks(fontsize=12)
+
   plt.sca(axes[1])
   plt.grid(True)
   plt.plot(theta, A[:,:,1])
-  plt.legend([R'$A_{12}$', R'$A_{22}$', R'$A_{32}$'], **legend_par)
+  plt.legend([R'$A_{12}$', R'$A_{22}$', R'$A_{32}$'], ncols=3, fontsize=10, loc='lower left')
+  plt.yticks(fontsize=12)
+
   plt.sca(axes[2])
   plt.grid(True)
-  plt.plot(theta, A[:,:,2] @ np.diag([10, 1, 1]))
-  plt.legend([R'$10 \cdot A_{13}$', R'$A_{23}$', R'$A_{33}$'], **legend_par)
+  plt.plot(theta, A[:,:,2] * np.array([[10, 1, 1]]))
+  plt.legend([R'$10 \times A_{13}$', R'$A_{23}$', R'$A_{33}$'], ncols=3, fontsize=10, loc='lower right')
+  plt.yticks([-1, 0., 1.], fontsize=12)
+
   plt.sca(axes[3])
   plt.grid(True)
-  plt.plot(theta, B[:,:,0] @ np.diag([10, 10, 1]))
-  plt.legend([R'$10 \cdot B_1$', R'$10 \cdot B_2$', R'$B_3$'], **legend_par)
+  plt.plot(theta, B[:,:,0] * np.array([[1000, 1000, 100]]))
+  plt.legend([R'$10^3 \times B_1$', R'$10^3 \times B_2$', R'$10^2 \times B_3$'], ncols=3, fontsize=10, loc='lower right')
+  plt.yticks([-2, 0, 2], fontsize=12)
 
   plt.sca(axes[4])
   plt.grid(True)
-  plt.plot(theta, Gmin)
-  plt.legend([R'$\min \mathrm{eigval} (G)$'], **legend_par)
+  plt.plot(theta, Gmin * 1e+6)
+  plt.yticks([0, 3, 6], fontsize=12)
+  plt.legend([R'$10^{6} \times \min \mathrm{eigval} (G)$'], fontsize=10, loc='upper left')
   # plt.yticks([0, 5e-5, 10e-5], [R'$0$', R'$5 \cdot 10^{-5}$', R'$10^{-4}$'])
 
-  set_pi_xticks('1/4', fontsize=16)
-  plt.tight_layout(h_pad=-0.5)
-  plt.savefig('fig/linsys-components.pdf')
+  plt.xlim(-0.08, 2*np.pi + 0.08)
+  set_pi_xticks('1/4', fontsize=14)
+  plt.xlabel(R'$\theta$', fontsize=14)
 
-  plt.show()
+  plt.tight_layout(pad=0, h_pad=0.01)
+  return fig
 
 def compute_closed_loop_fund_mat(Afun, Bfun, Kfun, interval, **integ_args):
   n,_ = Afun(0).shape
@@ -267,17 +311,21 @@ def plot_feedback_coefs():
     'ncol': 3
   }
 
-  fig, axes = plt.subplots(1, 1, sharex=True, figsize=(6, 2), num='feedback coefficients')
+  fig, axes = plt.subplots(1, 1, sharex=True, figsize=(6, 3), num='feedback coefficients')
   plt.grid(True)
   K = fb_data['K']
-  plt.plot(theta, K[:,0,:])
+  K_ext = np.vstack((K[:,0,:], K[:,0,:], K[:,0,:]))
+  theta = np.concatenate((theta - 2 * np.pi, theta, theta + 2 * np.pi))
+  plt.plot(theta, K_ext)
   plt.legend([R'$K_1$', R'$K_2$', R'$K_3$'], **legend_par)
-  set_pi_xticks('1/4', fontsize=16)
-  plt.tight_layout()
-  plt.savefig('fig/feedback-coefficients.pdf')
-  plt.show()
+  set_pi_xticks('1/4', fontsize=14)
+  plt.xlim(-0.1, 2*np.pi + 0.1)
+  plt.xlabel(R'$\theta$', fontsize=14)
+  plt.tight_layout(pad=0)
 
-def add_annotation(text : str, textpos : Tuple[int, int]):
+  return fig
+
+def add_annotation(text : str, textpos : Tuple[int, int], fontsize=18):
   bbox = {
     'boxstyle': 'round',
     'fc': '1.0',
@@ -287,7 +335,7 @@ def add_annotation(text : str, textpos : Tuple[int, int]):
   annotate_par = {
     'xycoords': 'axes fraction',
     'font': {
-      'size': 18
+      'size': fontsize
     },
     'bbox': bbox
   }
@@ -304,46 +352,59 @@ def plot_nonlin_simulation_results():
   ref_curve_par = {
     'lw': 2,
     'color': 'red', 
-    'ls': '--'
+    'ls': '-',
+    'alpha': 0.6
   }
   real_curve_par = {
     'alpha': 0.6,
     'color': 'darkblue',
-    'lw': 0.8
+    'lw': 1
   }
 
   fig, axes = plt.subplots(2, 2, sharex=True, num='closed loop sim', figsize=(6, 4))
 
   plt.sca(axes[0,0])
   plt.grid(True)
-  plt.plot(sim_traj.coords[:,0], sim_traj.vels[:,0], **real_curve_par)
-  plt.plot(orig_traj.coords[:,0], orig_traj.vels[:,0], **ref_curve_par)
-  add_annotation(R'$\dot q_1$', [-0.25, 0.57])
+  plt.plot(sim_traj.coords[:,0], sim_traj.vels[:,0], label=R'$\dot q_{1}$', **real_curve_par)
+  plt.plot(orig_traj.coords[:,0], orig_traj.vels[:,0], label=R'$\dot q_{*,1}$', **ref_curve_par)
+  plt.plot(sim_traj.coords[0,0], sim_traj.vels[0,0], 'o', color=real_curve_par['color'], markersize=4)
+  plt.legend(fontsize=12, loc=(0.59, 0.3))
 
   plt.sca(axes[0,1])
   plt.grid(True)
-  plt.plot(sim_traj.coords[:,0], sim_traj.vels[:,1], **real_curve_par)
-  plt.plot(orig_traj.coords[:,0], orig_traj.vels[:,1], **ref_curve_par)
-  add_annotation(R'$\dot q_2$', [-0.18, 0.50])
+  plt.plot(sim_traj.coords[:,0], sim_traj.vels[:,1], label=R'$\dot q_{2}$', **real_curve_par)
+  plt.plot(orig_traj.coords[:,0], orig_traj.vels[:,1], label=R'$\dot q_{*,2}$', **ref_curve_par)
+  plt.plot(sim_traj.coords[0,0], sim_traj.vels[0,1], 'o', color=real_curve_par['color'], markersize=4)
+  plt.legend(fontsize=12, loc=(0.59, 0.3))
 
   plt.sca(axes[1,0])
   plt.grid(True)
   n = orig_traj.time.shape[0] // 2
-  plt.plot(sim_traj.coords[:,0], sim_traj.coords[:,1], **real_curve_par)
-  plt.plot(orig_traj.coords[:n,0], orig_traj.coords[:n,1], **ref_curve_par)
-  add_annotation(R'$q_2$', [-0.25, 0.57])
-  add_annotation(R'$q_1$', [0.70, -0.18])
+  plt.plot(sim_traj.coords[:,0], sim_traj.coords[:,1], label=R'$q_{2}$', **real_curve_par)
+  plt.plot(orig_traj.coords[:n,0], orig_traj.coords[:n,1], label=R'$q_{*,2}$', **ref_curve_par)
+  plt.legend(fontsize=12, loc=(0.59, 0.05))
+  plt.plot(sim_traj.coords[0,0], sim_traj.coords[0,1], 'o', color=real_curve_par['color'], markersize=4)
+  plt.xlabel('$q_1$', fontsize=14)
 
   plt.sca(axes[1,1])
   plt.grid(True)
   n = orig_traj.time.shape[0] // 2
-  plt.plot(sim_traj.coords[:,0], sim_traj.control, **real_curve_par)
-  plt.plot(orig_traj.coords[:n,0], orig_traj.control[:n], **ref_curve_par)
-  add_annotation(R'$u$', [-0.18, 0.50])
-  add_annotation(R'$q_1$', [0.70, -0.18])
+  plt.plot(sim_traj.coords[:,0], sim_traj.control, label=R'$u$', **real_curve_par)
+  plt.plot(orig_traj.coords[:n,0], orig_traj.control[:n], label=R'$u_*$', **ref_curve_par)
+  plt.plot(sim_traj.coords[0,0], sim_traj.control[0], 'o', color=real_curve_par['color'], markersize=4)
+  plt.legend(fontsize=12, loc='lower left')
+  plt.xlabel('$q_1$', fontsize=14)
 
-  plt.tight_layout(h_pad=-0.1)
-  plt.savefig('fig/nonlin-sim-results.pdf')
+  plt.tight_layout(pad = 0, h_pad = 0.01, w_pad = 0.6)
+  return fig
+
+def plot_transverse():
+  par = double_pendulum_param_default
+  data = compute_traj_data(par)
+  sim_data = np.load('data/closed-loop-simulation-result.npy', allow_pickle=True).item()
+
+  orig_traj = data['traj']
+  sim_traj = sim_data.traj
 
   n, = sim_traj.time.shape
   n = n // 2  
@@ -358,23 +419,23 @@ def plot_nonlin_simulation_results():
   fig, axes = plt.subplots(3, 1, sharex=True, figsize=(6, 4), num='transverse coordinates')
   plt.sca(axes[0])
   plt.grid(True)
-  plt.plot(time, xi)
-  plt.legend([R'$\xi_1$', R'$\xi_2$', R'$\xi_3$'], loc='lower right', fontsize=14)
+  plt.plot(time, xi, lw=1.5, alpha=0.8)
+  plt.legend([R'$\xi_1$', R'$\xi_2$', R'$\xi_3$'], loc='lower right', fontsize=12, ncols=3)
 
   plt.sca(axes[1])
   plt.grid(True)
-  plt.plot(time, V)
-  plt.legend([R'$V$'], loc='upper right', fontsize=14)
+  plt.plot(time, V, lw=1.5)
+  plt.legend([R'$V$'], loc='upper right', fontsize=12)
 
   plt.sca(axes[2])
   plt.grid(True)
-  plt.plot(time, w)
-  plt.legend([R'$w$'], loc='upper right', fontsize=14)
-  plt.xlabel('time')
-  plt.tight_layout(h_pad=-0.2)
-  plt.savefig('fig/transverse-coords.pdf')
+  plt.plot(time, w, lw=1.5)
+  plt.legend([R'$w$'], loc='upper right', fontsize=12)
+  plt.xlabel('time, sec')
+  plt.xlim(time[0] - 0.03, time[-1] + 0.03)
+  plt.tight_layout(h_pad=0.01, pad=0)
 
-  plt.show()
+  return fig
 
 def plot_phase_portrait():
   par = double_pendulum_param_default
@@ -383,17 +444,39 @@ def plot_phase_portrait():
   traj = data['reduced_traj']
   fig, ax = plt.subplots(1, 1, figsize=(6, 4), num='reduced phase portrait')
   plot_singular_phase_portrait(reduced, traj, 0., npts_x=30, npts_y=12, wider=0.1, higher=0.3)
-  plt.savefig('fig/pendubot-phase-portrait.pdf')
+  return fig
 
 if __name__ == '__main__':
-  plt.rcParams.update({
-    "text.usetex": True,
-    "font.family": "sans-serif",
-    "font.sans-serif": "Helvetica",
-  })
+  plt.style.use('science')
+  plt.rcParams['legend.frameon'] = True
+  plt.rcParams['legend.framealpha'] = 0.8
 
-  # plot_trajectories()
-  plot_linear_system_components()
-  plot_feedback_coefs()
-  plot_nonlin_simulation_results()
-  plot_phase_portrait()
+  # fig = plot_ref_traj()
+  # fig.savefig('fig/singular-vhs-stabilization/pendubot-reference-trajectory-projections.pdf')
+  # fig.savefig('fig/singular-vhs-stabilization/pendubot-reference-trajectory-projections.eps')
+
+  # fig = plot_motion_schematically()
+  # fig.savefig('fig/singular-vhs-stabilization/pendubot-oscillations-schematically.pdf')
+  # fig.savefig('fig/singular-vhs-stabilization/pendubot-oscillations-schematically.eps')
+
+  # fig = plot_linear_system_components()
+  # fig.savefig('fig/singular-vhs-stabilization/linsys-components.eps')
+  # fig.savefig('fig/singular-vhs-stabilization/linsys-components.pdf')
+
+  # fig = plot_feedback_coefs()
+  # fig.savefig('fig/singular-vhs-stabilization/feedback-coefficients.pdf')
+  # fig.savefig('fig/singular-vhs-stabilization/feedback-coefficients.eps')
+
+  # fig = plot_nonlin_simulation_results()
+  # fig.savefig('fig/singular-vhs-stabilization/nonlin-sim-results.pdf')
+  # fig.savefig('fig/singular-vhs-stabilization/nonlin-sim-results.eps')
+
+  # fig = plot_transverse()
+  # fig.savefig('fig/singular-vhs-stabilization/transverse-coords.pdf')
+  # fig.savefig('fig/singular-vhs-stabilization/transverse-coords.eps')
+
+  fig = plot_phase_portrait()
+  fig.savefig('fig/singular-vhs-stabilization/pendubot-phase-portrait.pdf')
+  fig.savefig('fig/singular-vhs-stabilization/pendubot-phase-portrait.eps')
+
+  plt.show()

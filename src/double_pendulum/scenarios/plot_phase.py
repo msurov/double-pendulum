@@ -158,5 +158,5 @@ def plot_singular_phase_portrait(
 
   ax.set_xlim(smax - inc_width * (smax - smin), smin + inc_width * (smax - smin))
   ax.set_ylim(-dsmax * inc_height, dsmax * inc_height)
-  plt.tight_layout()
+  plt.tight_layout(pad=0)
   return plt.gcf()

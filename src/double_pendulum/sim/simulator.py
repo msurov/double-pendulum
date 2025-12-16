@@ -5,7 +5,7 @@ from double_pendulum.dynamics.dynamics_casadi import (
 import casadi as ca
 import numpy as np
 from scipy.integrate import ode
-from sigproc.delay_filter import DelayFilter
+from sigproc.delay_filter import DiscreteDelayFilter
 from common.trajectory import Trajectory
 from copy import copy
 from dataclasses import dataclass
@@ -59,10 +59,10 @@ class DoublePendulumSimulator:
     self.fb = fb
     self.step = sim_par.timestep
 
-    self.encoder_delay = DelayFilter(round_int(sim_par.encoder_delay / self.step))
+    self.encoder_delay = DiscreteDelayFilter(round_int(sim_par.encoder_delay / self.step))
     self.encoder_step = 2 * np.pi / sim_par.encoder_ppr
 
-    self.motor_delay = DelayFilter(round_int(sim_par.motor_delay / self.step))
+    self.motor_delay = DiscreteDelayFilter(round_int(sim_par.motor_delay / self.step))
     self.motor_noise = sim_par.motor_noise
     self.torque_max = sim_par.motor_torque_max
 

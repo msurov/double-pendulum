@@ -1,7 +1,7 @@
 from .mechsys import MechanicalSystem
 from .trajectory import Trajectory
 from typing import Callable, Optional
-from scipy.integrate import solve_ivp
+from scipy.integrate import solve_ivp, ode
 import numpy as np
 from dataclasses import dataclass
 
@@ -59,3 +59,47 @@ def integrate(
     energy = E,
     power = W
   )
+
+def simulate(
+    sys : MechanicalSystem,
+    q0 : np.ndarray,
+    dq0 : np.ndarray,
+    integstep  : float,
+    integtime : float,
+    control_input : Optional[ControlInput] = None,
+    **integ_args
+  ) -> MechanicalSystemTrajectory:
+
+  qdim, = np.shape(q0)
+  x = np.concatenate((q0, dq0))
+  t = 0.
+  u = control_input(t, q0, dq0)
+  udim = 1 # TODO fix this
+
+  def rhs(t, x):
+    dx = sys.rhs(x, u)
+    dx = np.reshape(dx, (2*qdim,))
+    return dx
+
+  integrator = ode(rhs)
+  integrator.set_initial_value(x, t)
+  integrator.set_integrator('dopri5', **integ_args)
+
+  nsteps = int(integtime / integstep) + 1
+  t_arr = np.zeros(nsteps)
+  t_arr[0] = t
+  x_arr = np.zeros((nsteps, 2*qdim))
+  x_arr[0] = x
+  u_arr = np.zeros((nsteps, udim))
+  u_arr[0] = u
+
+  for i in range(1, nsteps):
+    integrator.integrate(min(t + integstep, integtime))
+    t = integrator.t
+    x = integrator.y
+    u = control_input(t, x[0:qdim], x[qdim:])
+    t_arr[i] = t
+    x_arr[i,:] = x
+    u_arr[i] = u
+
+  return MechanicalSystemTrajectory(time = t_arr, phase = x_arr, control = u_arr)
