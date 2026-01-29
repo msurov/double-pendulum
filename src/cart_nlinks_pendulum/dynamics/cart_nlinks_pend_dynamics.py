@@ -9,6 +9,7 @@ cos = ca.cos
 @dataclass
 class LinkPar:
   mass : float
+  inertia : float
   mass_center_displacement : float
   length : float
 
@@ -32,20 +33,24 @@ class CartNLinksPendPar:
 
   def link_length(self, i : int) -> float:
     return self.links[i].length
-  
-@dataclass
-class MassPoint:
-  coords : ca.MX
-  mass : float
 
-def get_mass_points(q, par : CartNLinksPendPar) -> List[MassPoint]:
+@dataclass
+class RidigBody:
+  coords : ca.MX
+  orientation : ca.MX
+  mass : float
+  inertia : float
+
+def get_bodies(q, par : CartNLinksPendPar) -> List[RidigBody]:
   p = ca.vertcat(q[0], 0)
-  mass_points = []
-  cart = MassPoint(
+  bodies = []
+  cart = RidigBody(
     mass = par.cart_mass,
-    coords = p
+    coords = p,
+    inertia = 0,
+    orientation = 0
   )
-  mass_points.append(cart)
+  bodies.append(cart)
   angles = ca.cumsum(q[1:])
 
   for i,link in enumerate(par.links):
@@ -53,14 +58,16 @@ def get_mass_points(q, par : CartNLinksPendPar) -> List[MassPoint]:
       sin(angles[i]),
       cos(angles[i])
     )
-    mass_point = MassPoint(
+    body = RidigBody(
       coords = p + direction * link.mass_center_displacement,
-      mass = link.mass
+      mass = link.mass,
+      inertia = link.inertia,
+      orientation = angles[i]
     )
-    mass_points.append(mass_point)
+    bodies.append(body)
     p += direction * link.length
 
-  return mass_points
+  return bodies
 
 def compute_coriolis_mat(M, q, dq):
   C1 = ca.jtimes(M, q, dq)
@@ -75,15 +82,17 @@ class CartNLinksPendDynamics(MechanicalSystem):
     q = ca.MX.sym('q', ndof)
     dq = ca.MX.sym('dq', ndof)
     u = ca.MX.sym('u')
-    mass_points = get_mass_points(q, par)
+    bodies = get_bodies(q, par)
 
     M = ca.MX.zeros(ndof, ndof)
     U = 0
 
-    for mass_point in mass_points:
-      J = ca.jacobian(mass_point.coords, q)
-      M += J.T @ J * mass_point.mass
-      U += mass_point.coords[1] * mass_point.mass * par.gravity_accel
+    for body in bodies:
+      J = ca.jacobian(body.coords, q)
+      M += J.T @ J * body.mass
+      J = ca.jacobian(body.orientation, q)
+      M += J.T @ J * body.inertia
+      U += body.coords[1] * body.mass * par.gravity_accel
 
     C = compute_coriolis_mat(M, q, dq)
     G = ca.jacobian(U, q).T
@@ -122,7 +131,8 @@ cart_nlinks_pend_par_default = CartNLinksPendPar(
     LinkPar(
       mass = 1,
       mass_center_displacement = 0.5,
-      length = 1.
+      length = 1.,
+      inertia = 0.05
     )
   ]
 )

@@ -9,7 +9,7 @@ from typing import Callable, Tuple, List
 import matplotlib.pyplot as plt
 
 
-def rk4_step(f, t, x, h):
+def rk4_step(f, x, h):
   k1 = f(x)
   k2 = f(x + 0.5*h*k1)
   k3 = f(x + 0.5*h*k2)
@@ -22,7 +22,7 @@ def integrate(sys : Callable[[float, np.ndarray], np.ndarray], x0 : np.ndarray, 
   x_arr = [x]
   t_arr = [t]
   for i in range(1, nsteps + 1):
-    x = rk4_step(sys, t, x, step)
+    x = rk4_step(sys, x, step)
     t += step
     x_arr.append(x)
     t_arr.append(t)

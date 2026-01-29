@@ -1,6 +1,7 @@
 from functools import reduce
 from matplotlib.axes import Axes
 from common.trajectory import Trajectory
+from common.geom_utils import inflate_rect
 from .cart_nlinks_pend_draw import (
   CartNLinksPendPar,
   CartNLinksPendVis,
@@ -29,6 +30,7 @@ class CartNLinksPendAnim(AnimatorObject):
 
   def fit_view(self, ax : Axes, traj : Trajectory):
     rect = self.get_covering_box(traj)
+    rect = inflate_rect(rect, 1.05)
     ax.set_xlim(rect.x1, rect.x2)
     ax.set_ylim(rect.y1, rect.y2)
 
@@ -40,9 +42,10 @@ class CartNLinksPendAnim(AnimatorObject):
   def patches(self):
     return self.__model.patches
 
-def launch_anim(traj : Trajectory, modelpar : CartNLinksPendPar) -> Animate:
-  fig, ax = plt.subplots(1, 1)
+def launch_anim(traj : Trajectory, modelpar : CartNLinksPendPar, **kwargs) -> Animate:
+  fig = plt.gcf()
+  ax = plt.gca()
   ax.set_aspect(1)
   vispar = get_vis_par(modelpar)
   cart_pend_anim = CartNLinksPendAnim(ax, vispar, traj)
-  return Animate(fig, [cart_pend_anim], traj.time[-1])
+  return Animate(fig, [cart_pend_anim], traj.time[-1], **kwargs)

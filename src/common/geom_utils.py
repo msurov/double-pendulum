@@ -33,3 +33,13 @@ def covering_rect(r1 : Rect, r2 : Rect) -> Rect:
   y1 = min(r1.y1, r2.y1)
   y2 = max(r1.y2, r2.y2)
   return Rect(x1, x2, y1, y2)
+
+def inflate_rect(r : Rect, coef : float) -> Rect:
+  a = (1 + coef) / 2
+  b = (1 - coef) / 2
+  return Rect(
+    x1 = r.x1 * a + r.x2 * b,
+    x2 = r.x1 * b + r.x2 * a,
+    y1 = r.y1 * a + r.y2 * b,
+    y2 = r.y1 * b + r.y2 * a,
+  )
