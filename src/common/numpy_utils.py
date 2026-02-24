@@ -2,6 +2,7 @@ import numpy as np
 from bisect import bisect
 from scipy.integrate import cumulative_simpson, cumulative_trapezoid
 from typing import Union, Optional, Tuple
+from scipy.optimize import brentq
 
 
 def min_eigval(A : np.ndarray) -> float:
@@ -183,3 +184,15 @@ def map_array(fun : callable, arr : np.ndarray, elem_size : Union[Tuple|None|int
 
 def soft_sign(x, eps=1e-5):
   return x / (np.abs(x) + eps)
+
+def find_all_roots(f, interval):
+  x = np.linspace(*interval, 100)
+  y = map_array(f, x, 1)
+  mask = y[1:] * y[:-1] <= 0
+  indices, = np.nonzero(mask)
+  roots = []
+  for i in indices:
+    r = brentq(f, x[i], x[i+1], maxiter=40, xtol=1e-8)
+    roots.append(r)
+
+  return roots

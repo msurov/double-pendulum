@@ -3,8 +3,8 @@ import numpy as np
 from scipy.integrate import solve_ivp
 import matplotlib.pyplot as plt
 import casadi as ca
-from common.numpy_utils import map_array
-from scipy.optimize import brentq
+from common.numpy_utils import map_array, find_all_roots
+
 
 cos = ca.cos
 tan = ca.tan
@@ -12,18 +12,6 @@ sin = ca.sin
 pi = ca.pi
 sqrt = ca.sqrt
 
-
-def find_all_roots(f, interval):
-  x = np.linspace(*interval, 100)
-  y = map_array(f, x, 1)
-  mask = y[1:] * y[:-1] <= 0
-  indices, = np.nonzero(mask)
-  roots = []
-  for i in indices:
-    r = brentq(f, x[i], x[i+1], maxiter=40, xtol=1e-8)
-    roots.append(r)
-
-  return roots
 
 def main():
   l = 1

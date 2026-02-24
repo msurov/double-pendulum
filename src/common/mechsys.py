@@ -54,6 +54,9 @@ class MechanicalSystem:
   B : Callable[[ca.MX], ca.MX]
   ' B(q) -> float[N x M]'
 
+  D : Callable[[ca.MX], ca.MX]
+  ' D(q) -> float[N x N]'
+
   U : Callable[[ca.MX], ca.MX]
   ' U(q) -> float'
 
