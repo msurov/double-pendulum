@@ -1,0 +1,812 @@
+#LyX 2.5 created this file. For more info see https://www.lyx.org/
+\lyxformat 643
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\use_default_options true
+\maintain_unincluded_children no
+\language american
+\language_package default
+\inputencoding utf8
+\fontencoding auto
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_roman_osf false
+\font_sans_osf false
+\font_typewriter_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\float_placement class
+\float_alignment class
+\paperfontsize default
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification default
+\crossref_package refstyle
+\use_formatted_ref 0
+\use_minted 0
+\use_lineno 0
+\backgroundcolor none
+\fontcolor none
+\notefontcolor lightgray
+\boxbgcolor red
+\table_border_color default
+\table_odd_row_color default
+\table_even_row_color default
+\table_alt_row_colors_start 1
+\index Index
+\shortcut idx
+\color #008080
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tablestyle default
+\tracking_changes false
+\output_changes false
+\change_bars false
+\postpone_fragile_content true
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\docbook_table_output 0
+\docbook_mathml_prefix 1
+\docbook_mathml_version 0
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+\begin_inset Formula $\mathbf{R}=\left(\begin{array}{cc}
+\cos\theta & -\sin\theta\\
+\sin\theta & \cos\theta
+\end{array}\right)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\dot{\mathbf{R}}=\left(\begin{array}{cc}
+-\sin\theta & -\cos\theta\\
+\cos\theta & -\sin\theta
+\end{array}\right)\dot{\theta}=\mathbf{R}^{\prime}\dot{\theta}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\mathbf{R}^{\prime\top}\mathbf{R}^{\prime}=\left(\begin{array}{cc}
+-\sin\theta & \cos\theta\\
+-\cos\theta & -\sin\theta
+\end{array}\right)\left(\begin{array}{cc}
+-\sin\theta & -\cos\theta\\
+\cos\theta & -\sin\theta
+\end{array}\right)=\mathbf{I}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\mathbf{R}^{\top}\mathbf{R}^{\prime}=\left(\begin{array}{cc}
+\cos\theta & \sin\theta\\
+-\sin\theta & \cos\theta
+\end{array}\right)\left(\begin{array}{cc}
+-\sin\theta & -\cos\theta\\
+\cos\theta & -\sin\theta
+\end{array}\right)=\left(\begin{array}{cc}
+0 & -1\\
+1 & 0
+\end{array}\right)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $p=\left(\begin{array}{cc}
+\cos\theta & -\sin\theta\\
+\sin\theta & \cos\theta
+\end{array}\right)\left(\begin{array}{c}
+s\\
+h
+\end{array}\right)=\mathbf{R}\left(\begin{array}{c}
+s\\
+h
+\end{array}\right)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\omega=-\frac{\dot{s}}{R}+\dot{\theta}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\dot{p}=\mathbf{R}^{\prime}\left(\begin{array}{c}
+s\\
+h
+\end{array}\right)\dot{\theta}+\mathbf{R}\left(\begin{array}{c}
+\dot{s}\\
+0
+\end{array}\right)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\dot{p}^{\top}\dot{p} & =\left(\mathbf{R}^{\prime}\dot{\theta}\left(\begin{array}{c}
+s\\
+h
+\end{array}\right)+\mathbf{R}\left(\begin{array}{c}
+\dot{s}\\
+0
+\end{array}\right)\right)^{\top}\left(\mathbf{R}^{\prime}\dot{\theta}\left(\begin{array}{c}
+s\\
+h
+\end{array}\right)+\mathbf{R}\left(\begin{array}{c}
+\dot{s}\\
+0
+\end{array}\right)\right)\\
+ & =\left(\left(\begin{array}{c}
+s\\
+h
+\end{array}\right)^{\top}\mathbf{R}^{\prime\top}\dot{\theta}+\left(\begin{array}{c}
+\dot{s}\\
+0
+\end{array}\right)^{\top}\mathbf{R}^{\top}\right)\left(\mathbf{R}^{\prime}\dot{\theta}\left(\begin{array}{c}
+s\\
+h
+\end{array}\right)+\mathbf{R}\left(\begin{array}{c}
+\dot{s}\\
+0
+\end{array}\right)\right)\\
+ & =\left(s^{2}+h^{2}\right)\dot{\theta}^{2}+\left(\begin{array}{c}
+\dot{s}\\
+0
+\end{array}\right)^{\top}\left(\begin{array}{cc}
+0 & -1\\
+1 & 0
+\end{array}\right)\left(\begin{array}{c}
+s\\
+h
+\end{array}\right)\dot{\theta}-\left(\begin{array}{c}
+s\\
+h
+\end{array}\right)^{\top}\left(\begin{array}{cc}
+0 & -1\\
+1 & 0
+\end{array}\right)\left(\begin{array}{c}
+\dot{s}\\
+0
+\end{array}\right)\dot{\theta}+\dot{s}^{2}\\
+ & =\left(s^{2}+h^{2}\right)\dot{\theta}^{2}+\dot{s}^{2}-2h\dot{s}\dot{\theta}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $y=\mathbf{e}^{\top}_{y}\mathbf{R}\left(\begin{array}{c}
+s\\
+h
+\end{array}\right)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+K & =\frac{m_{\circ}}{2}\dot{p}^{\top}\dot{p}+\frac{J_{\circ}}{2}\omega^{2}+\frac{J_{-}}{2}\dot{\theta}^{2}\\
+ & =\frac{m_{\circ}}{2}\left(s^{2}+h^{2}\right)\dot{\theta}^{2}+\frac{m_{\circ}}{2}\dot{s}^{2}-\frac{m_{\circ}}{2}2h\dot{s}\dot{\theta}\\
+ & +\frac{J_{\circ}}{2}\left(\frac{\dot{s}^{2}}{R^{2}}+\dot{\theta}^{2}-2\frac{\dot{s}}{R}\dot{\theta}\right)\\
+ & +\frac{J_{-}}{2}\dot{\theta}^{2}\\
+ & =\frac{1}{2}\left[J_{-}+J_{\circ}+m_{\circ}\left(s^{2}+h^{2}\right)\right]\dot{\theta}^{2}\\
+ & +\frac{1}{2}\left[m_{\circ}+\frac{J_{\circ}}{R^{2}}\right]\dot{s}^{2}\\
+ & +\left[-m_{\circ}h-\frac{J_{\circ}}{R}\right]\dot{s}\dot{\theta}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $U=m_{\circ}g\mathbf{e}^{\top}_{y}\mathbf{R}\left(\begin{array}{c}
+s\\
+h
+\end{array}\right)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Уравнения:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\frac{d}{dt}\frac{\partial K}{\partial\dot{q}}-\frac{\partial K}{\partial q}+\frac{\partial U}{\partial q}=f$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $M=\left(\begin{array}{cc}
+J_{-}+J_{\circ}+m_{\circ}\left(s^{2}+h^{2}\right) & -m_{\circ}h-\frac{J_{\circ}}{R_{\circ}}\\
+-m_{\circ}h-\frac{J_{\circ}}{R_{\circ}} & m_{\circ}+\frac{J_{\circ}}{R^{2}_{\circ}}
+\end{array}\right)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\frac{\partial}{\partial\dot{\theta}}K=\left[J_{-}+J_{\circ}+m_{\circ}\left(s^{2}+h^{2}\right)\right]\dot{\theta}-\left[m_{\circ}h+\frac{J_{\circ}}{R_{\circ}}\right]\dot{s}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\frac{d}{dt}\frac{\partial}{\partial\dot{\theta}}K & =2m_{\circ}s\dot{s}\dot{\theta}+\left[J_{-}+J_{\circ}+m_{\circ}\left(s^{2}+h^{2}\right)\right]\ddot{\theta}-\left[m_{\circ}h+\frac{J_{\circ}}{R_{\circ}}\right]\ddot{s}\\
+\frac{\partial}{\partial\theta}K & =0\\
+\frac{d}{dt}\frac{\partial}{\partial\dot{s}}K & =\left[m_{\circ}+\frac{J_{\circ}}{R^{2}_{\circ}}\right]\ddot{s}-\left[m_{\circ}h+\frac{J_{\circ}}{R_{\circ}}\right]\ddot{\theta}\\
+\frac{\partial}{\partial s}K & =m_{\circ}s\dot{\theta}^{2}\\
+\frac{\partial}{\partial\theta}U & =\mathbf{e}^{\top}_{y}\mathbf{R}^{\prime}\left(\begin{array}{c}
+s\\
+h
+\end{array}\right)=m_{\circ}g\left(s\cos\theta-h\sin\theta\right)\\
+\frac{\partial}{\partial s}U & =m_{\circ}g\mathbf{e}^{\top}_{y}\mathbf{R}\left(\begin{array}{c}
+1\\
+0
+\end{array}\right)=m_{\circ}g\sin\theta
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+—
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\left[J_{-}+J_{\circ}+m_{\circ}\left(s^{2}+h^{2}\right)\right]\ddot{\theta}-\left[m_{\circ}h+\frac{J_{\circ}}{R_{\circ}}\right]\ddot{s}+2m_{\circ}s\dot{s}\dot{\theta}+m_{\circ}gs\cos\theta-m_{\circ}gh\sin\theta & =u\\
+\left[m_{\circ}+\frac{J_{\circ}}{R^{2}_{\circ}}\right]\ddot{s}-\left[m_{\circ}h+\frac{J_{\circ}}{R_{\circ}}\right]\ddot{\theta}-m_{\circ}s\dot{\theta}^{2}+m_{\circ}g\sin\theta & =0
+\end{align*}
+
+\end_inset
+
+Сила сопротивления воздуха
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $f_{i}=-\kappa\dot{p}=-\kappa\frac{\partial p}{\partial q}\dot{q}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Comment
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset Formula $f^{\top}_{i}\dot{p}=f^{\top}_{q}\dot{q}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Formula $f^{\top}_{i}\frac{\partial p}{\partial q}\dot{q}=f^{\top}_{q}\dot{q}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Formula $f_{q}=\left(\frac{\partial p}{\partial q}\right)^{\top}f_{i}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Formula $f_{q}=\left(\frac{\partial p}{\partial q}\right)^{\top}f_{i}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Formula $p=\mathbf{R}\left(\begin{array}{c}
+s\\
+h
+\end{array}\right)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Formula $\frac{\partial p}{\partial\theta}=\mathbf{R}^{\prime}\left(\begin{array}{c}
+s\\
+h
+\end{array}\right)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Formula $\frac{\partial p}{\partial s}=\mathbf{R}\left(\begin{array}{c}
+1\\
+0
+\end{array}\right)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Formula $\frac{\partial p}{\partial q}=\left(\begin{array}{cc}
+-s\sin\theta-h\cos\theta & \cos\theta\\
+s\cos\theta-h\sin\theta & \sin\theta
+\end{array}\right)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Formula $\left(\frac{\partial p}{\partial q}\right)^{\top}=\left(\begin{array}{cc}
+-s\sin\theta-h\cos\theta & s\cos\theta-h\sin\theta\\
+\cos\theta & \sin\theta
+\end{array}\right)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Formula $f_{q}=\left(\frac{\partial p}{\partial q}\right)^{\top}f_{i}=\left(\begin{array}{cc}
+-s\sin\theta-h\cos\theta & s\cos\theta-h\sin\theta\\
+\cos\theta & \sin\theta
+\end{array}\right)$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $f^{\top}_{i}\dot{p}=f^{\top}_{q}\dot{q}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $-\kappa\dot{p}^{\top}\dot{p}=f^{\top}_{q}\dot{q}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\dot{p}^{\top}\dot{p}=\left(s^{2}+h^{2}\right)\dot{\theta}^{2}+\dot{s}^{2}-2h\dot{s}\dot{\theta}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $-\kappa\dot{p}^{\top}\dot{p}=f^{\top}_{q}\dot{q}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $f_{q}=-\kappa J^{\top}J\dot{q}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+—
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $p=\mathbf{R}\left(\begin{array}{c}
+s\\
+h
+\end{array}\right)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\nospellcheck off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+\begin_inset Formula $\dot{p}=J\dot{q}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\frac{\partial p}{\partial\theta}=\mathbf{R}^{\prime}\left(\begin{array}{c}
+s\\
+h
+\end{array}\right)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\frac{\partial p}{\partial s}=\mathbf{R}\left(\begin{array}{c}
+1\\
+0
+\end{array}\right)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $J=\left[c_{1}\mid c_{2}\right]$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\nospellcheck off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+\begin_inset Formula $J^{\top}J=\left[\begin{array}{c}
+c^{\top}_{1}\\
+c^{\top}_{2}
+\end{array}\right]\left[c_{1}\mid c_{2}\right]=\left[\begin{array}{cc}
+c^{\top}_{1}c_{1} & c^{\top}_{1}c_{2}\\
+c^{\top}_{1}c_{2} & c^{\top}_{2}c_{2}
+\end{array}\right]$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $J=\left[\mathbf{R}^{\prime}\left(\begin{array}{c}
+s\\
+h
+\end{array}\right)\mid\mathbf{R}\left(\begin{array}{c}
+1\\
+0
+\end{array}\right)\right]$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $J^{\top}J=\left[\begin{array}{cc}
+s^{2}+h^{2} & -h\\
+-h & 1
+\end{array}\right]$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $f_{q}=-\kappa J^{\top}J\dot{q}=\left[\begin{array}{c}
+-\kappa\left(s^{2}+h^{2}\right)\dot{\theta}+\kappa h\dot{s}\\
+\kappa h\dot{\theta}-\kappa\dot{s}
+\end{array}\right]$
+\end_inset
+
+ – сила сопротивления воздуха
+\end_layout
+
+\begin_layout Standard
+Матрица 
+\begin_inset Formula 
+\[
+D\left(q\right)=-\kappa J^{\top}J=-\kappa\left[\begin{array}{cc}
+s^{2}+h^{2} & -h\\
+-h & 1
+\end{array}\right]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Уравнения динамики
+\begin_inset Formula 
+\begin{align*}
+\left[J_{-}+J_{\circ}+m_{\circ}\left(s^{2}+h^{2}\right)\right]\ddot{\theta}-\left[m_{\circ}h+\frac{J_{\circ}}{R_{\circ}}\right]\ddot{s}+2m_{\circ}s\dot{s}\dot{\theta}+\kappa\left(s^{2}+h^{2}\right)\dot{\theta}-\kappa h\dot{s}+m_{\circ}gs\cos\theta-m_{\circ}gh\sin\theta & =u\\
+\left[m_{\circ}+\frac{J_{\circ}}{R^{2}_{\circ}}\right]\ddot{s}-\left[m_{\circ}h+\frac{J_{\circ}}{R_{\circ}}\right]\ddot{\theta}-m_{\circ}s\dot{\theta}^{2}-\kappa h\dot{\theta}+\kappa\dot{s}+m_{\circ}g\sin\theta & =0
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Редуцированная динамика 
+\begin_inset Formula 
+\[
+\left[m_{\circ}+\frac{J_{\circ}}{R^{2}_{\circ}}\right]\ddot{s}-\left[m_{\circ}h+\frac{J_{\circ}}{R_{\circ}}\right]\ddot{\theta}-m_{\circ}s\dot{\theta}^{2}-\kappa h\dot{\theta}+\kappa\dot{s}+m_{\circ}g\sin\theta=0
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Пусть 
+\begin_inset Formula $a_{1}:=\left[m_{\circ}+\frac{J_{\circ}}{R^{2}_{\circ}}\right]$
+\end_inset
+
+,
+ 
+\begin_inset Formula $a_{2}:=\left[m_{\circ}h+\frac{J_{\circ}}{R_{\circ}}\right]$
+\end_inset
+
+
+\begin_inset Formula 
+\[
+a_{1}\ddot{s}-a_{2}\ddot{\theta}-m_{\circ}s\dot{\theta}^{2}-\kappa h\dot{\theta}+\kappa\dot{s}+m_{\circ}g\sin\theta=0
+\]
+
+\end_inset
+
+Далее вирт связь вида
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $s=S\left(\lambda\right)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\theta=\Theta\left(\lambda\right)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\dot{s}=S^{\prime}\left(\lambda\right)\dot{\lambda}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\dot{\theta}=\Theta^{\prime}\left(\lambda\right)\dot{\lambda}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\ddot{s}=S^{\prime\prime}\left(\lambda\right)\dot{\lambda}^{2}+S^{\prime}\left(\lambda\right)\ddot{\lambda}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\ddot{\theta}=\Theta^{\prime\prime}\left(\lambda\right)\dot{\lambda}^{2}+\Theta^{\prime}\left(\lambda\right)\ddot{\lambda}$
+\end_inset
+
+
+\begin_inset Formula 
+\[
+a_{1}\left(S^{\prime\prime}\left(\lambda\right)\dot{\lambda}^{2}+S^{\prime}\left(\lambda\right)\ddot{\lambda}\right)-a_{2}\left(\Theta^{\prime\prime}\left(\lambda\right)\dot{\lambda}^{2}+\Theta^{\prime}\left(\lambda\right)\ddot{\lambda}\right)-m_{\circ}s\left(\Theta^{\prime}\left(\lambda\right)\dot{\lambda}\right)^{2}-\kappa h\left(\Theta^{\prime}\left(\lambda\right)\dot{\lambda}\right)+\kappa S^{\prime}\left(\lambda\right)\dot{\lambda}+m_{\circ}g\sin\Theta\left(\lambda\right)=0
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+\left[a_{1}S^{\prime}-a_{2}\Theta^{\prime}\right]\ddot{\lambda}\\
+\left[a_{1}S^{\prime\prime}-a_{2}\Theta^{\prime\prime}-m_{\circ}s\Theta^{\prime2}\right]\dot{\lambda}^{2}\\
+\left[-\kappa h\Theta^{\prime}+\kappa S^{\prime}\right]\dot{\lambda}\\
++m_{\circ}g\sin\Theta & =0
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\alpha & =a_{1}S^{\prime}-a_{2}\Theta^{\prime}\\
+\beta & =a_{1}S^{\prime\prime}-a_{2}\Theta^{\prime\prime}-m_{\circ}s\Theta^{\prime2}\\
+\delta & =-\kappa h\Theta^{\prime}+\kappa S^{\prime}\\
+\gamma & =m_{\circ}g\sin\Theta
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document

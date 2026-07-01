@@ -19,6 +19,14 @@ def rotmat(angle, axis):
   R = I + ca.sin(angle) * K + (1 - ca.cos(angle)) * K @ K
   return ca.simplify(R)
 
+def rotmat2d(angle):
+  J = ca.DM([
+    [0, -1],
+    [1, 0]
+  ])
+  I = ca.DM.eye(2)
+  return I * ca.cos(angle) + J * ca.sin(angle)
+
 def wedge(v):
   x = v[0]
   y = v[1]

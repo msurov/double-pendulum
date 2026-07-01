@@ -6,6 +6,22 @@ from common.trajectory import Trajectory
 
 
 class ReducedDynamics:
+  s : ca.SX
+
+  alpha_expr : ca.SX
+  dalpha_expr : ca.SX
+  beta_expr : ca.SX
+  delta_expr : ca.SX
+  gamma_expr : ca.SX
+  dgamma_expr : ca.SX
+
+  alpha : ca.SX
+  dalpha : ca.SX
+  beta : ca.SX
+  delta : ca.SX
+  gamma : ca.SX
+  dgamma : ca.SX
+
   def __init__(self, dynamics : MechanicalSystem, constr : ca.Function):
     s = ca.SX.sym('s')
 
@@ -24,18 +40,23 @@ class ReducedDynamics:
     self.beta_expr = B_perp @ (M @ ddQ + C @ dQ)
     self.gamma_expr = B_perp @ G
     self.dgamma_expr = ca.jacobian(self.gamma_expr, s)
+    if hasattr(dynamics, 'D'):
+      self.delta_expr = B_perp @ dynamics.D(Q) @ dQ
+    else:
+      self.delta_expr = 0
 
     self.s = s
     self.alpha = ca.Function('alpha', [self.s], [self.alpha_expr])
     self.dalpha = ca.Function('dalpha', [self.s], [self.dalpha_expr])
     self.beta = ca.Function('beta', [self.s], [self.beta_expr])
+    self.delta = ca.Function('delta', [self.s], [self.delta_expr])
     self.gamma = ca.Function('gamma', [self.s], [self.gamma_expr])
     self.dgamma = ca.Function('dgamma', [self.s], [self.dgamma_expr])
 
 def compute_time(s, ds):
   dt = 2 * np.diff(s) / (ds[1:] + ds[:-1])
   t = np.zeros(len(s))
-  t[1:] = np.cumsum(dt)
+  np.cumsum(dt, out=t[1:])
   return t
 
 def solve_periodic(rd : ReducedDynamics, s0, smax, eps=1e-6, **solver_args) -> Trajectory:
@@ -121,10 +142,14 @@ def reconstruct_trajectory(constr : ca.Function, reduced : ReducedDynamics,
   DDconstr_expr = ca.jacobian(Dconstr_expr, s_expr)
   ds_expr = ca.SX.sym('ds')
   dq_expr = Dconstr_expr * ds_expr
-  dds_expr = (-reduced.beta_expr * ds_expr**2 - reduced.gamma_expr) / reduced.alpha_expr
+  dds_expr = -(reduced.beta_expr * ds_expr**2 + reduced.delta_expr * ds_expr + reduced.gamma_expr) / reduced.alpha_expr
   ddq_expr = Dconstr_expr * dds_expr + DDconstr_expr * ds_expr**2
   B = dynamics.B(constr_expr)
+
   tmp = dynamics.M(constr_expr) @ ddq_expr + dynamics.C(constr_expr, dq_expr) @ dq_expr + dynamics.G(constr_expr)
+  if hasattr(dynamics, 'D'):
+    tmp += dynamics.D(constr_expr) @ dq_expr
+
   u_expr = ca.solve(B.T @ B, B.T @ tmp)
   u_fun = ca.Function('u', [s_expr, ds_expr], [u_expr])
   dq_fun = ca.Function('dq', [s_expr, ds_expr], [dq_expr])

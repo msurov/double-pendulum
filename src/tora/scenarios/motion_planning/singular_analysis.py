@@ -126,123 +126,181 @@ def integrate(reduced, theta0, dtheta0, interval, direction=1):
   sol = solve_ivp(rhs, [0., direction * 100.], [0., theta0, dtheta0], max_step=1e-3, events=stop_cond)
   return sol.y[0], sol.y[1], sol.y[2]
 
+def cubic_vhc():
+  par = tora_param_default
+  dynamics = TORADynamics(tora_param_default)
+  theta = ca.MX.sym('theta')
+
+  a = 0.086
+  b = -0.03
+  mu = 0.0007007696665823457
+  step = 0.005
+  m = par.pendulum_mass
+  M = par.pendulum_mass + par.cart_mass
+  l = par.pendulum_length
+  theta_s = np.arctan(m * a + M * l / M * b)
+
+  for i in range(30):
+    X = a * ca.sin(theta) + b * ca.cos(theta) - mu * ca.sin(theta - theta_s)**3
+    reduced = get_reduced_dynamics(X, theta, dynamics)
+    _,dtheta0 = speed_at_singularity(reduced, theta_s)
+    t_, theta_, dtheta_ = integrate(reduced, theta_s + eps, dtheta0, 0.5, 1)
+    print(f'dtheta0 = {dtheta0}, dthetaf = {dtheta_[-1]}, a = {a}, b = {b}, mu = {mu}')
+
+    if abs(dtheta_[-1] - dtheta0) < 1e-3:
+      break
+    elif dtheta_[-1] < dtheta0:
+      mu += step
+    else:
+      mu -= step
+    step /= 2
+
+    plt.plot(theta_, dtheta_)
+    plt.ylim(-30, 30)
+    plt.pause(0.1)
+
+  plt.show()
+
+def linear_vhc():
+  par = tora_param_default
+  dynamics = TORADynamics(tora_param_default)
+  theta = ca.MX.sym('theta')
+
+  theta_s = 1.0
+  b = -0.1
+  a = -par.pendulum_mass * par.pendulum_length / (par.pendulum_mass + par.cart_mass)
+  step = 0.05
+
+  for i in range(30):
+    X = a * ca.sin(theta) + b * ca.cos(theta - theta_s)
+    reduced = get_reduced_dynamics(X, theta, dynamics)
+    _,dtheta0 = speed_at_singularity(reduced, theta_s)
+    t_, theta_, dtheta_ = integrate(reduced, theta_s + eps, dtheta0, 0.5, 1)
+    print(f'dtheta0 = {dtheta0}, dthetaf = {dtheta_[-1]}, a = {a}, b = {b}')
+
+    if abs(dtheta_[-1] - dtheta0) < 1e-3:
+      break
+    elif dtheta_[-1] < dtheta0:
+      b += step
+    else:
+      b -= step
+    step /= 2
+
+    plt.plot(theta_, dtheta_)
+    plt.ylim(-30, 30)
+    plt.pause(0.1)
+
+  plt.show()
+
+def plot_coefs():
+  par = tora_param_default
+  dynamics = TORADynamics(tora_param_default)
+  theta = ca.MX.sym('theta')
+
+  theta_s = 1.0
+  b = -0.1
+  a = -par.pendulum_mass * par.pendulum_length / (par.pendulum_mass + par.cart_mass)
+  X = a * ca.sin(theta) + b * ca.cos(theta - theta_s)
+  reduced = get_reduced_dynamics(X, theta, dynamics)
+  singularities = identify_singularities(reduced, [-np.pi, np.pi])
+
+  args = np.linspace(-np.pi, np.pi, 300)
+  alpha = map_array(reduced.alpha, args, 1)
+  beta = map_array(reduced.beta, args, 1)
+  kappa = map_array(reduced.kappa, args, 1)
+  gamma = map_array(reduced.gamma, args, 1)
+
+  _, axes = plt.subplots(4, 1, sharex=True)
+  axes[0].plot(args, alpha)
+  axes[0].set_ylabel('alpha')
+  axes[1].plot(args, beta)
+  axes[1].set_ylabel('beta')
+  axes[2].plot(args, kappa)
+  axes[2].set_ylabel('kappa')
+  axes[3].plot(args, gamma)
+  axes[3].set_ylabel('gamma')
+
+  for ax in axes:
+    for s,_,__ in singularities:
+      ax.axvline(s, color='red')
+    ax.grid(True)
+
+  s = singularities[0]
+  beta = reduced.beta(s)
+  gamma = reduced.gamma(s)
+  kappa = reduced.kappa(s)
+  dalpha = reduced.dalpha(s)
+  print('beta', beta)
+  print('gamma', gamma)
+  print('kappa', kappa)
+  d = kappa**2 - 4 * beta * gamma
+  print('d', d)
+  dtheta = (-kappa + np.sqrt(d)) / (2 * beta)
+  print('dtheta', dtheta)
+  lam = (-2 * beta * dtheta - kappa) / (dalpha * dtheta)
+  print('lam', lam)
+
+  set_pi_xticks('1/4')
+  plt.tight_layout()
+  plt.show()
+
 def main():
   par = tora_param_default
   dynamics = TORADynamics(tora_param_default)
   theta = ca.MX.sym('theta')
 
-  b = -0.1298696517944337
-  theta_s = 1.
+  b = -0.1298695320263506 - 0.1
+  theta_s = 1.0
   a = -par.pendulum_mass * par.pendulum_length / (par.pendulum_mass + par.cart_mass)
   eps = 1e-3
-  print(a)
-
-  if False:
-    step = 0.05  
-    for i in range(20):
-      X = a * ca.sin(theta) + b * ca.cos(theta - theta_s)
-      reduced = get_reduced_dynamics(X, theta, dynamics)
-      _,dtheta0 = speed_at_singularity(reduced, theta_s)
-      t_, theta_, dtheta_ = integrate(reduced, theta_s + eps, dtheta0, 0.5, 1)
-      print(f'dtheta0 = {dtheta0}, dthetaf = {dtheta_[-1]}, b = {b}')
-
-      if abs(dtheta_[-1] - dtheta0) < 1e-3:
-        break
-      elif dtheta_[-1] < dtheta0:
-        b += step
-      else:
-        b -= step
-      step /= 2
 
   X = a * ca.sin(theta) + b * ca.cos(theta - theta_s)
   reduced = get_reduced_dynamics(X, theta, dynamics)
   singularities = identify_singularities(reduced, [-np.pi, np.pi])
   interval = 1.0
 
-  if False:
-    args = np.linspace(-np.pi, np.pi, 300)
-    alpha = map_array(reduced.alpha, args, 1)
-    beta = map_array(reduced.beta, args, 1)
-    kappa = map_array(reduced.kappa, args, 1)
-    gamma = map_array(reduced.gamma, args, 1)
+  for s,v1,v2 in singularities:
+    print('singularity', s, 'speed', v1, 'and', v2)
+    plt.axvline(s, color='red', ls='--')
+    if v1 is not None:
+      plt.plot(s, v1, 'o', color='red')
+    if v2 is not None:
+      plt.plot(s, v2, 'o', color='red')
 
-    _, axes = plt.subplots(4, 1, sharex=True)
-    axes[0].plot(args, alpha)
-    axes[0].set_ylabel('alpha')
-    axes[1].plot(args, beta)
-    axes[1].set_ylabel('beta')
-    axes[2].plot(args, kappa)
-    axes[2].set_ylabel('kappa')
-    axes[3].plot(args, gamma)
-    axes[3].set_ylabel('gamma')
+  theta_s, dtheta_s,_ = singularities[1]
+  t, theta, dtheta = integrate(reduced, theta_s - eps, dtheta_s, interval, -1)
+  plt.plot(theta, dtheta, alpha=0.8, lw=1)
 
-    for ax in axes:
-      for s,_,__ in singularities:
-        ax.axvline(s, color='red')
-      ax.grid(True)
+  t, theta, dtheta = integrate(reduced, theta_s + eps, dtheta_s, interval, -1)
+  plt.plot(theta, dtheta, alpha=0.8, lw=1)
 
-    s = singularities[0]
-    beta = reduced.beta(s)
-    gamma = reduced.gamma(s)
-    kappa = reduced.kappa(s)
-    dalpha = reduced.dalpha(s)
-    print('beta', beta)
-    print('gamma', gamma)
-    print('kappa', kappa)
-    d = kappa**2 - 4 * beta * gamma
-    print('d', d)
-    dtheta = (-kappa + np.sqrt(d)) / (2 * beta)
-    print('dtheta', dtheta)
-    lam = (-2 * beta * dtheta - kappa) / (dalpha * dtheta)
-    print('lam', lam)
+  theta_s,_,dtheta_s = singularities[1]
+  t, theta, dtheta = integrate(reduced, theta_s - eps, dtheta_s, interval, 1)
+  plt.plot(theta, dtheta, alpha=0.8, lw=1)
 
-    set_pi_xticks('1/4')
-    plt.tight_layout()
-    plt.show()
+  t, theta, dtheta = integrate(reduced, theta_s + eps, dtheta_s, interval, 1)
+  plt.plot(theta, dtheta, alpha=0.8, lw=1)
 
-  if True:
-    for s,v1,v2 in singularities:
-      print('singularity', s, 'speed', v1, 'and', v2)
-      plt.axvline(s, color='red', ls='--')
-      if v1 is not None:
-        plt.plot(s, v1, 'o', color='red')
-      if v2 is not None:
-        plt.plot(s, v2, 'o', color='red')
+  theta_s,_,dtheta_s = singularities[0]
+  t, theta, dtheta = integrate(reduced, theta_s + eps, dtheta_s, interval, -1)
+  plt.plot(theta, dtheta, alpha=0.8, lw=1)
 
-    theta_s, dtheta_s,_ = singularities[1]
-    t, theta, dtheta = integrate(reduced, theta_s - eps, dtheta_s, interval, -1)
-    plt.plot(theta, dtheta, alpha=0.8, lw=1)
+  t, theta, dtheta = integrate(reduced, theta_s - eps, dtheta_s, interval, -1)
+  plt.plot(theta, dtheta, alpha=0.8, lw=1)
 
-    t, theta, dtheta = integrate(reduced, theta_s + eps, dtheta_s, interval, -1)
-    plt.plot(theta, dtheta, alpha=0.8, lw=1)
+  theta_,dtheta_s,_ = singularities[0]
+  t, theta, dtheta = integrate(reduced, theta_s + eps, dtheta_s, interval, 1)
+  plt.plot(theta, dtheta, alpha=0.8, lw=1)
 
-    theta_s,_,dtheta_s = singularities[1]
-    t, theta, dtheta = integrate(reduced, theta_s - eps, dtheta_s, interval, 1)
-    plt.plot(theta, dtheta, alpha=0.8, lw=1)
+  t, theta, dtheta = integrate(reduced, theta_s - eps, dtheta_s, interval, 1)
+  plt.plot(theta, dtheta, alpha=0.8, lw=1)
 
-    t, theta, dtheta = integrate(reduced, theta_s + eps, dtheta_s, interval, 1)
-    plt.plot(theta, dtheta, alpha=0.8, lw=1)
-
-    theta_s,_,dtheta_s = singularities[0]
-    t, theta, dtheta = integrate(reduced, theta_s + eps, dtheta_s, interval, -1)
-    plt.plot(theta, dtheta, alpha=0.8, lw=1)
-
-    t, theta, dtheta = integrate(reduced, theta_s - eps, dtheta_s, interval, -1)
-    plt.plot(theta, dtheta, alpha=0.8, lw=1)
-
-    theta_,dtheta_s,_ = singularities[0]
-    t, theta, dtheta = integrate(reduced, theta_s + eps, dtheta_s, interval, 1)
-    plt.plot(theta, dtheta, alpha=0.8, lw=1)
-
-    t, theta, dtheta = integrate(reduced, theta_s - eps, dtheta_s, interval, 1)
-    plt.plot(theta, dtheta, alpha=0.8, lw=1)
-
-    plt.ylim(-30., 30.)
-    plt.xlim(-1.2 * np.pi, 1.2 * np.pi)
-    set_pi_xticks('1/4')
-    plt.grid(True)
-    plt.tight_layout()
-    plt.show()
+  plt.ylim(-30., 30.)
+  plt.xlim(-1.2 * np.pi, 1.2 * np.pi)
+  set_pi_xticks('1/4')
+  plt.grid(True)
+  plt.tight_layout()
+  plt.show()
 
 if __name__ == '__main__':
   main()

@@ -190,7 +190,7 @@ def traj_repeat(tr : Trajectory, ntimes=2) -> Trajectory:
     time[i1:i2] = tr.time[-1] * i + tr.time
 
     if control is not None:
-      control[i1:i2] = tr.control[0:-1]
+      control[i1:i2] = tr.control
   
   return Trajectory(
     time = time,

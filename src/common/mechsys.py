@@ -1,71 +1,74 @@
 import casadi as ca
 from typing import Callable
 
-
 class MechanicalSystem:
-  q : ca.MX
+  T = ca.GenericExpressionCommon
+
+  q : T
   ' dim N '
 
-  dq : ca.MX
+  dq : T
   ' dim N '
 
-  u : ca.MX
+  u : T
   ' dim M '
 
-  B_perp_expr : ca.MX
+  B_perp_expr : T
   ' dim (N - M) x N '
 
-  M_expr : ca.MX
+  M_expr : T
   ' dim N x N '
 
-  C_expr : ca.MX
+  C_expr : T
   ' dim N x N '
 
-  G_expr : ca.MX
+  G_expr : T
   ' dim N x 1'
 
-  B_expr : ca.MX
+  B_expr : T
   ' dim N x M '
 
-  U_expr : ca.MX
+  U_expr : T
   ' float '
 
-  K_expr : ca.MX
+  K_expr : T
   ' float '
 
-  E_expr : ca.MX
+  E_expr : T
   ' float '
 
-  ddq_expr : ca.MX
+  ddq_expr : T
   ' dim N x 1 '
 
-  rhs_expr : ca.MX
+  rhs_expr : T
   ' dim 2N x 1'
 
-  M : Callable[[ca.MX], ca.MX]
+  M : Callable[[T], T]
   ' M(q) -> float[N x N]'
 
-  C : Callable[[ca.MX, ca.MX], ca.MX]
+  C : Callable[[T, T], T]
   ' C(q, dq) -> float[N x N]'
 
-  G : Callable[[ca.MX], ca.MX]
+  G : Callable[[T], T]
   ' G(q) -> float[N x 1]'
 
-  B : Callable[[ca.MX], ca.MX]
+  B : Callable[[T], T]
   ' B(q) -> float[N x M]'
 
-  D : Callable[[ca.MX], ca.MX]
+  B_perp : Callable[[T], T]
+  ' B_perp(q) -> float[M x N]'
+
+  D : Callable[[T], T]
   ' D(q) -> float[N x N]'
 
-  U : Callable[[ca.MX], ca.MX]
+  U : Callable[[T], T]
   ' U(q) -> float'
 
-  K : Callable[[ca.MX, ca.MX], ca.MX]
+  K : Callable[[T, T], T]
   ' K(q, dq) -> float'
 
-  E : Callable[[ca.MX, ca.MX], ca.MX]
+  E : Callable[[T, T], T]
   ' E(q, dq) -> float'
 
-  rhs : Callable[[ca.MX, ca.MX], ca.MX]
+  rhs : Callable[[T, T], T]
   ' rhs(state, u) -> float[2N x 1]'
-
