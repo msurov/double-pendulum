@@ -249,6 +249,6 @@ def plot_coefs():
 
 
 if __name__ == '__main__':
-  plot_coefs()
+  # plot_coefs()
   plot_phase()
   plt.show()

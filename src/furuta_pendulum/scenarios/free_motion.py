@@ -11,9 +11,11 @@ import numpy as np
 
 def main():
   par = furuta_pendulum_param_default
+  par.joint_1_friction = 0.002
+  par.joint_2_friction = 0.0005
   dynamics = FurutaPendulumDynamics(par)
-  q0 = np.zeros(2)
-  dq0 = np.array([1., 1e-2])
+  q0 = np.array([0., 0.01])
+  dq0 = np.array([0., 0])
   traj = integrate(dynamics, q0, dq0, 7, max_step=1e-2)
 
   a = animate(traj, par, speedup=1.)

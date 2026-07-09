@@ -1,7 +1,7 @@
 import numpy as np
 from dataclasses import dataclass, asdict
 import json
-
+from typing import Optional
 
 @dataclass
 class CartPendulumPar:
@@ -9,6 +9,7 @@ class CartPendulumPar:
   pendulum_mass : float
   cart_mass : float
   gravity_accel : float
+  joint_friction : Optional[float] = None
 
   def __post_init__(self):
     pass

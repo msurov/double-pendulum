@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 import numpy as np
+from typing import Optional
 
 """
   A link is the rigid body.
@@ -28,6 +29,8 @@ class FurutaPendulumPar:
   joint_1_pos : np.ndarray # position of joint-1 in world frame
   joint_2_pos : np.ndarray # position of joint-2 in link-1 frame
   gravity_accel : float
+  joint_1_friction : Optional[float] = None
+  joint_2_friction : Optional[float] = None
 
 furuta_pendulum_param_default = FurutaPendulumPar(
   link_1_mass = 0.100,

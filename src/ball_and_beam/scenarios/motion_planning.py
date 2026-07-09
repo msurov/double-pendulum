@@ -111,7 +111,7 @@ def compute_periodic_trajectory(dynamics : BallAndBeamDynamics):
   lam = ca.SX.sym('lam')
   lam_shift = ca.SX.sym('lam_shift')
   Q_expr = ca.vertcat(
-    0.1 * ca.sin(lam - lam_shift),
+    0.15 * ca.sin(lam - lam_shift),
     0.4 * ca.sin(lam + lam_shift)
   )
 

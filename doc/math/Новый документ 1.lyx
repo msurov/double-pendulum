@@ -171,5 +171,24 @@ acceleration at singularity
 
 \end_layout
 
+\begin_layout Standard
+—
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\left.\frac{dv}{dt}\right|_{\text{sing}}/v_{\text{\mathrm{s}}}=\left.\frac{dv}{dx}\right|_{\text{sing}}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $dt=\frac{dx}{v}$
+\end_inset
+
+
+\end_layout
+
 \end_body
 \end_document

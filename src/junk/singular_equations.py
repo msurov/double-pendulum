@@ -89,10 +89,10 @@ def main():
 
   plt.xlim(-0.2, 0.6)
   plt.ylim(-2, 2)
-  plt.xlabel(R'$\theta$')
-  plt.ylabel(R'$\dot\theta$')
+  plt.xlabel(R'$y$')
+  plt.ylabel(R'$y^\prime$')
   plt.tight_layout(pad=0.1)
-  plt.savefig('fig/singularity-equilibrium/phase-with-friction.svg', dpi=600)
+  plt.savefig('fig/singularity-equilibrium/phase-with-friction.png', dpi=600)
   plt.show()
 
 if __name__ == '__main__':

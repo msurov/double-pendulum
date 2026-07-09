@@ -14,15 +14,17 @@ class FurutaPendulumDynamics(MechanicalSystem):
     self.U_expr = self.get_potential_energy(par)
     self.G_expr = ca.jacobian(self.U_expr, self.q).T
     self.C_expr = self.compute_C(self.M_expr, self.q, self.dq)
+    self.D_expr = self.get_friction_mat(par)
     self.B_expr = ca.DM([[1], [0]])
     self.B_perp_expr = ca.DM([[0, 1]])
     self.K_expr = self.dq.T @ self.M_expr @ self.dq / 2
     self.E_expr = self.K_expr + self.U_expr
-    self.ddq_expr = ca.solve(self.M_expr, -self.C_expr @ self.dq - self.G_expr + self.B_expr * self.u)
+    self.ddq_expr = ca.solve(self.M_expr, -self.C_expr @ self.dq - self.D_expr @ self.dq - self.G_expr + self.B_expr * self.u)
     self.rhs_expr = ca.vertcat(self.dq, self.ddq_expr)
 
     self.M = ca.Function('M', [self.q], [self.M_expr])
     self.C = ca.Function('C', [self.q, self.dq], [self.C_expr])
+    self.D = ca.Function('D', [self.q], [self.D_expr])
     self.G = ca.Function('G', [self.q], [self.G_expr])
     self.B = ca.Function('B', [self.q], [self.B_expr])
     self.B_perp = ca.Function('B_perp', [self.q], [self.B_perp_expr])
@@ -30,6 +32,15 @@ class FurutaPendulumDynamics(MechanicalSystem):
     self.K = ca.Function('K', [self.q, self.dq], [self.K_expr])
     self.E = ca.Function('E', [self.q, self.dq], [self.E_expr])
     self.rhs = ca.Function('rhs', [ca.vertcat(self.q, self.dq), self.u], [self.rhs_expr])
+
+  def get_friction_mat(self, par : FurutaPendulumPar):
+    k1 = 0 if par.joint_1_friction is None else par.joint_1_friction
+    k2 = 0 if par.joint_2_friction is None else par.joint_2_friction
+    D = ca.DM([
+      [k1, 0],
+      [0, k2],
+    ])
+    return D
 
   def get_links_poses(self, par : FurutaPendulumPar):
     q1 = self.q[0]

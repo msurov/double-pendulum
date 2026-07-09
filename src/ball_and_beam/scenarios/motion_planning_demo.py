@@ -26,13 +26,11 @@ def main():
   _, axes = plt.subplots(2, 2, sharex=True, figsize=(8, 4), num='traj')
   plt.sca(axes[0,0])
   plt.plot(traj.coords[:,1], traj.vels[:,0])
-  plt.xlabel('s')
-  plt.ylabel('theta')
+  plt.ylabel('dtheta')
   plt.grid(True)
 
   plt.sca(axes[0,1])
   plt.plot(traj.coords[:,1], traj.vels[:,1])
-  plt.xlabel('s')
   plt.ylabel('ds')
   plt.grid(True)
 
@@ -50,11 +48,11 @@ def main():
 
   plt.tight_layout(pad=0.1)
   plt.pause(0.01)
-  
+
   vispar = BallAndBeamVisPar(
     ball_radius = par.ball_radius,
     beam_thickness = 0.02,
-    beam_length = 0.9,
+    beam_length = 0.85,
     joint_radius = 0.01,
     surface_vertical_displacement = par.ball_center_displacement - par.ball_radius
   )

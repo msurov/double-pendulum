@@ -150,7 +150,7 @@ def animate(traj : Trajectory, par : FurutaPendulumPar, fps=60, speedup=1, video
   def drawframe(iframe):
     ti = speedup * iframe / fps + t[0]
     vis.move(qfun(ti))
-    return vis.patches()
+    return vis.patches
 
   anim = animation.FuncAnimation(fig, drawframe, frames=nframes, interval=1000/fps, blit=True)
   plt.tight_layout()

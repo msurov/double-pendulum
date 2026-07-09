@@ -33,6 +33,9 @@ class CartPendulumDynamics(MechanicalSystem):
     C = MX.zeros((2,2))
     C[0,1] = -mp * l * sin(q[1]) * dq[1]
 
+    D = MX.zeros((2, 2))
+    D[1,1] = 0 if par.joint_friction is None else par.joint_friction
+
     G = MX.zeros((2,1))
     G[1] = -mp * g * l * sin(q[1])
 
@@ -52,6 +55,7 @@ class CartPendulumDynamics(MechanicalSystem):
     self.u = u
     self.M_expr = M
     self.C_expr = C
+    self.D_expr = D
     self.G_expr = G
     self.B_expr = B
     self.B_perp_expr = B_perp
@@ -60,11 +64,12 @@ class CartPendulumDynamics(MechanicalSystem):
     self.E_expr = E
 
     state = ca.vertcat(q, dq)
-    self.ddq_expr = ca.pinv(M) @ (-C @ dq - G + B @ u)
+    self.ddq_expr = ca.pinv(M) @ (-C @ dq - D @ dq - G + B @ u)
     self.rhs_expr = ca.vertcat(dq, self.ddq_expr)
 
     self.M = ca.Function('M', [q], [self.M_expr])
     self.C = ca.Function('C', [q, dq], [self.C_expr])
+    self.D = ca.Function('D', [q], [self.D_expr])
     self.G = ca.Function('G', [q], [self.G_expr])
     self.B = ca.Function('B', [q], [self.B_expr])
     self.B_perp = ca.Function('B_perp', [q], [self.B_perp_expr])

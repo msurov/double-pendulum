@@ -12,12 +12,11 @@ from common.mechsys_integ import integrate
 
 def main():
   par = ball_and_beam_parameters_default
-  par.ball_airdrag_coef = 0.3
   dynamics = BallAndBeamDynamics(par, auto_compute=False)
   vispar = get_vis_par(par)
 
-  traj = integrate(dynamics, [0., 0.05], [0., 0.0], 5., max_step=0.01)
-  a = launch_anim(traj, vispar)
+  traj = integrate(dynamics, [0., 0.05], [0., 0.0], 2., max_step=0.01)
+  a = launch_anim(traj, vispar, speedup=0.5)
   plt.show()
 
 if __name__ == '__main__':
